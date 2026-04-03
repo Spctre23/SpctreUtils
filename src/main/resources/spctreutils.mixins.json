@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"package": "spctreutils.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"core.ClientPacketListenerMixin",
+		"core.PlayerListMixin",
+		"feature.BlockItemMixin",
+		"feature.BlockStateBaseMixin",
+		"feature.PlayerMixin",
+		"accessor.Vec3iWaypointInvoker",
+		"accessor.ChunkWaypointInvoker",
+		"accessor.AzimuthWaypointInvoker"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

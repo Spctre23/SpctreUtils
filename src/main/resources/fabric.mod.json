@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "spctreutils",
+	"version": "${version}",
+	"name": "SpctreUtils",
+	"description": "Adds various QOL stuff that I find useful.",
+	"authors": [
+		"Spctre"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/spctreutils/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"spctreutils.SpctreUtils"
+		],
+		"modmenu": [
+			"spctreutils.config.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"spctreutils.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.6",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
