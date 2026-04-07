@@ -32,8 +32,11 @@ public class Keybind
 
     public void onReleased(Runnable releasedAction)
     {
-        boolean isDown = key.isDown();
-        if (wasDown && !isDown) releasedAction.run();
-        wasDown = isDown;
+        ClientTickEvents.END_CLIENT_TICK.register(mc ->
+        {
+            boolean isDown = key.isDown();
+            if (wasDown && !isDown) releasedAction.run();
+            wasDown = isDown;
+        });
     }
 }

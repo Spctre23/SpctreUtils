@@ -7,18 +7,18 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import spctreutils.SpctreUtils;
-import spctreutils.config.ModConfig;
+import spctreutils.config.ConfigManager;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin
 {
-	@Shadow public abstract Abilities getAbilities();
+    @Shadow
+    public abstract Abilities getAbilities();
 
-	@Inject(at = @At("HEAD"), method = "tick", cancellable = true)
-	private void tick(CallbackInfo ci)
-	{
-		if (SpctreUtils.config == null) return;
-		this.getAbilities().setFlyingSpeed(SpctreUtils.config.flyingSpeed);
-	}
+    @Inject(at = @At("HEAD"), method = "tick", cancellable = true)
+    private void tick(CallbackInfo ci)
+    {
+        if (ConfigManager.config == null) return;
+        this.getAbilities().setFlyingSpeed(ConfigManager.config.flyingSpeed);
+    }
 }

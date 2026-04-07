@@ -1,4 +1,4 @@
-package spctreutils.utils;
+package spctreutils.util;
 
 public class Delay
 {
@@ -6,7 +6,7 @@ public class Delay
 
     public void set(double seconds)
     {
-        endTime = System.currentTimeMillis() + (long)(seconds * 1000);
+        endTime = System.currentTimeMillis() + (long) (seconds * 1000);
     }
 
     public boolean isOver()

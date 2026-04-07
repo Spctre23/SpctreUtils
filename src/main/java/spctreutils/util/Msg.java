@@ -1,4 +1,4 @@
-package spctreutils.utils;
+package spctreutils.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -15,10 +15,10 @@ public class Msg
     {
         if (Minecraft.getInstance() == null) return;
         Minecraft.getInstance().gui.getChat()
-                .addMessage(Component.literal("[SpctreUtils]: ")
+            .addMessage(Component.literal("[SpctreUtils]: ")
                 .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FFFF)))
                 .append(Component.literal(msg)
-                .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.toHex(color))))));
+                    .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color))))));
     }
 
     public static void sendChat(String msg)
@@ -33,9 +33,13 @@ public class Msg
 
         for (Object msg : msgs)
         {
-            try {
+            try
+            {
                 sb.append("\n• " + msg.toString());
-            } catch (Exception e) { }
+            }
+            catch (Exception e)
+            {
+            }
         }
         sendChat(sb.toString(), color);
     }
@@ -45,9 +49,15 @@ public class Msg
         sendChat(msgs, prefixMsg, Color.WHITE);
     }
 
-    public static void sendHud(String msg)
+    public static void sendHud(String msg, Color color)
     {
         if (SpctreUtils.localPlayer == null) return;
-        SpctreUtils.localPlayer.displayClientMessage(Component.literal(msg), true);
+        SpctreUtils.localPlayer.displayClientMessage(Component.literal(msg)
+            .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color)))), true);
+    }
+
+    public static void sendHud(String msg)
+    {
+        sendHud(msg, Color.WHITE);
     }
 }

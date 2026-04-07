@@ -1,14 +1,15 @@
 package spctreutils.feature.impl;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.phys.Vec3;
+import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
 import spctreutils.mixin.accessor.AzimuthWaypointInvoker;
 import spctreutils.mixin.accessor.ChunkWaypointInvoker;
 import spctreutils.mixin.accessor.Vec3iWaypointInvoker;
-import spctreutils.utils.Msg;
+import spctreutils.util.Msg;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,12 +17,19 @@ import java.util.UUID;
 
 public class PlayerTracker extends Feature
 {
-    public PlayerTracker() {
-        super("Player Tracker", "Prints information about players such as their position and distance.", false, false);
+    public PlayerTracker()
+    {
+        super("Player Tracker",
+            "Prints information about players such as their position and distance.",
+            false,
+            InputConstants.UNKNOWN.getValue(),
+            KEY_BEHAVIOR.TRIGGER,
+            () -> ConfigManager.config.playerTracker,
+            value -> ConfigManager.config.playerTracker = value);
     }
 
     @Override
-    public void onEnable()
+    public void onKeyPressed()
     {
         mc.player.connection.getWaypointManager().forEachWaypoint(mc.player, waypoint ->
         {
@@ -41,11 +49,12 @@ public class PlayerTracker extends Feature
             if (waypoint instanceof Vec3iWaypointInvoker vec3iWaypoint)
             {
                 Vec3 pos = vec3iWaypoint.invokePosition(mc.level);
-                sb.append("• Pos: " + (pos + " (exact)"));
+                sb.append("• Pos: " + Math.round(pos.x) + " " + Math.round(pos.y) + " " + Math.round(pos.z) + " (exact)");
             }
             else if (waypoint instanceof ChunkWaypointInvoker chunkWaypoint)
             {
-                sb.append("• Pos: " + chunkWaypoint.invokePosition(mc.player.getY()) + " (chunk)");
+                Vec3 pos = chunkWaypoint.invokePosition(mc.player.getY());
+                sb.append("• Pos: " + Math.round(pos.x) + " " + Math.round(pos.y) + " " + Math.round(pos.z) + " (chunk)");
             }
             else if (waypoint instanceof AzimuthWaypointInvoker azimuthWaypoint)
             {

@@ -1,24 +1,37 @@
 package spctreutils.feature.impl;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.levelgen.Column;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
+import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
-import spctreutils.utils.Delay;
-import spctreutils.utils.Msg;
-import spctreutils.utils.RenderHelper;
+import spctreutils.util.Delay;
+import spctreutils.util.Msg;
+import spctreutils.util.RaycastHelper;
+import spctreutils.util.RenderHelper;
+
+import java.awt.*;
 
 public class CopyPos extends Feature
 {
     private BlockPos copyPos = null;
     private final Delay unrenderDelay = new Delay();
 
-    public CopyPos() {
-        super("Copy Coords of Aimed Block", "Copies the coordinates of the block you are looking at to your clipboard.", false, false);
+    public CopyPos()
+    {
+        super("Copy Coords of Aimed Block",
+            "Copies the coordinates of the block you are looking at to clipboard.",
+            false,
+            InputConstants.UNKNOWN.getValue(),
+            KEY_BEHAVIOR.TRIGGER,
+            () -> ConfigManager.config.copyPos,
+            value -> ConfigManager.config.copyPos = value);
 
         WorldRenderEvents.AFTER_ENTITIES.register(context ->
         {
@@ -28,32 +41,16 @@ public class CopyPos extends Feature
     }
 
     @Override
-    public void onEnable()
+    public void onKeyPressed()
     {
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
-        Vec3 lookAngle = camera.getEntity().getLookAngle();
-        double distance = 100;
-        Vec3 raycastEnd = cameraPos.add(lookAngle.scale(distance));
+        BlockPos blockPos = RaycastHelper.getAimedBlock();
+        if (blockPos == null) return;
 
-        BlockHitResult hitResult = mc.level.clip(new ClipContext(
-                cameraPos,
-                raycastEnd,
-                ClipContext.Block.OUTLINE,
-                ClipContext.Fluid.NONE,
-                camera.getEntity()
-        ));
-
-        if (hitResult.getType() != BlockHitResult.Type.MISS)
-        {
-            copyPos = hitResult.getBlockPos();
-            String posString = copyPos.getX() + " " + copyPos.getY() + " " + copyPos.getZ();
-            GLFW.glfwSetClipboardString(mc.getWindow().getWindow(), posString);
-            Msg.sendHud("Copied position: " + posString);
-            unrenderDelay.set(0.5);
-        }
-
-        enabled = false;
+        copyPos = blockPos;
+        String posString = copyPos.getX() + " " + copyPos.getY() + " " + copyPos.getZ();
+        GLFW.glfwSetClipboardString(mc.getWindow().getWindow(), posString);
+        Msg.sendHud("Copied position: " + posString, Color.YELLOW);
+        unrenderDelay.set(0.5);
     }
 
     @Override

@@ -1,0 +1,11 @@
+{
+  "text.autoconfig.spctreutils.option.noClip": "NoClip",
+  "text.autoconfig.spctreutils.option.playerTracker": "Player Tracker",
+  "text.autoconfig.spctreutils.option.copyPos": "Copy Aimed Block Position",
+  "text.autoconfig.spctreutils.option.playerTracker": "Force Place",
+  "text.autoconfig.spctreutils.option.invulnerable": "Invulnerable",
+  "text.autoconfig.spctreutils.option.entityOwner": "Entity Owner",
+  "text.autoconfig.spctreutils.option.flyingSpeed": "Flying Speed",
+  "text.autoconfig.spctreutils.hud": "HUD",
+  "text.autoconfig.spctreutils.hud.durability": "Held Item Durability"
+}
