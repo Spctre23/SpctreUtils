@@ -19,10 +19,12 @@ public class Durability extends HudElement
         ItemStack held = mc.player.getMainHandItem();
         if (held.isEmpty() || !held.isDamageableItem())
         {
-            text = "";
+            removeContent();
             return;
         }
-        int durability = held.getMaxDamage() - held.getDamageValue();
-        text = "Durability: " + durability + " / " + held.getMaxDamage();
+        int maxDamage = held.getMaxDamage();
+        int durability = maxDamage - held.getDamageValue();
+        String text = durability + " / " + maxDamage;
+        setContent(text, Color.lightGray);
     }
 }

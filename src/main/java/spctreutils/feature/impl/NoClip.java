@@ -15,7 +15,7 @@ public class NoClip extends Feature
     }
 
     @Override
-    public void onDisable()
+    public void onDisabled()
     {
         if (SpctreUtils.localPlayer == null) return;
         SpctreUtils.localPlayer.getAbilities().flying = false;

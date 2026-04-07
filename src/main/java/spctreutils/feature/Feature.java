@@ -12,12 +12,12 @@ import java.util.function.Supplier;
 
 public abstract class Feature
 {
-    public final String name;
-    public final String description;
     protected final Minecraft mc;
-    protected final KEY_BEHAVIOR keyBehavior;
-    protected boolean enabled;
+    private boolean enabled;
+    private final String name;
+    private final String description;
     private final Keybind keybind;
+    private final KEY_BEHAVIOR keyBehavior;
     private final boolean chatFeedback;
     private final Consumer<Boolean> configSetter;
 
@@ -27,7 +27,7 @@ public abstract class Feature
         TRIGGER
     }
 
-    public Feature(String name, String description, boolean chatFeedback, int keyCode, KEY_BEHAVIOR keyBehavior,
+    protected Feature(String name, String description, boolean chatFeedback, int keyCode, KEY_BEHAVIOR keyBehavior,
                    Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this.name = name;
@@ -42,60 +42,66 @@ public abstract class Feature
         initialize();
     }
 
-    public Feature(String name, String description, boolean chatFeedback, int keyCode,
+    protected Feature(String name, String description, boolean chatFeedback, int keyCode,
                    Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this(name, description, chatFeedback, keyCode, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
     }
 
-    public Feature(String name, String description, boolean chatFeedback,
+    protected Feature(String name, String description, boolean chatFeedback,
                    Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this(name, description, chatFeedback, InputConstants.UNKNOWN.getValue(), configGetter, configSetter);
     }
 
-    public Feature(String name, String description,
+    protected Feature(String name, String description,
                    Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
 {
         this(name, description, true, configGetter, configSetter);
     }
 
-    public Feature(String name, Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this(name, "", configGetter, configSetter);
     }
 
-    public void onEnable() {}
+    protected void onEnabled() {}
 
-    public void onDisable() {}
+    protected void onDisabled() {}
 
-    public void onKeyPressed() {}
+    protected void onKeyPressed() {}
 
-    public void onKeyReleased() {}
+    protected void onKeyReleased() {}
 
-    public void onTick() {}
+    protected void onTick() {}
 
-    public void toggle()
+    protected void toggle()
     {
-        enabled = !enabled;
-        setState();
-
-        configSetter.accept(enabled);
-        ConfigManager.save();
+        setState(!enabled);
     }
 
-    private void setState()
+    protected void setState(boolean state)
     {
-        if (enabled) onEnable();
-        else onDisable();
-        if (chatFeedback) sendToggleNotification();
+        enabled = state;
+        configSetter.accept(enabled);
+        ConfigManager.save();
+
+        onStateChanged();
     }
 
     public void syncFromConfig(boolean newValue)
     {
         if (newValue == enabled) return;
         enabled = newValue;
-        setState();
+
+        onStateChanged();
+    }
+
+    private void onStateChanged()
+    {
+        if (enabled) onEnabled();
+        else onDisabled();
+        if (chatFeedback) sendToggleNotification();
     }
 
     private void initialize()
@@ -104,6 +110,7 @@ public abstract class Feature
         {
             if (enabled && client.player != null) onTick();
         });
+
         registerKeybind();
     }
 

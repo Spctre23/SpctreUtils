@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
@@ -45,16 +46,17 @@ public class HudManager
 
             for (HudElement element : elements)
             {
-                if (!element.enabled) continue;
+                Component content = element.getContent();
+                if (!element.isEnabled() || content == null) continue;
 
-                int textWidth = mc.font.width(element.text);
+                int textWidth = mc.font.width(content);
 
                 guiGraphics.drawString(
                     mc.font,
-                    element.text,
+                    content,
                     width - textWidth,
                     offset -= mc.font.lineHeight,
-                    element.color
+                    element.getPrefixColor()
                 );
             }
         });

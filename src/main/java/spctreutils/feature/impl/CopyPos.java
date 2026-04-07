@@ -54,7 +54,7 @@ public class CopyPos extends Feature
     }
 
     @Override
-    public void onDisable()
+    public void onDisabled()
     {
         copyPos = null;
     }

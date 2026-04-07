@@ -12,7 +12,6 @@ public class ModConfig implements ConfigData
     public boolean copyPos = false;
     public boolean forcePlace = false;
     public boolean invulnerable = false;
-    public boolean entityOwner = false;
     public float flyingSpeed = 0.05F;
 
     @ConfigEntry.Category("hud")
@@ -20,4 +19,7 @@ public class ModConfig implements ConfigData
 
     @ConfigEntry.Category("hud")
     public boolean durability = false;
+
+    @ConfigEntry.Category("hud")
+    public boolean entityOwner = false;
 }

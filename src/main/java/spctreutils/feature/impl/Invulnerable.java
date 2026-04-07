@@ -11,15 +11,15 @@ public class Invulnerable extends Feature
     }
 
     @Override
-    public void onEnable()
+    protected void onEnabled()
     {
-        mc.player.setInvulnerable(enabled);
+        mc.player.setInvulnerable(true);
     }
 
     @Override
-    public void onDisable()
+    public void onDisabled()
     {
         if (mc.player.isSpectator() || mc.player.isCreative()) return;
-        mc.player.setInvulnerable(enabled);
+        mc.player.setInvulnerable(false);
     }
 }
