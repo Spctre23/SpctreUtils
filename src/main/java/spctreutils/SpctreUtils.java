@@ -10,7 +10,9 @@ import spctreutils.config.ConfigManager;
 import spctreutils.feature.FeatureManager;
 import spctreutils.hud.HudManager;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class SpctreUtils implements ClientModInitializer
 {

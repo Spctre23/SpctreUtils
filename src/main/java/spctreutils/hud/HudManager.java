@@ -10,6 +10,7 @@ import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.hud.impl.Durability;
 import spctreutils.hud.impl.EntityOwner;
+import spctreutils.hud.impl.GoatVariant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,10 @@ public class HudManager
     {
         elements.add(new Durability());
         elements.add(new EntityOwner());
+        elements.add(new GoatVariant());
     }
 
-    public void initializeHud()
+    private void initializeHud()
     {
         Minecraft mc = Minecraft.getInstance();
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
@@ -60,15 +62,5 @@ public class HudManager
                 );
             }
         });
-    }
-
-    public <T extends HudElement> T get(Class<T> type)
-    {
-        for (HudElement element : elements)
-        {
-            if (type.isInstance(element))
-                return type.cast(element);
-        }
-        return null;
     }
 }

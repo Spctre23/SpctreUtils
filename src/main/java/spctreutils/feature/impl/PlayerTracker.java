@@ -24,7 +24,7 @@ public class PlayerTracker extends Feature
             false,
             InputConstants.UNKNOWN.getValue(),
             KEY_BEHAVIOR.TRIGGER,
-            () -> ConfigManager.config.playerTracker,
+            config -> config.playerTracker,
             value -> ConfigManager.config.playerTracker = value);
     }
 

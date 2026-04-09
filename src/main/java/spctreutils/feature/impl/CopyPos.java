@@ -2,12 +2,7 @@ package spctreutils.feature.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.levelgen.Column;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
@@ -30,7 +25,7 @@ public class CopyPos extends Feature
             false,
             InputConstants.UNKNOWN.getValue(),
             KEY_BEHAVIOR.TRIGGER,
-            () -> ConfigManager.config.copyPos,
+            config -> config.copyPos,
             value -> ConfigManager.config.copyPos = value);
 
         WorldRenderEvents.AFTER_ENTITIES.register(context ->

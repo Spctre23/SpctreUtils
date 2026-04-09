@@ -1,7 +1,6 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.item.ItemStack;
-import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 import java.awt.*;
@@ -10,7 +9,7 @@ public class Durability extends HudElement
 {
     public Durability()
     {
-        super("Durability", Color.WHITE, () -> ConfigManager.config.durability);
+        super("Durability", Color.WHITE, config -> config.durability);
     }
 
     @Override

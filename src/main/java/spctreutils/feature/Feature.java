@@ -1,14 +1,19 @@
 package spctreutils.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionResult;
+import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
+import spctreutils.config.ModConfig;
 import spctreutils.key.Keybind;
 import spctreutils.util.Msg;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public abstract class Feature
 {
@@ -19,6 +24,7 @@ public abstract class Feature
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
     private final boolean chatFeedback;
+    private final Function<ModConfig, Boolean> configGetter;
     private final Consumer<Boolean> configSetter;
 
     protected enum KEY_BEHAVIOR
@@ -28,7 +34,7 @@ public abstract class Feature
     }
 
     protected Feature(String name, String description, boolean chatFeedback, int keyCode, KEY_BEHAVIOR keyBehavior,
-                   Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
+                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this.name = name;
         this.description = description;
@@ -36,31 +42,32 @@ public abstract class Feature
         this.keybind = new Keybind(name, keyCode);
         this.mc = Minecraft.getInstance();
         this.keyBehavior = keyBehavior;
+        this.configGetter = configGetter;
         this.configSetter = configSetter;
-        this.enabled = configGetter.get();
+        this.enabled = configGetter.apply(ConfigManager.config);
 
         initialize();
     }
 
     protected Feature(String name, String description, boolean chatFeedback, int keyCode,
-                   Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
+                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this(name, description, chatFeedback, keyCode, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
     }
 
     protected Feature(String name, String description, boolean chatFeedback,
-                   Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
+                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this(name, description, chatFeedback, InputConstants.UNKNOWN.getValue(), configGetter, configSetter);
     }
 
     protected Feature(String name, String description,
-                   Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
+                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
 {
         this(name, description, true, configGetter, configSetter);
     }
 
-    protected Feature(String name, Supplier<Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this(name, "", configGetter, configSetter);
     }
@@ -89,11 +96,22 @@ public abstract class Feature
         onStateChanged();
     }
 
-    public void syncFromConfig(boolean newValue)
+    private void initialize()
     {
-        if (newValue == enabled) return;
-        enabled = newValue;
+        ClientTickEvents.START_CLIENT_TICK.register(client ->
+        {
+            syncFromConfig();
+            if (enabled && client.player != null) onTick();
+        });
 
+        registerKeybind();
+    }
+
+    private void syncFromConfig()
+    {
+        boolean configValue = configGetter.apply(ConfigManager.config);
+        if (configValue == enabled) return;
+        enabled = configValue;
         onStateChanged();
     }
 
@@ -102,16 +120,6 @@ public abstract class Feature
         if (enabled) onEnabled();
         else onDisabled();
         if (chatFeedback) sendToggleNotification();
-    }
-
-    private void initialize()
-    {
-        ClientTickEvents.START_CLIENT_TICK.register(client ->
-        {
-            if (enabled && client.player != null) onTick();
-        });
-
-        registerKeybind();
     }
 
     private void registerKeybind()

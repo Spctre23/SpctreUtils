@@ -22,4 +22,7 @@ public class ModConfig implements ConfigData
 
     @ConfigEntry.Category("hud")
     public boolean entityOwner = false;
+
+    @ConfigEntry.Category("hud")
+    public boolean goatVariant = false;
 }
