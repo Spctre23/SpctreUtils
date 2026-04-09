@@ -11,6 +11,8 @@ import java.util.List;
 
 public class Msg
 {
+
+
     public static void sendChat(String msg, Color color)
     {
         if (Minecraft.getInstance() == null) return;
@@ -26,7 +28,20 @@ public class Msg
         sendChat(msg, Color.WHITE);
     }
 
-    public static void sendChat(List<Object> msgs, String prefixMsg, Color color)
+    public static void sendChat(Color color, String... msgs)
+    {
+        for (String msg : msgs)
+        {
+            sendChat(msg + " ", color);
+        }
+    }
+
+    public static void sendChat(String... msgs)
+    {
+        sendChat(Color.WHITE, msgs);
+    }
+
+    public static <T extends List> void sendChat(T msgs, String prefixMsg, Color color)
     {
         StringBuilder sb = new StringBuilder();
         sb.append(prefixMsg);
@@ -44,7 +59,7 @@ public class Msg
         sendChat(sb.toString(), color);
     }
 
-    public static void sendChat(List<Object> msgs, String prefixMsg)
+    public static <T extends List> void sendChat(T msgs, String prefixMsg)
     {
         sendChat(msgs, prefixMsg, Color.WHITE);
     }

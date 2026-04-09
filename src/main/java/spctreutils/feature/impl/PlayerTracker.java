@@ -21,8 +21,6 @@ public class PlayerTracker extends Feature
     {
         super("Player Tracker",
             "Prints information about players such as their position and distance.",
-            false,
-            InputConstants.UNKNOWN.getValue(),
             KEY_BEHAVIOR.TRIGGER,
             config -> config.playerTracker,
             value -> ConfigManager.config.playerTracker = value);

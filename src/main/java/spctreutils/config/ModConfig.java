@@ -12,6 +12,7 @@ public class ModConfig implements ConfigData
     public boolean copyPos = false;
     public boolean forcePlace = false;
     public boolean invulnerable = false;
+    public boolean getEntitiesInBlock = false;
     public float flyingSpeed = 0.05F;
 
     @ConfigEntry.Category("hud")

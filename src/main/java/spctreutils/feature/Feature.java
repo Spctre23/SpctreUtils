@@ -23,7 +23,6 @@ public abstract class Feature
     private final String description;
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
-    private final boolean chatFeedback;
     private final Function<ModConfig, Boolean> configGetter;
     private final Consumer<Boolean> configSetter;
 
@@ -33,38 +32,31 @@ public abstract class Feature
         TRIGGER
     }
 
-    protected Feature(String name, String description, boolean chatFeedback, int keyCode, KEY_BEHAVIOR keyBehavior,
+    protected Feature(String name, String description, int keyCode, KEY_BEHAVIOR keyBehavior,
                       Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this.name = name;
         this.description = description;
-        this.chatFeedback = chatFeedback;
         this.keybind = new Keybind(name, keyCode);
-        this.mc = Minecraft.getInstance();
         this.keyBehavior = keyBehavior;
         this.configGetter = configGetter;
         this.configSetter = configSetter;
         this.enabled = configGetter.apply(ConfigManager.config);
+        this.mc = Minecraft.getInstance();
 
         initialize();
     }
 
-    protected Feature(String name, String description, boolean chatFeedback, int keyCode,
+    protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior,
                       Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
-        this(name, description, chatFeedback, keyCode, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
-    }
-
-    protected Feature(String name, String description, boolean chatFeedback,
-                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
-    {
-        this(name, description, chatFeedback, InputConstants.UNKNOWN.getValue(), configGetter, configSetter);
+        this(name, description, InputConstants.UNKNOWN.getValue(), keyBehavior, configGetter, configSetter);
     }
 
     protected Feature(String name, String description,
                       Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
-{
-        this(name, description, true, configGetter, configSetter);
+    {
+        this(name, description, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
     }
 
     protected Feature(String name, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
@@ -119,7 +111,7 @@ public abstract class Feature
     {
         if (enabled) onEnabled();
         else onDisabled();
-        if (chatFeedback) sendToggleNotification();
+        if (keyBehavior == KEY_BEHAVIOR.TOGGLE) sendToggleNotification();
     }
 
     private void registerKeybind()

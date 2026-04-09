@@ -35,18 +35,14 @@ public abstract class HudElement
         this(prefix, Color.WHITE, configGetter);
     }
 
-    protected void onEnabled()
-    {
-    }
+    protected void onEnabled() {}
 
     protected void onDisabled()
     {
         removeContent();
     }
 
-    protected void onTick()
-    {
-    }
+    protected void onTick() {}
 
     public boolean isEnabled()
     {

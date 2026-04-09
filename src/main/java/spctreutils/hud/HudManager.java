@@ -17,7 +17,7 @@ import java.util.List;
 
 public class HudManager
 {
-    public List<HudElement> elements = new ArrayList<>();
+    private List<HudElement> elements = new ArrayList<>();
 
     public HudManager()
     {
@@ -25,7 +25,7 @@ public class HudManager
         initializeHud();
     }
 
-    public void registerElements()
+    private void registerElements()
     {
         elements.add(new Durability());
         elements.add(new EntityOwner());
