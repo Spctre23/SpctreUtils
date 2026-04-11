@@ -9,7 +9,7 @@ public class EntityOwner extends HudElement
 {
     public EntityOwner()
     {
-        super("Owner", Color.WHITE, config -> config.entityOwner);
+        super("Owner", Color.WHITE, config -> config.hud.entityOwner);
     }
 
     @Override

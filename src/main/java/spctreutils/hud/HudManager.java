@@ -38,7 +38,7 @@ public class HudManager
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
         HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, resourceLocation, (guiGraphics, tickDelta) ->
         {
-            if (!ConfigManager.config.hud || mc.player == null || mc.options.hideGui) return;
+            if (!ConfigManager.config.hud.hud || mc.player == null || mc.options.hideGui) return;
 
             Window window = mc.getWindow();
             int width = window.getGuiScaledWidth();

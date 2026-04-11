@@ -9,8 +9,8 @@ public class Invulnerable extends Feature
     {
         super("Invulnerable",
             "Makes you invincible. Must be in singleplayer.",
-            config -> config.invulnerable,
-            value -> ConfigManager.config.invulnerable = value);
+            config -> config.feature.invulnerable,
+            value -> ConfigManager.config.feature.invulnerable = value);
     }
 
     @Override

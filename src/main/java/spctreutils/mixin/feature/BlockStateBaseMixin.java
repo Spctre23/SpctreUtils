@@ -22,7 +22,7 @@ public class BlockStateBaseMixin
     private void onGetCollisionShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext, CallbackInfoReturnable<VoxelShape> cir)
     {
         if (ConfigManager.config == null ||
-            !ConfigManager.config.noClip ||
+            !ConfigManager.config.feature.noClip ||
             SpctreUtils.serverPlayer == null ||
             !(collisionContext instanceof EntityCollisionContext entityCollisionContext) ||
             !(entityCollisionContext.getEntity() instanceof Player player) ||

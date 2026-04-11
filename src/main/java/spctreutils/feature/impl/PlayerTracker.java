@@ -22,8 +22,8 @@ public class PlayerTracker extends Feature
         super("Player Tracker",
             "Prints information about players such as their position and distance.",
             KEY_BEHAVIOR.TRIGGER,
-            config -> config.playerTracker,
-            value -> ConfigManager.config.playerTracker = value);
+            config -> config.feature.playerTracker,
+            value -> ConfigManager.config.feature.playerTracker = value);
     }
 
     @Override

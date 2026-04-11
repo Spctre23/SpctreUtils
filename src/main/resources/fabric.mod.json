@@ -3,7 +3,7 @@
 	"id": "spctreutils",
 	"version": "${version}",
 	"name": "SpctreUtils",
-	"description": "Adds various QOL features that I find useful.",
+	"description": "Adds random QOL features I find useful.",
 	"authors": [
 		"Spctre"
 	],

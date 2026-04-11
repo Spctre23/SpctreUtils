@@ -9,7 +9,7 @@ public class Durability extends HudElement
 {
     public Durability()
     {
-        super("Durability", Color.WHITE, config -> config.durability);
+        super("Durability", Color.WHITE, config -> config.hud.durability);
     }
 
     @Override

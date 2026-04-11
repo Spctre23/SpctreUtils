@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
+import org.jetbrains.annotations.Nullable;
 
 public class RaycastHelper
 {
@@ -20,6 +21,7 @@ public class RaycastHelper
         return new Ray(start, look, end);
     }
 
+    @Nullable
     public static Entity getAimedEntity()
     {
         Minecraft mc = Minecraft.getInstance();
@@ -35,7 +37,8 @@ public class RaycastHelper
         return hit == null || hit.getType() == HitResult.Type.MISS || hit.getEntity() == null ? null : hit.getEntity();
     }
 
-    public static BlockPos getAimedBlock()
+    @Nullable
+    public static BlockPos getAimedBlock(boolean adjacent)
     {
         Minecraft mc = Minecraft.getInstance();
         Ray ray = getRay();
@@ -48,6 +51,16 @@ public class RaycastHelper
             mc.gameRenderer.getMainCamera().getEntity()
         ));
 
-        return hit.getType() == HitResult.Type.MISS ? null : hit.getBlockPos();
+        if (hit.getType() == HitResult.Type.MISS) return null;
+
+        BlockPos pos = hit.getBlockPos();
+        if (!adjacent) return pos;
+        return pos.relative(hit.getDirection());
+    }
+
+    @Nullable
+    public static BlockPos getAimedBlock()
+    {
+        return getAimedBlock(false);
     }
 }

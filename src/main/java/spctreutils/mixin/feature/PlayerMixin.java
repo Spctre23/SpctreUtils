@@ -19,6 +19,6 @@ public abstract class PlayerMixin
     private void tick(CallbackInfo ci)
     {
         if (ConfigManager.config == null) return;
-        this.getAbilities().setFlyingSpeed(ConfigManager.config.flyingSpeed);
+        this.getAbilities().setFlyingSpeed(ConfigManager.config.feature.flyingSpeed);
     }
 }

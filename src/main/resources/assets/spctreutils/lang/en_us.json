@@ -7,6 +7,7 @@
   "text.autoconfig.spctreutils.option.copyPos": "Copy Aimed Block Position",
   "text.autoconfig.spctreutils.option.forcePlace": "Force Place",
   "text.autoconfig.spctreutils.option.invulnerable": "Invulnerable",
+  "text.autoconfig.spctreutils.option.getEntityCountAtBlock": "Get Entity Count at Block",
   "text.autoconfig.spctreutils.option.flyingSpeed": "Flying Speed",
   "text.autoconfig.spctreutils.option.hud": "Render HUD",
   "text.autoconfig.spctreutils.option.durability": "Held Item Durability",

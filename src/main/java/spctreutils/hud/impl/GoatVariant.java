@@ -9,7 +9,7 @@ public class GoatVariant extends HudElement
 {
     public GoatVariant()
     {
-        super("Goat Variant", Color.WHITE, config -> config.goatVariant);
+        super("Goat Variant", Color.WHITE, config -> config.hud.goatVariant);
     }
 
     @Override

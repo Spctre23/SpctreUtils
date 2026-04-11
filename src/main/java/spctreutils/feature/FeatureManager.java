@@ -16,6 +16,6 @@ public class FeatureManager
         features.add(new CopyPos());
         features.add(new ForcePlace());
         features.add(new Invulnerable());
-        features.add(new GetEntitiesInBlock());
+        features.add(new GetEntityCountAtBlock());
     }
 }

@@ -23,8 +23,8 @@ public class CopyPos extends Feature
         super("Copy Coords of Aimed Block",
             "Copies the coordinates of the block you are looking at to clipboard.",
             KEY_BEHAVIOR.TRIGGER,
-            config -> config.copyPos,
-            value -> ConfigManager.config.copyPos = value);
+            config -> config.feature.copyPos,
+            value -> ConfigManager.config.feature.copyPos = value);
 
         WorldRenderEvents.AFTER_ENTITIES.register(context ->
         {
