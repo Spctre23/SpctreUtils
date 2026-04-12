@@ -1,6 +1,5 @@
 package spctreutils.feature.impl;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.phys.Vec3;
@@ -20,7 +19,6 @@ public class PlayerTracker extends Feature
     public PlayerTracker()
     {
         super("Player Tracker",
-            "Prints information about players such as their position and distance.",
             KEY_BEHAVIOR.TRIGGER,
             config -> config.feature.playerTracker,
             value -> ConfigManager.config.feature.playerTracker = value);

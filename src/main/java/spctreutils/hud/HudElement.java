@@ -77,19 +77,19 @@ public abstract class HudElement
         return prefixColor;
     }
 
-    public Component getContent()
+    public Component setText()
     {
         return content;
     }
 
-    protected void setContent(String text, Color textColor)
+    protected void setText(String text, Color textColor)
     {
         content = Component.literal(prefix).withColor(prefixColor).append(Component.literal(text).withColor(ColorHelper.argbToHex(textColor)));
     }
 
-    protected void setContent(String text)
+    protected void setText(String text)
     {
-        setContent(text, Color.WHITE);
+        setText(text, Color.lightGray);
     }
 
     protected void removeContent()

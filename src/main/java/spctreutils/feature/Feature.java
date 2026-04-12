@@ -1,12 +1,8 @@
 package spctreutils.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionResult;
-import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
 import spctreutils.key.Keybind;
@@ -20,7 +16,6 @@ public abstract class Feature
     protected final Minecraft mc;
     private boolean enabled;
     private final String name;
-    private final String description;
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
     private final Function<ModConfig, Boolean> configGetter;
@@ -32,11 +27,9 @@ public abstract class Feature
         TRIGGER
     }
 
-    protected Feature(String name, String description, int keyCode, KEY_BEHAVIOR keyBehavior,
-                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, int keyCode, KEY_BEHAVIOR keyBehavior, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
         this.name = name;
-        this.description = description;
         this.keybind = new Keybind(name, keyCode);
         this.keyBehavior = keyBehavior;
         this.configGetter = configGetter;
@@ -47,32 +40,35 @@ public abstract class Feature
         initialize();
     }
 
-    protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior,
-                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, KEY_BEHAVIOR keyBehavior, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
-        this(name, description, InputConstants.UNKNOWN.getValue(), keyBehavior, configGetter, configSetter);
-    }
-
-    protected Feature(String name, String description,
-                      Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
-    {
-        this(name, description, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
+        this(name, InputConstants.UNKNOWN.getValue(), keyBehavior, configGetter, configSetter);
     }
 
     protected Feature(String name, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
     {
-        this(name, "", configGetter, configSetter);
+        this(name, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
     }
 
-    protected void onEnabled() {}
+    protected void onEnabled()
+    {
+    }
 
-    protected void onDisabled() {}
+    protected void onDisabled()
+    {
+    }
 
-    protected void onKeyPressed() {}
+    protected void onKeyPressed()
+    {
+    }
 
-    protected void onKeyReleased() {}
+    protected void onKeyReleased()
+    {
+    }
 
-    protected void onTick() {}
+    protected void onTick()
+    {
+    }
 
     protected void toggle()
     {

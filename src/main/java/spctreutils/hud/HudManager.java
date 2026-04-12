@@ -6,11 +6,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.horse.Horse;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
-import spctreutils.hud.impl.Durability;
-import spctreutils.hud.impl.EntityOwner;
-import spctreutils.hud.impl.GoatVariant;
+import spctreutils.hud.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +26,13 @@ public class HudManager
 
     private void registerElements()
     {
+        elements.add(new Position());
         elements.add(new Durability());
+        elements.add(new EntityHealth());
         elements.add(new EntityOwner());
         elements.add(new GoatVariant());
+        elements.add(new HorseSpeed());
+        elements.add(new HorseJump());
     }
 
     private void initializeHud()
@@ -48,7 +51,7 @@ public class HudManager
 
             for (HudElement element : elements)
             {
-                Component content = element.getContent();
+                Component content = element.setText();
                 if (!element.isEnabled() || content == null) continue;
 
                 int textWidth = mc.font.width(content);

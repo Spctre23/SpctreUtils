@@ -4,10 +4,15 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
+import java.awt.*;
+
 @Config(name = "spctreutils")
 public class ModConfig implements ConfigData
 {
+    @ConfigEntry.Gui.CollapsibleObject
     public FeatureConfig feature = new FeatureConfig();
+
+    @ConfigEntry.Gui.CollapsibleObject
     public HudConfig hud = new HudConfig();
 
     public class FeatureConfig
@@ -28,7 +33,7 @@ public class ModConfig implements ConfigData
         public boolean invulnerable = false;
 
         @ConfigEntry.Gui.Tooltip
-        public boolean getEntitiesInBlock = false;
+        public boolean getEntityCountAtBlock = false;
 
         @ConfigEntry.Gui.Tooltip
         public float flyingSpeed = 0.05F;
@@ -43,9 +48,24 @@ public class ModConfig implements ConfigData
         public boolean durability = false;
 
         @ConfigEntry.Gui.Tooltip
+        public boolean entityHealth = false;
+
+        @ConfigEntry.Gui.Tooltip
         public boolean entityOwner = false;
 
         @ConfigEntry.Gui.Tooltip
         public boolean goatVariant = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean horseSpeed = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean horseJump = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean position = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean positionScaled = false;
     }
 }

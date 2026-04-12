@@ -9,7 +9,6 @@ public class NoClip extends Feature
     public NoClip()
     {
         super("NoClip",
-            "Allows you to clip through blocks. Must be in singleplayer.",
             config -> config.feature.noClip,
             value -> ConfigManager.config.feature.noClip = value);
     }

@@ -11,12 +11,11 @@ import java.util.List;
 
 public class Msg
 {
-
-
     public static void sendChat(String msg, Color color)
     {
-        if (Minecraft.getInstance() == null) return;
-        Minecraft.getInstance().gui.getChat()
+        Minecraft mc = Minecraft.getInstance();
+        if (mc == null) return;
+        mc.gui.getChat()
             .addMessage(Component.literal("[SpctreUtils]: ")
                 .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FFFF)))
                 .append(Component.literal(msg)
@@ -31,9 +30,7 @@ public class Msg
     public static void sendChat(Color color, String... msgs)
     {
         for (String msg : msgs)
-        {
             sendChat(msg + " ", color);
-        }
     }
 
     public static void sendChat(String... msgs)
@@ -52,9 +49,7 @@ public class Msg
             {
                 sb.append("\n• " + msg.toString());
             }
-            catch (Exception e)
-            {
-            }
+            catch (Exception e) { }
         }
         sendChat(sb.toString(), color);
     }

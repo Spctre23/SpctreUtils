@@ -9,18 +9,18 @@ public class GoatVariant extends HudElement
 {
     public GoatVariant()
     {
-        super("Goat Variant", Color.WHITE, config -> config.hud.goatVariant);
+        super("Goat Variant", config -> config.hud.goatVariant);
     }
 
     @Override
     public void onTick()
     {
-        if (mc.crosshairPickEntity instanceof Goat entity)
+        if (mc.crosshairPickEntity instanceof Goat goat)
         {
-            boolean isScreaming = entity.isScreamingGoat();
+            boolean isScreaming = goat.isScreamingGoat();
             String variant = isScreaming ? "Screaming" : "Regular";
             Color color = isScreaming ? Color.RED : Color.lightGray;
-            setContent(variant, color);
+            setText(variant, color);
             return;
         }
         removeContent();

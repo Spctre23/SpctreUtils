@@ -6,7 +6,7 @@ import net.minecraft.client.KeyMapping;
 
 public class Keybind
 {
-    public KeyMapping key;
+    private KeyMapping key;
     private boolean wasDown = false;
 
     public Keybind(String name, int keyCode)
@@ -19,14 +19,6 @@ public class Keybind
         ClientTickEvents.END_CLIENT_TICK.register(mc ->
         {
             while (key.consumeClick()) pressedAction.run();
-        });
-    }
-
-    public void onHeld(Runnable onHeld)
-    {
-        ClientTickEvents.END_CLIENT_TICK.register(mc ->
-        {
-            if (key.isDown()) onHeld.run();
         });
     }
 

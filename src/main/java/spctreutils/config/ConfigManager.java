@@ -1,8 +1,11 @@
 package spctreutils.config;
 
+import com.google.gson.*;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.world.InteractionResult;
+
+import java.awt.*;
 
 public class ConfigManager
 {

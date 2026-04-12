@@ -8,7 +8,6 @@ public class ForcePlace extends Feature
     public ForcePlace()
     {
         super("Force Place",
-            "Bypass placement restrictions. Must be in singleplayer.",
             config -> config.feature.forcePlace,
             value -> ConfigManager.config.feature.forcePlace = value);
     }
