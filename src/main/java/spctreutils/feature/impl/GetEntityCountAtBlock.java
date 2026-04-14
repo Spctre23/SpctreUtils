@@ -24,9 +24,10 @@ public class GetEntityCountAtBlock extends Feature
     public GetEntityCountAtBlock()
     {
         super("Get Entity Count at Block",
+            "Prints number of entities at the block you are looking at.",
             KEY_BEHAVIOR.TRIGGER,
-            config -> config.feature.getEntityCountAtBlock,
-            value -> ConfigManager.config.feature.getEntityCountAtBlock = value);
+            config -> config.getEntitiesInBlock,
+            value -> ConfigManager.config.getEntitiesInBlock = value);
 
         WorldRenderEvents.AFTER_ENTITIES.register(context ->
         {

@@ -11,8 +11,11 @@ base {
 }
 
 repositories {
-	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
+	maven {
+		name 'Xander Maven'
+		url 'https://maven.isxander.dev/releases'
+	}
 	mavenCentral()
 }
 
@@ -25,8 +28,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	modApi("me.shedaniel.cloth:cloth-config-fabric:19.0.147") {
-		exclude(group: "net.fabricmc.fabric-api")
+	dependencies {
+		modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 	}
 
 	modApi "com.terraformersmc:modmenu:15.0.1"

@@ -15,7 +15,7 @@ public class BlockItemMixin
     @Inject(at = @At("HEAD"), method = "canPlace", cancellable = true)
     private void canPlace(BlockPlaceContext blockPlaceContext, BlockState blockState, CallbackInfoReturnable<Boolean> cir)
     {
-        if (ConfigManager.config == null || !ConfigManager.config.feature.forcePlace) return;
+        if (ConfigManager.config == null || !ConfigManager.config.forcePlace) return;
         cir.setReturnValue(true);
     }
 }

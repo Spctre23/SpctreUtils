@@ -19,9 +19,10 @@ public class PlayerTracker extends Feature
     public PlayerTracker()
     {
         super("Player Tracker",
+            "Prints the estimated position of all players on the server (if possible).",
             KEY_BEHAVIOR.TRIGGER,
-            config -> config.feature.playerTracker,
-            value -> ConfigManager.config.feature.playerTracker = value);
+            config -> config.playerTracker,
+            value -> ConfigManager.config.playerTracker = value);
     }
 
     @Override

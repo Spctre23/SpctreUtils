@@ -1,71 +1,41 @@
 package spctreutils.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 
-@Config(name = "spctreutils")
-public class ModConfig implements ConfigData
+public class ModConfig
 {
-    @ConfigEntry.Gui.CollapsibleObject
-    public FeatureConfig feature = new FeatureConfig();
+    public static final ConfigClassHandler<ModConfig> HANDLER = ConfigClassHandler.createBuilder(ModConfig.class)
+        .id(ResourceLocation.fromNamespaceAndPath("spctreutils", "config"))
+        .serializer(config -> GsonConfigSerializerBuilder.create(config)
+            .setPath(FabricLoader.getInstance().getConfigDir().resolve("spctreutils.json"))
+            .build())
+        .build();
 
-    @ConfigEntry.Gui.CollapsibleObject
-    public HudConfig hud = new HudConfig();
+    // Features
+    @SerialEntry public boolean noClip = false;
+    @SerialEntry public boolean playerTracker = false;
+    @SerialEntry public boolean copyPos = false;
+    @SerialEntry public boolean forcePlace = false;
+    @SerialEntry public boolean invulnerable = false;
+    @SerialEntry public boolean getEntitiesInBlock = false;
+    @SerialEntry public float flyingSpeed = 0.05f;
 
-    public class FeatureConfig
-    {
-        @ConfigEntry.Gui.Tooltip
-        public boolean noClip = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean playerTracker = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean copyPos = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean forcePlace = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean invulnerable = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean getEntityCountAtBlock = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public float flyingSpeed = 0.05F;
-    }
-
-    public class HudConfig
-    {
-        @ConfigEntry.Gui.Tooltip
-        public boolean hud = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean durability = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean entityHealth = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean entityOwner = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean goatVariant = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean horseSpeed = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean horseJump = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean position = false;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean positionScaled = false;
-    }
+    // HUD
+    @SerialEntry public boolean hud = false;
+    @SerialEntry public boolean durability = false;
+    @SerialEntry public boolean entityHealth = false;
+    @SerialEntry public boolean entityOwner = false;
+    @SerialEntry public boolean goatVariant = false;
+    @SerialEntry public boolean horseSpeed = false;
+    @SerialEntry public boolean horseJump = false;
+    @SerialEntry public boolean position = false;
+    @SerialEntry public boolean positionScaled = false;
+    @SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();
+    @SerialEntry public int hudTextColor = Color.WHITE.getRGB();
 }

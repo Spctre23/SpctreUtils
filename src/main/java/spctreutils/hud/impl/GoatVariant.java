@@ -1,6 +1,7 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.entity.animal.goat.Goat;
+import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 import java.awt.*;
@@ -9,7 +10,10 @@ public class GoatVariant extends HudElement
 {
     public GoatVariant()
     {
-        super("Goat Variant", config -> config.hud.goatVariant);
+        super("Goat Variant",
+            "Displays the variant of the goat you are looking at.",
+            config -> config.goatVariant,
+            value -> ConfigManager.config.goatVariant = value);
     }
 
     @Override
@@ -19,10 +23,10 @@ public class GoatVariant extends HudElement
         {
             boolean isScreaming = goat.isScreamingGoat();
             String variant = isScreaming ? "Screaming" : "Regular";
-            Color color = isScreaming ? Color.RED : Color.lightGray;
-            setText(variant, color);
+            int variantColor = isScreaming ? Color.RED.getRGB() : textColor;
+            setText(variant, variantColor);
             return;
         }
-        removeContent();
+        removeText();
     }
 }

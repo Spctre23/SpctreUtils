@@ -1,13 +1,18 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.entity.LivingEntity;
+import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class EntityHealth extends HudElement
 {
     public EntityHealth()
     {
-        super("HP", config -> config.hud.entityHealth);
+        super("Entity Health",
+            "HP",
+            "Displays the health of the entity you are looking at.",
+            config -> config.entityHealth,
+            value -> ConfigManager.config.entityHealth = value);
     }
 
     @Override
@@ -19,6 +24,6 @@ public class EntityHealth extends HudElement
             setText(healthText);
             return;
         }
-        removeContent();
+        removeText();
     }
 }

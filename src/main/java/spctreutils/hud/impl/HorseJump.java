@@ -3,13 +3,17 @@ package spctreutils.hud.impl;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.Horse;
+import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class HorseJump extends HudElement
 {
     public HorseJump()
     {
-        super("Horse Jump", config -> config.hud.horseJump);
+        super("Horse Jump",
+            "Displays the max jump height of the horse you are looking at.",
+            config -> config.horseJump,
+            value -> ConfigManager.config.horseJump = value);
     }
 
     @Override
@@ -21,7 +25,7 @@ public class HorseJump extends HudElement
             setText(jumpHeight);
             return;
         }
-        removeContent();
+        removeText();
     }
 
     // Calculations obtained from MiniHud

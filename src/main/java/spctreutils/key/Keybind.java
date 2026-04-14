@@ -6,7 +6,7 @@ import net.minecraft.client.KeyMapping;
 
 public class Keybind
 {
-    private KeyMapping key;
+    private final KeyMapping key;
     private boolean wasDown = false;
 
     public Keybind(String name, int keyCode)

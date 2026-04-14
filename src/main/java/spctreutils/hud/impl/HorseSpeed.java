@@ -2,6 +2,7 @@ package spctreutils.hud.impl;
 
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.Horse;
+import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class HorseSpeed extends HudElement
@@ -10,7 +11,10 @@ public class HorseSpeed extends HudElement
 
     public HorseSpeed()
     {
-        super("Horse Speed", config -> config.hud.horseSpeed);
+        super("Horse Speed",
+            "Displays the max speed of the horse you are looking at.",
+            config -> config.horseSpeed,
+            value -> ConfigManager.config.horseSpeed = value);
     }
 
     @Override
@@ -22,6 +26,6 @@ public class HorseSpeed extends HudElement
             setText(speed);
             return;
         }
-        removeContent();
+        removeText();
     }
 }

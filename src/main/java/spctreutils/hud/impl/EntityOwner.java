@@ -1,13 +1,19 @@
 package spctreutils.hud.impl;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
+import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class EntityOwner extends HudElement
 {
     public EntityOwner()
     {
-        super("Owner", config -> config.hud.entityOwner);
+        super("Entity Owner",
+            "Owner",
+            "Displays the owner of the entity you are looking at, if tamed.",
+            config -> config.entityOwner,
+            value -> ConfigManager.config.entityOwner = value);
     }
 
     @Override
@@ -15,9 +21,12 @@ public class EntityOwner extends HudElement
     {
         if (mc.crosshairPickEntity instanceof TamableAnimal entity && entity.isTame())
         {
-            setText(entity.getOwner().getName().getString());
-            return;
+            Entity owner = entity.getOwner();
+            if (entity.getOwner() != null)
+            {
+                setText(owner.getName().getString());
+            }
         }
-        removeContent();
+        removeText();
     }
 }

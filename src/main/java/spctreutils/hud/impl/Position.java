@@ -11,7 +11,11 @@ public class Position extends HudElement
 {
     public Position()
     {
-        super("Pos", config -> config.hud.position);
+        super("Position",
+            "Pos",
+            "Displays your coordinates.",
+            config -> config.position,
+            value -> ConfigManager.config.position = value);
     }
 
     @Override
@@ -20,20 +24,20 @@ public class Position extends HudElement
         LocalPlayer player = mc.player;
         if (player == null || mc.level == null)
         {
-            removeContent();
+            removeText();
             return;
         }
 
         Vec3 pos = player.position();
         String posText = String.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z);
         String posScaledText = "";
-        if (ConfigManager.config.hud.positionScaled)
+        if (ConfigManager.config.positionScaled)
         {
             ResourceKey dimension = mc.level.dimension();
             if (dimension != Level.END)
             {
                 Vec3 posScaled = dimension == Level.NETHER ? pos.scale(8) : pos.scale(0.125);
-                posScaledText = String.format(" (%.1f, %.1f, %.1f)", posScaled.x, posScaled.y, posScaled.z);
+                posScaledText = String.format(" [ %.1f, %.1f, %.1f ]", posScaled.x, posScaled.y, posScaled.z);
             }
         }
 
