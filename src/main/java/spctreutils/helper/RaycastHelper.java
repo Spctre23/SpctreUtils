@@ -1,4 +1,4 @@
-package spctreutils.util;
+package spctreutils.helper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

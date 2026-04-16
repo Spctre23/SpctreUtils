@@ -6,10 +6,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import spctreutils.feature.Feature;
-import spctreutils.util.Delay;
-import spctreutils.util.Msg;
-import spctreutils.util.RaycastHelper;
-import spctreutils.util.RenderHelper;
+import spctreutils.helper.Delay;
+import spctreutils.helper.Msg;
+import spctreutils.helper.RaycastHelper;
+import spctreutils.helper.RenderHelper;
 
 import java.util.LinkedHashMap;
 import java.util.List;

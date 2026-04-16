@@ -71,21 +71,22 @@ public abstract class HudElement implements OptionProvider
     @Override public String getName() { return name; }
     @Override public String getDescription() { return description; }
     @Override public boolean getEnabled() { return enabled; }
-    @Override public void setEnabled(boolean value) { setEnabled(value); }
     @Override public List<Setting<?>> getSettings() { return settings; }
+
+    @Override
+    public void setEnabled(boolean value)
+    {
+        enabled = value;
+        ConfigManager.config.hudElementStates.put(getClass().getSimpleName(), value);
+        ConfigManager.save();
+        onStateChanged();
+    }
 
     protected void onEnabled() {}
 
     protected void onDisabled() { removeText(); }
 
     protected void onTick() {}
-
-    public boolean isEnabled() { return enabled; }
-
-    private boolean getConfigValue()
-    {
-        return ConfigManager.config.hudElementStates.getOrDefault(getClass().getSimpleName(), false);
-    }
 
     private void initialize()
     {
@@ -94,6 +95,13 @@ public abstract class HudElement implements OptionProvider
             syncFromConfig();
             if (enabled && client.player != null) onTick();
         });
+    }
+
+    public boolean isEnabled() { return enabled; }
+
+    private boolean getConfigValue()
+    {
+        return ConfigManager.config.hudElementStates.getOrDefault(getClass().getSimpleName(), false);
     }
 
     private void syncFromConfig()

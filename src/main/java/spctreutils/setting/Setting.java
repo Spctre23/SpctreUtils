@@ -18,6 +18,14 @@ public class Setting<T>
         this.type = type;
     }
 
+    public Setting(String name, T defaultValue, Class<T> type)
+    {
+        this.name = name;
+        this.description = "";
+        this.defaultValue = defaultValue;
+        this.type = type;
+    }
+
     public void setKey(String featureName)
     {
         this.key = featureName + "." + name;

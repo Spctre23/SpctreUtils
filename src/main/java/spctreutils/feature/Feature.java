@@ -1,20 +1,14 @@
 package spctreutils.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.OptionProvider;
 import spctreutils.key.Keybind;
 import spctreutils.setting.Setting;
-import spctreutils.util.Msg;
+import spctreutils.helper.Msg;
 
-import java.awt.*;
 import java.util.List;
 
 public abstract class Feature implements OptionProvider
@@ -77,7 +71,7 @@ public abstract class Feature implements OptionProvider
     @Override public String getName() { return name; }
     @Override public String getDescription() { return description; }
     @Override public boolean getEnabled() { return enabled; }
-    @Override public void setEnabled(boolean value) { setEnabled(value); }
+    @Override public void setEnabled(boolean value) { setState(value); }
     @Override public List<Setting<?>> getSettings() { return settings; }
 
     protected void onEnabled() {}
@@ -110,16 +104,6 @@ public abstract class Feature implements OptionProvider
         ConfigManager.config.featureStates.put(getClass().getSimpleName(), value);
     }
 
-    private void initialize()
-    {
-        ClientTickEvents.START_CLIENT_TICK.register(client ->
-        {
-            syncFromConfig();
-            if (enabled && client.player != null) onTick();
-        });
-        registerKeybind();
-    }
-
     private void syncFromConfig()
     {
         boolean configValue = getConfigValue();
@@ -133,6 +117,16 @@ public abstract class Feature implements OptionProvider
         if (enabled) onEnabled();
         else onDisabled();
         if (keyBehavior == KEY_BEHAVIOR.TOGGLE) sendToggleNotification();
+    }
+
+    private void initialize()
+    {
+        ClientTickEvents.START_CLIENT_TICK.register(client ->
+        {
+            syncFromConfig();
+            if (enabled && client.player != null) onTick();
+        });
+        registerKeybind();
     }
 
     private void registerKeybind()

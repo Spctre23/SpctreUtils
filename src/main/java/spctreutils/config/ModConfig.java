@@ -18,12 +18,10 @@ public class ModConfig
             .setPath(FabricLoader.getInstance().getConfigDir().resolve("spctreutils.json"))
             .build())
         .build();
-
-    // Features
+    
     @SerialEntry public Map<String, Boolean> featureStates = new HashMap<>();
     @SerialEntry public float flyingSpeed = 0.05f;
 
-    // HUD
     @SerialEntry public Map<String, Boolean> hudElementStates = new HashMap<>();
     @SerialEntry public boolean hud = false;
     @SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();

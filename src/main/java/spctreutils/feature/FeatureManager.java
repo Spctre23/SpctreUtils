@@ -28,11 +28,20 @@ public class FeatureManager
         features.add(new HighlightRareEntities());
     }
 
+    public List<Option<?>> getOptions()
+    {
+        return features.stream()
+                .filter(feature -> feature.getSettings().isEmpty())
+                .map(Feature::createOption)
+                .collect(Collectors.toList());
+    }
+
     public List<OptionGroup> getGroups()
     {
         return features.stream()
-            .map(Feature::createGroup)
-            .collect(Collectors.toList());
+                .filter(feature -> !feature.getSettings().isEmpty())
+                .map(Feature::createGroup)
+                .collect(Collectors.toList());
     }
 
     public List<Option<?>> getExtraOptions()

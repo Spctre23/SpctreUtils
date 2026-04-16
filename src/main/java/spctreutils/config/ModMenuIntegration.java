@@ -9,6 +9,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import spctreutils.SpctreUtils;
 
+import java.util.Collection;
+
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi
 {
@@ -19,12 +21,13 @@ public class ModMenuIntegration implements ModMenuApi
             .title(Component.literal("SpctreUtils"))
             .category(ConfigCategory.createBuilder()
                 .name(Component.literal("Features"))
-                .groups(SpctreUtils.instance.feature.getGroups())
+                .options(SpctreUtils.instance.feature.getOptions())
                 .options(SpctreUtils.instance.feature.getExtraOptions())
                 .build())
             .category(ConfigCategory.createBuilder()
                 .name(Component.literal("HUD"))
                 .options(SpctreUtils.instance.hud.getExtraOptions())
+                .options(SpctreUtils.instance.hud.getOptions())
                 .groups(SpctreUtils.instance.hud.getGroups())
                 .build())
             .build()

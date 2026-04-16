@@ -7,7 +7,7 @@ import spctreutils.feature.Feature;
 import spctreutils.mixin.accessor.AzimuthWaypointInvoker;
 import spctreutils.mixin.accessor.ChunkWaypointInvoker;
 import spctreutils.mixin.accessor.Vec3iWaypointInvoker;
-import spctreutils.util.Msg;
+import spctreutils.helper.Msg;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

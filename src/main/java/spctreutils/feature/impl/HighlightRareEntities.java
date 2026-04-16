@@ -7,7 +7,7 @@ import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.phys.AABB;
 import spctreutils.feature.Feature;
-import spctreutils.util.RenderHelper;
+import spctreutils.helper.RenderHelper;
 
 public class HighlightRareEntities extends Feature
 {

@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
+import spctreutils.feature.Feature;
 import spctreutils.hud.impl.*;
 
 import java.awt.*;
@@ -73,18 +74,27 @@ public class HudManager
         });
     }
 
+    public List<Option<?>> getOptions()
+    {
+        return elements.stream()
+                .filter(element -> element.getSettings().isEmpty())
+                .map(HudElement::createOption)
+                .collect(Collectors.toList());
+    }
+
     public List<OptionGroup> getGroups()
     {
         return elements.stream()
-            .map(HudElement::createGroup)
-            .collect(Collectors.toList());
+                .filter(element -> !element.getSettings().isEmpty())
+                .map(HudElement::createGroup)
+                .collect(Collectors.toList());
     }
 
     public List<Option<?>> getExtraOptions()
     {
         return List.of(
             Option.<Boolean>createBuilder()
-                .name(Component.literal("HUD Enabled"))
+                .name(Component.literal("Render HUD"))
                 .binding(
                     new ModConfig().hud,
                     () -> ConfigManager.config.hud,
@@ -92,7 +102,7 @@ public class HudManager
                 .controller(TickBoxControllerBuilder::create)
                 .build(),
             Option.<Color>createBuilder()
-                .name(Component.literal("Prefix Color"))
+                .name(Component.literal("HUD Prefix Color"))
                 .binding(
                     new Color(new ModConfig().hudPrefixColor, true),
                     () -> new Color(ConfigManager.config.hudPrefixColor, true),
@@ -100,7 +110,7 @@ public class HudManager
                 .controller(ColorControllerBuilder::create)
                 .build(),
             Option.<Color>createBuilder()
-                .name(Component.literal("Text Color"))
+                .name(Component.literal("HUD Text Color"))
                 .binding(
                     new Color(new ModConfig().hudTextColor, true),
                     () -> new Color(ConfigManager.config.hudTextColor, true),

@@ -35,9 +35,9 @@ public interface OptionProvider
     default OptionGroup createGroup()
     {
         OptionGroup.Builder group = OptionGroup.createBuilder()
-            .name(Component.literal(getName()))
-            .description(OptionDescription.of(Component.literal(getDescription())))
-            .option(createOption());
+                .name(Component.literal(getName()))
+                .description(OptionDescription.of(Component.literal(getDescription())))
+                .option(createOption());
 
         for (Setting<?> setting : getSettings())
             group.option(createSettingOption(setting));

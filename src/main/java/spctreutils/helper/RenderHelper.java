@@ -1,4 +1,4 @@
-package spctreutils.util;
+package spctreutils.helper;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;

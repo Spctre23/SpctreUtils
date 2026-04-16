@@ -4,15 +4,19 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.core.BlockPos;
 import org.lwjgl.glfw.GLFW;
 import spctreutils.feature.Feature;
-import spctreutils.util.Delay;
-import spctreutils.util.Msg;
-import spctreutils.util.RaycastHelper;
-import spctreutils.util.RenderHelper;
+import spctreutils.helper.*;
+import spctreutils.setting.Setting;
 
 import java.awt.*;
 
 public class CopyPos extends Feature
 {
+    public static final Setting<Boolean> SCALED = new Setting<>(
+            "Copy opposite dimension coords (CTRL)",
+            true,
+            Boolean.class
+    );
+
     private BlockPos copyPos = null;
     private final Delay unrenderDelay = new Delay();
 
@@ -33,7 +37,10 @@ public class CopyPos extends Feature
         BlockPos blockPos = RaycastHelper.getAimedBlock();
         if (blockPos == null) return;
 
-        copyPos = blockPos;
+        if (SCALED.getValue() == true)
+            copyPos = DimensionHelper.getOppositePos(blockPos);
+        else copyPos = blockPos;
+
         String posString = copyPos.getX() + " " + copyPos.getY() + " " + copyPos.getZ();
         GLFW.glfwSetClipboardString(mc.getWindow().getWindow(), posString);
         Msg.sendHud("Copied position: " + posString, Color.YELLOW);

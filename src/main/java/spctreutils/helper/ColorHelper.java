@@ -1,4 +1,4 @@
-package spctreutils.util;
+package spctreutils.helper;
 
 import java.awt.*;
 
