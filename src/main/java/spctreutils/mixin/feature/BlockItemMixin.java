@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import spctreutils.config.ConfigManager;
+import spctreutils.feature.impl.ForcePlace;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin
@@ -15,7 +16,7 @@ public class BlockItemMixin
     @Inject(at = @At("HEAD"), method = "canPlace", cancellable = true)
     private void canPlace(BlockPlaceContext blockPlaceContext, BlockState blockState, CallbackInfoReturnable<Boolean> cir)
     {
-        if (ConfigManager.config == null || !ConfigManager.config.forcePlace) return;
-        cir.setReturnValue(true);
+        if (ConfigManager.config != null && ConfigManager.config.featureStates.getOrDefault(ForcePlace.class.getSimpleName(), false))
+            cir.setReturnValue(true);
     }
 }

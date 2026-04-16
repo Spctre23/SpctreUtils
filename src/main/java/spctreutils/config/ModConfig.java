@@ -7,6 +7,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModConfig
 {
@@ -18,24 +20,14 @@ public class ModConfig
         .build();
 
     // Features
-    @SerialEntry public boolean noClip = false;
-    @SerialEntry public boolean playerTracker = false;
-    @SerialEntry public boolean copyPos = false;
-    @SerialEntry public boolean forcePlace = false;
-    @SerialEntry public boolean invulnerable = false;
-    @SerialEntry public boolean getEntitiesInBlock = false;
+    @SerialEntry public Map<String, Boolean> featureStates = new HashMap<>();
     @SerialEntry public float flyingSpeed = 0.05f;
 
     // HUD
+    @SerialEntry public Map<String, Boolean> hudElementStates = new HashMap<>();
     @SerialEntry public boolean hud = false;
-    @SerialEntry public boolean durability = false;
-    @SerialEntry public boolean entityHealth = false;
-    @SerialEntry public boolean entityOwner = false;
-    @SerialEntry public boolean goatVariant = false;
-    @SerialEntry public boolean horseSpeed = false;
-    @SerialEntry public boolean horseJump = false;
-    @SerialEntry public boolean position = false;
-    @SerialEntry public boolean positionScaled = false;
     @SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();
     @SerialEntry public int hudTextColor = Color.WHITE.getRGB();
+
+    @SerialEntry public Map<String, Object> settings = new HashMap<>();
 }

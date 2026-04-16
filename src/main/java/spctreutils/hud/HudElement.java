@@ -2,45 +2,77 @@ package spctreutils.hud;
 
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
+import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
-import spctreutils.config.ModConfig;
+import spctreutils.config.OptionProvider;
+import spctreutils.setting.Setting;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.awt.*;
+import java.util.List;
 
-public abstract class HudElement
+public abstract class HudElement implements OptionProvider
 {
-    protected final Minecraft mc;
     protected int prefixColor = ConfigManager.config.hudPrefixColor;
     protected int textColor = ConfigManager.config.hudTextColor;
-    private String name;
-    private String description;
+    protected final Minecraft mc;
+    protected final String name;
+    protected final List<Setting<?>> settings;
     private boolean enabled;
     private Component text = null;
+    private final String description;
     private final String prefix;
-    private final Function<ModConfig, Boolean> configGetter;
-    private final Consumer<Boolean> configSetter;
 
-    protected HudElement(String name, String prefix, String description, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
         this.name = name;
         this.prefix = prefix + ": ";
         this.description = description;
         this.mc = Minecraft.getInstance();
-        this.configGetter = configGetter;
-        this.configSetter = configSetter;
-        this.enabled = configGetter.apply(ConfigManager.config);
+        this.enabled = getConfigValue();
+        this.settings = settings;
+
+        for (Setting<?> setting : settings)
+            setting.setKey(name);
+
         initialize();
     }
 
-    protected HudElement(String name, String description, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected HudElement(String name, String prefix, String description)
     {
-        this(name, name, description, configGetter, configSetter);
+        this(name, prefix, description, List.of());
     }
+
+    protected HudElement(String name, String description, List<Setting<?>> settings)
+    {
+        this(name, name, description, settings);
+    }
+
+    protected HudElement(String name, String description)
+    {
+        this(name, name, description, List.of());
+    }
+
+    protected HudElement(String name, List<Setting<?>> settings)
+    {
+        this(name, "", settings);
+    }
+
+    protected HudElement(String name)
+    {
+        this(name, "", List.of());
+    }
+
+    @Override public String getName() { return name; }
+    @Override public String getDescription() { return description; }
+    @Override public boolean getEnabled() { return enabled; }
+    @Override public void setEnabled(boolean value) { setEnabled(value); }
+    @Override public List<Setting<?>> getSettings() { return settings; }
 
     protected void onEnabled() {}
 
@@ -50,16 +82,9 @@ public abstract class HudElement
 
     public boolean isEnabled() { return enabled; }
 
-    public Option<Boolean> createOption()
+    private boolean getConfigValue()
     {
-        return Option.<Boolean>createBuilder()
-            .name(Component.literal(name))
-            .description(OptionDescription.of(Component.literal(description)))
-            .binding(false,
-                () -> configGetter.apply(ConfigManager.config),
-                v -> { configSetter.accept(v); ConfigManager.save(); })
-            .controller(TickBoxControllerBuilder::create)
-            .build();
+        return ConfigManager.config.hudElementStates.getOrDefault(getClass().getSimpleName(), false);
     }
 
     private void initialize()
@@ -75,7 +100,7 @@ public abstract class HudElement
     {
         prefixColor = ConfigManager.config.hudPrefixColor;
         textColor = ConfigManager.config.hudTextColor;
-        boolean configValue = configGetter.apply(ConfigManager.config);
+        boolean configValue = getConfigValue();
         if (configValue == enabled) return;
         enabled = configValue;
         onStateChanged();

@@ -9,11 +9,7 @@ public class EntityOwner extends HudElement
 {
     public EntityOwner()
     {
-        super("Entity Owner",
-            "Owner",
-            "Displays the owner of the entity you are looking at, if tamed.",
-            config -> config.entityOwner,
-            value -> ConfigManager.config.entityOwner = value);
+        super("Entity Owner", "Owner", "Displays the owner of the entity you are looking at, if tamed.");
     }
 
     @Override

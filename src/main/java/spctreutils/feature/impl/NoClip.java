@@ -1,17 +1,13 @@
 package spctreutils.feature.impl;
 
 import spctreutils.SpctreUtils;
-import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
 
 public class NoClip extends Feature
 {
     public NoClip()
     {
-        super("NoClip",
-            "Allows you to clip through blocks. Must be in singleplayer.",
-            config -> config.noClip,
-            value -> ConfigManager.config.noClip = value);
+        super("NoClip", "Allows you to clip through blocks. Must be in singleplayer.");
     }
 
     @Override

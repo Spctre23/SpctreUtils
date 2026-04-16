@@ -10,10 +10,7 @@ public class GoatVariant extends HudElement
 {
     public GoatVariant()
     {
-        super("Goat Variant",
-            "Displays the variant of the goat you are looking at.",
-            config -> config.goatVariant,
-            value -> ConfigManager.config.goatVariant = value);
+        super("Goat Variant", "Displays the variant of the goat you are looking at.");
     }
 
     @Override

@@ -2,6 +2,7 @@ package spctreutils.feature;
 
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
+import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.FloatFieldControllerBuilder;
 import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
@@ -24,12 +25,13 @@ public class FeatureManager
         features.add(new ForcePlace());
         features.add(new Invulnerable());
         features.add(new GetEntityCountAtBlock());
+        features.add(new HighlightRareEntities());
     }
 
-    public List<Option<Boolean>> getOptions()
+    public List<OptionGroup> getGroups()
     {
         return features.stream()
-            .map(Feature::createOption)
+            .map(Feature::createGroup)
             .collect(Collectors.toList());
     }
 

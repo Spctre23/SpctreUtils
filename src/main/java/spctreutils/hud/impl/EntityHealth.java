@@ -8,11 +8,7 @@ public class EntityHealth extends HudElement
 {
     public EntityHealth()
     {
-        super("Entity Health",
-            "HP",
-            "Displays the health of the entity you are looking at.",
-            config -> config.entityHealth,
-            value -> ConfigManager.config.entityHealth = value);
+        super("Entity Health", "HP", "Displays the health of the entity you are looking at.");
     }
 
     @Override

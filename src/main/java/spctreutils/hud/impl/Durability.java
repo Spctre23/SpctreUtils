@@ -1,17 +1,13 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.item.ItemStack;
-import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class Durability extends HudElement
 {
     public Durability()
     {
-        super("Durability",
-            "Displays the durability of the item you are currently holding.",
-            config -> config.durability,
-            value -> ConfigManager.config.durability = value);
+        super("Durability", "Displays the durability of the item you are currently holding.");
     }
 
     @Override

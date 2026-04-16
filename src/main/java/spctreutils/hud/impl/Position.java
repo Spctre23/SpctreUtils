@@ -6,16 +6,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
+import spctreutils.setting.Setting;
+
+import java.util.List;
 
 public class Position extends HudElement
 {
+    public static final Setting<Boolean> POSITION_SCALED = new Setting<>(
+        "Position Scaled",
+        "Show scaled coordinates for Nether and End.",
+        true,
+        Boolean.class
+    );
+
     public Position()
     {
-        super("Position",
-            "Pos",
-            "Displays your coordinates.",
-            config -> config.position,
-            value -> ConfigManager.config.position = value);
+        super("Position", "Pos", "Displays your coordinates.", List.of(POSITION_SCALED));
     }
 
     @Override
@@ -31,7 +37,7 @@ public class Position extends HudElement
         Vec3 pos = player.position();
         String posText = String.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z);
         String posScaledText = "";
-        if (ConfigManager.config.positionScaled)
+        if (POSITION_SCALED.getValue() == true)
         {
             ResourceKey dimension = mc.level.dimension();
             if (dimension != Level.END)

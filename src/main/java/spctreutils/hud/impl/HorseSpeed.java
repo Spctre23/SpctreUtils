@@ -11,10 +11,7 @@ public class HorseSpeed extends HudElement
 
     public HorseSpeed()
     {
-        super("Horse Speed",
-            "Displays the max speed of the horse you are looking at.",
-            config -> config.horseSpeed,
-            value -> ConfigManager.config.horseSpeed = value);
+        super("Horse Speed", "Displays the max speed of the horse you are looking at.");
     }
 
     @Override

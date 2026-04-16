@@ -3,7 +3,6 @@ package spctreutils.feature.impl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.phys.Vec3;
-import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
 import spctreutils.mixin.accessor.AzimuthWaypointInvoker;
 import spctreutils.mixin.accessor.ChunkWaypointInvoker;
@@ -18,11 +17,7 @@ public class PlayerTracker extends Feature
 {
     public PlayerTracker()
     {
-        super("Player Tracker",
-            "Prints the estimated position of all players on the server (if possible).",
-            KEY_BEHAVIOR.TRIGGER,
-            config -> config.playerTracker,
-            value -> ConfigManager.config.playerTracker = value);
+        super("Player Tracker", "Prints the estimated position of all players on the server (if possible).", KEY_BEHAVIOR.TRIGGER);
     }
 
     @Override

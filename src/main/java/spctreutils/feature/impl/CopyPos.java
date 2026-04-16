@@ -1,10 +1,8 @@
 package spctreutils.feature.impl;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.core.BlockPos;
 import org.lwjgl.glfw.GLFW;
-import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
 import spctreutils.util.Delay;
 import spctreutils.util.Msg;
@@ -20,16 +18,12 @@ public class CopyPos extends Feature
 
     public CopyPos()
     {
-        super("Copy Coords of Aimed Block",
-            "Copies the coordinates of the block you are looking at to clipboard.",
-            KEY_BEHAVIOR.TRIGGER,
-            config -> config.copyPos,
-            value -> ConfigManager.config.copyPos = value);
+        super("Copy Coords of Aimed Block", "Copies the coordinates of the block you are looking at to clipboard.", KEY_BEHAVIOR.TRIGGER);
 
-        WorldRenderEvents.AFTER_ENTITIES.register(context ->
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
         {
             if (copyPos == null || unrenderDelay.isOver()) return;
-            RenderHelper.drawBlockOutline(context, copyPos, 1f, 1f, 0f, 1f);
+            RenderHelper.drawOutline(context, copyPos, 1f, 1f, 0f, 1f, true);
         });
     }
 

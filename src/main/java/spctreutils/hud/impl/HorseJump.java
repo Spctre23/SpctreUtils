@@ -10,10 +10,7 @@ public class HorseJump extends HudElement
 {
     public HorseJump()
     {
-        super("Horse Jump",
-            "Displays the max jump height of the horse you are looking at.",
-            config -> config.horseJump,
-            value -> ConfigManager.config.horseJump = value);
+        super("Horse Jump", "Displays the max jump height of the horse you are looking at.");
     }
 
     @Override

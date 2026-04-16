@@ -2,6 +2,7 @@ package spctreutils.hud;
 
 import com.mojang.blaze3d.platform.Window;
 import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -32,7 +33,6 @@ public class HudManager
     private void registerElements()
     {
         elements.add(new Position());
-        elements.add(new PositionScaled());
         elements.add(new Durability());
         elements.add(new EntityHealth());
         elements.add(new EntityOwner());
@@ -73,10 +73,10 @@ public class HudManager
         });
     }
 
-    public List<Option<Boolean>> getOptions()
+    public List<OptionGroup> getGroups()
     {
         return elements.stream()
-            .map(HudElement::createOption)
+            .map(HudElement::createGroup)
             .collect(Collectors.toList());
     }
 

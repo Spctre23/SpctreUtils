@@ -3,28 +3,29 @@ package spctreutils.feature;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
-import spctreutils.config.ModConfig;
+import spctreutils.config.OptionProvider;
 import spctreutils.key.Keybind;
+import spctreutils.setting.Setting;
 import spctreutils.util.Msg;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.awt.*;
+import java.util.List;
 
-public abstract class Feature
+public abstract class Feature implements OptionProvider
 {
+    protected boolean enabled;
     protected final Minecraft mc;
     protected final String name;
-    private boolean enabled;
+    protected final List<Setting<?>> settings;
     private final String description;
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
-    private final Function<ModConfig, Boolean> configGetter;
-    private final Consumer<Boolean> configSetter;
 
     protected enum KEY_BEHAVIOR
     {
@@ -32,33 +33,52 @@ public abstract class Feature
         TRIGGER
     }
 
-    protected Feature(String name, String description, int keyCode, KEY_BEHAVIOR keyBehavior, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, String description, int keyCode, KEY_BEHAVIOR keyBehavior, List<Setting<?>> settings)
     {
         this.name = name;
         this.description = description;
         this.keybind = new Keybind(name, keyCode);
         this.keyBehavior = keyBehavior;
-        this.configGetter = configGetter;
-        this.configSetter = configSetter;
-        this.enabled = configGetter.apply(ConfigManager.config);
+        this.settings = settings;
         this.mc = Minecraft.getInstance();
+        this.enabled = getConfigValue();
+
+        for (Setting<?> setting : settings)
+            setting.setKey(name);
+
         initialize();
     }
 
-    protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior, List<Setting<?>> settings)
     {
-        this(name, description, InputConstants.UNKNOWN.getValue(), keyBehavior, configGetter, configSetter);
+        this(name, description, InputConstants.UNKNOWN.getValue(), keyBehavior, settings);
     }
 
-    protected Feature(String name, String description, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior)
     {
-        this(name, description, KEY_BEHAVIOR.TOGGLE, configGetter, configSetter);
+        this(name, description, keyBehavior, List.of());
     }
 
-    protected Feature(String name, Function<ModConfig, Boolean> configGetter, Consumer<Boolean> configSetter)
+    protected Feature(String name, String description, List<Setting<?>> settings)
     {
-        this(name, "", configGetter, configSetter);
+        this(name, description, KEY_BEHAVIOR.TOGGLE, settings);
     }
+
+    protected Feature(String name, String description)
+    {
+        this(name, description, List.of());
+    }
+
+    protected Feature(String name)
+    {
+        this(name, "");
+    }
+
+    @Override public String getName() { return name; }
+    @Override public String getDescription() { return description; }
+    @Override public boolean getEnabled() { return enabled; }
+    @Override public void setEnabled(boolean value) { setEnabled(value); }
+    @Override public List<Setting<?>> getSettings() { return settings; }
 
     protected void onEnabled() {}
 
@@ -75,21 +95,19 @@ public abstract class Feature
     protected void setState(boolean state)
     {
         enabled = state;
-        configSetter.accept(enabled);
+        setConfigValue(enabled);
         ConfigManager.save();
         onStateChanged();
     }
 
-    public Option<Boolean> createOption()
+    private boolean getConfigValue()
     {
-        return Option.<Boolean>createBuilder()
-            .name(Component.literal(name))
-            .description(OptionDescription.of(Component.literal(description)))
-            .binding(false,
-                () -> configGetter.apply(ConfigManager.config),
-                v -> { configSetter.accept(v); ConfigManager.save(); })
-            .controller(TickBoxControllerBuilder::create)
-            .build();
+        return ConfigManager.config.featureStates.getOrDefault(getClass().getSimpleName(), false);
+    }
+
+    private void setConfigValue(boolean value)
+    {
+        ConfigManager.config.featureStates.put(getClass().getSimpleName(), value);
     }
 
     private void initialize()
@@ -104,7 +122,7 @@ public abstract class Feature
 
     private void syncFromConfig()
     {
-        boolean configValue = configGetter.apply(ConfigManager.config);
+        boolean configValue = getConfigValue();
         if (configValue == enabled) return;
         enabled = configValue;
         onStateChanged();

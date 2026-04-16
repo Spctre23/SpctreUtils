@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
+import spctreutils.feature.impl.NoClip;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public class BlockStateBaseMixin
@@ -22,7 +23,7 @@ public class BlockStateBaseMixin
     private void onGetCollisionShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext, CallbackInfoReturnable<VoxelShape> cir)
     {
         if (ConfigManager.config == null ||
-            !ConfigManager.config.noClip ||
+            !ConfigManager.config.featureStates.getOrDefault(NoClip.class.getSimpleName(), false) ||
             SpctreUtils.serverPlayer == null ||
             !(collisionContext instanceof EntityCollisionContext entityCollisionContext) ||
             !(entityCollisionContext.getEntity() instanceof Player player) ||

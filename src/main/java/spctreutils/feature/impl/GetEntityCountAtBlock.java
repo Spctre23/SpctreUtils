@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import spctreutils.config.ConfigManager;
 import spctreutils.feature.Feature;
 import spctreutils.util.Delay;
 import spctreutils.util.Msg;
@@ -23,16 +22,12 @@ public class GetEntityCountAtBlock extends Feature
 
     public GetEntityCountAtBlock()
     {
-        super("Get Entity Count at Block",
-            "Prints number of entities at the block you are looking at.",
-            KEY_BEHAVIOR.TRIGGER,
-            config -> config.getEntitiesInBlock,
-            value -> ConfigManager.config.getEntitiesInBlock = value);
+        super("Get Entity Count at Block", "Prints number of entities at the block you are looking at.", KEY_BEHAVIOR.TRIGGER);
 
-        WorldRenderEvents.AFTER_ENTITIES.register(context ->
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
         {
             if (block == null || unrenderDelay.isOver()) return;
-            RenderHelper.drawBlockOutline(context, block, 1f, 1f, 0f, 1f);
+            RenderHelper.drawOutline(context, block, 1f, 1f, 0f, 1f, true);
         });
     }
 
