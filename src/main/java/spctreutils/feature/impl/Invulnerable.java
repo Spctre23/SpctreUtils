@@ -16,7 +16,7 @@ public class Invulnerable extends Feature
     }
 
     @Override
-    public void onDisabled()
+    protected void onDisabled()
     {
         if (mc.player.isSpectator() || mc.player.isCreative()) return;
         mc.player.setInvulnerable(false);

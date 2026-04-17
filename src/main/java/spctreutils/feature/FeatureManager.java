@@ -25,23 +25,25 @@ public class FeatureManager
         features.add(new ForcePlace());
         features.add(new Invulnerable());
         features.add(new GetEntityCountAtBlock());
+        features.add(new GetDistanceToAimedBlock());
         features.add(new HighlightRareEntities());
+        features.add(new MetadataSearch());
     }
 
     public List<Option<?>> getOptions()
     {
         return features.stream()
-                .filter(feature -> feature.getSettings().isEmpty())
-                .map(Feature::createOption)
-                .collect(Collectors.toList());
+            .filter(feature -> feature.getSettings().isEmpty())
+            .map(Feature::createOption)
+            .collect(Collectors.toList());
     }
 
     public List<OptionGroup> getGroups()
     {
         return features.stream()
-                .filter(feature -> !feature.getSettings().isEmpty())
-                .map(Feature::createGroup)
-                .collect(Collectors.toList());
+            .filter(feature -> !feature.getSettings().isEmpty())
+            .map(Feature::createGroup)
+            .collect(Collectors.toList());
     }
 
     public List<Option<?>> getExtraOptions()
@@ -52,8 +54,11 @@ public class FeatureManager
                 .description(OptionDescription.of(Component.literal("Lets you configure creative mode flight speed.")))
                 .binding(
                     new ModConfig().flyingSpeed,
-                    () -> ConfigManager.config.flyingSpeed,
-                    v -> { ConfigManager.config.flyingSpeed = v; ConfigManager.save(); })
+                    () -> ConfigManager.config.flyingSpeed, v ->
+                    {
+                        ConfigManager.config.flyingSpeed = v;
+                        ConfigManager.save();
+                    })
                 .controller(opt -> FloatFieldControllerBuilder.create(opt)
                     .range(0.01f, 1f))
                 .build()

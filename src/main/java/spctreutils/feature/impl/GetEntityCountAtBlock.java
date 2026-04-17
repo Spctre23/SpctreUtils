@@ -1,5 +1,6 @@
 package spctreutils.feature.impl;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +12,7 @@ import spctreutils.helper.Msg;
 import spctreutils.helper.RaycastHelper;
 import spctreutils.helper.RenderHelper;
 
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +25,10 @@ public class GetEntityCountAtBlock extends Feature
     public GetEntityCountAtBlock()
     {
         super("Get Entity Count at Block", "Prints number of entities at the block you are looking at.", KEY_BEHAVIOR.TRIGGER);
-
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
-        {
-            if (block == null || unrenderDelay.isOver()) return;
-            RenderHelper.drawOutline(context, block, 1f, 1f, 0f, 1f, true);
-        });
     }
 
     @Override
-    public void onKeyPressed()
+    protected void onKeyPressed()
     {
         block = RaycastHelper.getAimedBlock(true);
         if (block == null) return;
@@ -53,5 +49,12 @@ public class GetEntityCountAtBlock extends Feature
 
         Msg.sendChat(sb.toString());
         unrenderDelay.set(0.5);
+    }
+
+    @Override
+    protected void onRender(WorldRenderContext context)
+    {
+        if (block == null || unrenderDelay.isOver()) return;
+        RenderHelper.drawOutline(context, block, Color.YELLOW, true);
     }
 }

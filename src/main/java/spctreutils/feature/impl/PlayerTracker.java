@@ -21,7 +21,7 @@ public class PlayerTracker extends Feature
     }
 
     @Override
-    public void onKeyPressed()
+    protected void onKeyPressed()
     {
         mc.player.connection.getWaypointManager().forEachWaypoint(mc.player, waypoint ->
         {

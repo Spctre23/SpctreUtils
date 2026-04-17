@@ -1,6 +1,6 @@
 package spctreutils.feature.impl;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
@@ -9,45 +9,46 @@ import net.minecraft.world.phys.AABB;
 import spctreutils.feature.Feature;
 import spctreutils.helper.RenderHelper;
 
+import java.awt.*;
+
 public class HighlightRareEntities extends Feature
 {
     public HighlightRareEntities()
     {
         super("Highlight Rare Entities", "Highlight rare entities with an outline.");
+    }
 
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
+    @Override
+    protected void onRender(WorldRenderContext context)
+    {
+        for (Entity entity : mc.level.entitiesForRendering())
         {
-            if (!enabled) return;
+            if (entity == null) continue;
 
-            for (Entity entity : mc.level.entitiesForRendering())
+            AABB pos = null;
+            Color color = null;
+            if (entity instanceof Panda panda)
             {
-                if (entity == null) continue;
-
-                AABB pos = null;
-                float r = 0, g = 0, b = 0;
-                if (entity instanceof Panda panda)
+                Panda.Gene main = panda.getMainGene(), hidden = panda.getHiddenGene();
+                if ((main == Panda.Gene.BROWN && !main.isRecessive()) || (main == Panda.Gene.BROWN && hidden == Panda.Gene.BROWN))
                 {
-                    Panda.Gene main = panda.getMainGene(), hidden = panda.getHiddenGene();
-                    if ((main == Panda.Gene.BROWN && !main.isRecessive()) || (main == Panda.Gene.BROWN && hidden == Panda.Gene.BROWN))
-                    {
-                        r = g = 1f;
-                        pos = entity.getBoundingBox();
-                    }
-                }
-                else if (entity instanceof Axolotl axolotl && axolotl.getVariant() == Axolotl.Variant.BLUE)
-                {
-                    g = b = 1f;
+                    color = Color.YELLOW;
                     pos = entity.getBoundingBox();
                 }
-                else if (entity instanceof Goat goat && goat.isScreamingGoat())
-                {
-                    r = 1f;
-                    pos = entity.getBoundingBox();
-                }
-
-                if (pos == null) continue;
-                RenderHelper.drawOutline(context, pos, r, g, b, 1f, true);
             }
-        });
+            else if (entity instanceof Axolotl axolotl && axolotl.getVariant() == Axolotl.Variant.BLUE)
+            {
+                color = Color.CYAN;
+                pos = entity.getBoundingBox();
+            }
+            else if (entity instanceof Goat goat && goat.isScreamingGoat())
+            {
+                color = Color.RED;
+                pos = entity.getBoundingBox();
+            }
+
+            if (pos == null) continue;
+            RenderHelper.drawOutline(context, pos, color, true);
+        }
     }
 }

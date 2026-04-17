@@ -10,36 +10,24 @@ import java.util.List;
 
 public class Position extends HudElement
 {
-    public static final Setting<Boolean> SCALED = new Setting<>(
-        "Also display position scaled to opposite dimension",
-        true,
-        Boolean.class
-    );
+    private static final Setting<Boolean> scaled = new Setting<>("Also display opposite dimension pos", false, Boolean.class);
 
     public Position()
     {
-        super("Position", "Pos", "Displays your coordinates.", List.of(SCALED));
+        super("Position", "Pos", "Displays your coordinates.", List.of(scaled));
     }
 
     @Override
-    public void onTick()
+    protected void onTick()
     {
-        LocalPlayer player = mc.player;
-        if (player == null || mc.level == null)
-        {
-            removeText();
-            return;
-        }
-
-        Vec3 pos = player.position();
+        Vec3 pos = mc.player.position();
         String posText = String.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z);
         String posScaledText = "";
-        if (SCALED.getValue() == true)
+        if (scaled.getValue())
         {
             Vec3 posScaled = DimensionHelper.getOppositePos(pos);
-            posScaledText = String.format(" [ %.1f, %.1f, %.1f ]", posScaled.x, posScaled.y, posScaled.z);
+            posScaledText = String.format(" [%.1f, %.1f, %.1f]", posScaled.x, posScaled.y, posScaled.z);
         }
-
         setText(posText + posScaledText);
     }
 }

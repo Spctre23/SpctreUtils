@@ -8,8 +8,6 @@ import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MappableRingBuffer;
@@ -24,6 +22,7 @@ import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 import spctreutils.SpctreUtils;
 
+import java.awt.*;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
@@ -43,17 +42,37 @@ public class RenderHelper
 
     // --- Block outline overloads ---
 
+    public static void drawOutline(WorldRenderContext context, BlockPos pos, Color color)
+    {
+        drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, false);
+    }
+
+    public static void drawOutline(WorldRenderContext context, BlockPos pos, Color color, boolean throughWalls)
+    {
+        drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, throughWalls);
+    }
+
+    public static void drawOutline(WorldRenderContext context, BlockPos pos, float r, float g, float b, float a)
+    {
+        drawOutline(context, new AABB(pos), r, g, b, a, false);
+    }
+
     public static void drawOutline(WorldRenderContext context, BlockPos pos, float r, float g, float b, float a, boolean throughWalls)
     {
         drawOutline(context, new AABB(pos), r, g, b, a, throughWalls);
     }
 
-    public static void drawOutline(WorldRenderContext context, BlockPos pos, float r, float g, float b, float a)
+    // --- AABB outline overloads ---
+
+    public static void drawOutline(WorldRenderContext context, AABB box, Color color)
     {
-        drawOutline(context, pos, r, g, b, a, false);
+        drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, false);
     }
 
-    // --- AABB outline overloads ---
+    public static void drawOutline(WorldRenderContext context, AABB box, Color color, boolean throughWalls)
+    {
+        drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, throughWalls);
+    }
 
     public static void drawOutline(WorldRenderContext context, AABB box, float r, float g, float b, float a)
     {
@@ -77,37 +96,41 @@ public class RenderHelper
                 buffer = new BufferBuilder(allocator, LINES_NO_DEPTH.getVertexFormatMode(), LINES_NO_DEPTH.getVertexFormat());
 
             Matrix4f mat = poseStack.last().pose();
-            addLineToBuffer(buffer, mat, x1,y1,z1, x2,y1,z1, r,g,b,a);
-            addLineToBuffer(buffer, mat, x2,y1,z1, x2,y1,z2, r,g,b,a);
-            addLineToBuffer(buffer, mat, x2,y1,z2, x1,y1,z2, r,g,b,a);
-            addLineToBuffer(buffer, mat, x1,y1,z2, x1,y1,z1, r,g,b,a);
-            addLineToBuffer(buffer, mat, x1,y2,z1, x2,y2,z1, r,g,b,a);
-            addLineToBuffer(buffer, mat, x2,y2,z1, x2,y2,z2, r,g,b,a);
-            addLineToBuffer(buffer, mat, x2,y2,z2, x1,y2,z2, r,g,b,a);
-            addLineToBuffer(buffer, mat, x1,y2,z2, x1,y2,z1, r,g,b,a);
-            addLineToBuffer(buffer, mat, x1,y1,z1, x1,y2,z1, r,g,b,a);
-            addLineToBuffer(buffer, mat, x2,y1,z1, x2,y2,z1, r,g,b,a);
-            addLineToBuffer(buffer, mat, x2,y1,z2, x2,y2,z2, r,g,b,a);
-            addLineToBuffer(buffer, mat, x1,y1,z2, x1,y2,z2, r,g,b,a);
+            addLineToBuffer(buffer, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
+            addLineToBuffer(buffer, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
+            addLineToBuffer(buffer, mat, x2, y1, z2, x1, y1, z2, r, g, b, a);
+            addLineToBuffer(buffer, mat, x1, y1, z2, x1, y1, z1, r, g, b, a);
+            addLineToBuffer(buffer, mat, x1, y2, z1, x2, y2, z1, r, g, b, a);
+            addLineToBuffer(buffer, mat, x2, y2, z1, x2, y2, z2, r, g, b, a);
+            addLineToBuffer(buffer, mat, x2, y2, z2, x1, y2, z2, r, g, b, a);
+            addLineToBuffer(buffer, mat, x1, y2, z2, x1, y2, z1, r, g, b, a);
+            addLineToBuffer(buffer, mat, x1, y1, z1, x1, y2, z1, r, g, b, a);
+            addLineToBuffer(buffer, mat, x2, y1, z1, x2, y2, z1, r, g, b, a);
+            addLineToBuffer(buffer, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
+            addLineToBuffer(buffer, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
             drawBuffer(Minecraft.getInstance(), LINES_NO_DEPTH);
         }
         else
         {
-            if (context.consumers() == null) { poseStack.popPose(); return; }
+            if (context.consumers() == null)
+            {
+                poseStack.popPose();
+                return;
+            }
             VertexConsumer lines = context.consumers().getBuffer(RenderType.lines());
             Matrix4f mat = poseStack.last().pose();
-            line(lines, mat, x1,y1,z1, x2,y1,z1, r,g,b,a);
-            line(lines, mat, x2,y1,z1, x2,y1,z2, r,g,b,a);
-            line(lines, mat, x2,y1,z2, x1,y1,z2, r,g,b,a);
-            line(lines, mat, x1,y1,z2, x1,y1,z1, r,g,b,a);
-            line(lines, mat, x1,y2,z1, x2,y2,z1, r,g,b,a);
-            line(lines, mat, x2,y2,z1, x2,y2,z2, r,g,b,a);
-            line(lines, mat, x2,y2,z2, x1,y2,z2, r,g,b,a);
-            line(lines, mat, x1,y2,z2, x1,y2,z1, r,g,b,a);
-            line(lines, mat, x1,y1,z1, x1,y2,z1, r,g,b,a);
-            line(lines, mat, x2,y1,z1, x2,y2,z1, r,g,b,a);
-            line(lines, mat, x2,y1,z2, x2,y2,z2, r,g,b,a);
-            line(lines, mat, x1,y1,z2, x1,y2,z2, r,g,b,a);
+            line(lines, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
+            line(lines, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
+            line(lines, mat, x2, y1, z2, x1, y1, z2, r, g, b, a);
+            line(lines, mat, x1, y1, z2, x1, y1, z1, r, g, b, a);
+            line(lines, mat, x1, y2, z1, x2, y2, z1, r, g, b, a);
+            line(lines, mat, x2, y2, z1, x2, y2, z2, r, g, b, a);
+            line(lines, mat, x2, y2, z2, x1, y2, z2, r, g, b, a);
+            line(lines, mat, x1, y2, z2, x1, y2, z1, r, g, b, a);
+            line(lines, mat, x1, y1, z1, x1, y2, z1, r, g, b, a);
+            line(lines, mat, x2, y1, z1, x2, y2, z1, r, g, b, a);
+            line(lines, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
+            line(lines, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
         }
 
         poseStack.popPose();
@@ -174,14 +197,16 @@ public class RenderHelper
                                         double x2, double y2, double z2,
                                         float r, float g, float b, float a)
     {
-        float nx = (float)(x2 - x1);
-        float ny = (float)(y2 - y1);
-        float nz = (float)(z2 - z1);
-        float len = (float) Math.sqrt(nx*nx + ny*ny + nz*nz);
-        nx /= len; ny /= len; nz /= len;
+        float nx = (float) (x2 - x1);
+        float ny = (float) (y2 - y1);
+        float nz = (float) (z2 - z1);
+        float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+        nx /= len;
+        ny /= len;
+        nz /= len;
 
-        buffer.addVertex(mat, (float)x1, (float)y1, (float)z1).setColor(r, g, b, a).setNormal(nx, ny, nz);
-        buffer.addVertex(mat, (float)x2, (float)y2, (float)z2).setColor(r, g, b, a).setNormal(nx, ny, nz);
+        buffer.addVertex(mat, (float) x1, (float) y1, (float) z1).setColor(r, g, b, a).setNormal(nx, ny, nz);
+        buffer.addVertex(mat, (float) x2, (float) y2, (float) z2).setColor(r, g, b, a).setNormal(nx, ny, nz);
     }
 
     private static void line(VertexConsumer consumer, Matrix4f mat,
@@ -189,11 +214,13 @@ public class RenderHelper
                              double x2, double y2, double z2,
                              float r, float g, float b, float a)
     {
-        float nx = (float)(x2-x1), ny = (float)(y2-y1), nz = (float)(z2-z1);
-        float len = (float)Math.sqrt(nx*nx + ny*ny + nz*nz);
-        nx /= len; ny /= len; nz /= len;
+        float nx = (float) (x2 - x1), ny = (float) (y2 - y1), nz = (float) (z2 - z1);
+        float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+        nx /= len;
+        ny /= len;
+        nz /= len;
 
-        consumer.addVertex(mat, (float)x1, (float)y1, (float)z1).setColor(r,g,b,a).setNormal(nx,ny,nz);
-        consumer.addVertex(mat, (float)x2, (float)y2, (float)z2).setColor(r,g,b,a).setNormal(nx,ny,nz);
+        consumer.addVertex(mat, (float) x1, (float) y1, (float) z1).setColor(r, g, b, a).setNormal(nx, ny, nz);
+        consumer.addVertex(mat, (float) x2, (float) y2, (float) z2).setColor(r, g, b, a).setNormal(nx, ny, nz);
     }
 }

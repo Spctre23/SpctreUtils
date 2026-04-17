@@ -12,7 +12,7 @@ public class EntityHealth extends HudElement
     }
 
     @Override
-    public void onTick()
+    protected void onTick()
     {
         if (mc.crosshairPickEntity instanceof LivingEntity entity)
         {

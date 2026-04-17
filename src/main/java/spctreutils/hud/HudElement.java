@@ -1,11 +1,5 @@
 package spctreutils.hud;
 
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
-import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -13,7 +7,6 @@ import spctreutils.config.ConfigManager;
 import spctreutils.config.OptionProvider;
 import spctreutils.setting.Setting;
 
-import java.awt.*;
 import java.util.List;
 
 public abstract class HudElement implements OptionProvider
@@ -40,7 +33,7 @@ public abstract class HudElement implements OptionProvider
         for (Setting<?> setting : settings)
             setting.setKey(name);
 
-        initialize();
+        registerEvents();
     }
 
     protected HudElement(String name, String prefix, String description)
@@ -69,16 +62,18 @@ public abstract class HudElement implements OptionProvider
     }
 
     @Override public String getName() { return name; }
+
     @Override public String getDescription() { return description; }
+
     @Override public boolean getEnabled() { return enabled; }
+
     @Override public List<Setting<?>> getSettings() { return settings; }
 
     @Override
     public void setEnabled(boolean value)
     {
         enabled = value;
-        ConfigManager.config.hudElementStates.put(getClass().getSimpleName(), value);
-        ConfigManager.save();
+        setConfigValue(enabled);
         onStateChanged();
     }
 
@@ -88,12 +83,12 @@ public abstract class HudElement implements OptionProvider
 
     protected void onTick() {}
 
-    private void initialize()
+    private void registerEvents()
     {
         ClientTickEvents.START_CLIENT_TICK.register(client ->
         {
             syncFromConfig();
-            if (enabled && client.player != null) onTick();
+            if (enabled && mc.level != null && client.player != null) onTick();
         });
     }
 
@@ -102,6 +97,12 @@ public abstract class HudElement implements OptionProvider
     private boolean getConfigValue()
     {
         return ConfigManager.config.hudElementStates.getOrDefault(getClass().getSimpleName(), false);
+    }
+
+    private void setConfigValue(boolean value)
+    {
+        ConfigManager.config.hudElementStates.put(getClass().getSimpleName(), value);
+        ConfigManager.save();
     }
 
     private void syncFromConfig()

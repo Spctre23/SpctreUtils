@@ -1,6 +1,5 @@
 package spctreutils.feature.impl;
 
-import spctreutils.SpctreUtils;
 import spctreutils.feature.Feature;
 
 public class NoClip extends Feature
@@ -11,17 +10,16 @@ public class NoClip extends Feature
     }
 
     @Override
-    public void onDisabled()
+    public void onTick()
     {
-        if (SpctreUtils.localPlayer == null) return;
-        SpctreUtils.localPlayer.getAbilities().flying = false;
+        if (mc.getSingleplayerServer() == null) return;
+        mc.player.fallDistance = 0;
+        mc.player.getAbilities().flying = true;
     }
 
     @Override
-    public void onTick()
+    protected void onDisabled()
     {
-        if (mc.player == null || mc.getSingleplayerServer() == null) return;
-        mc.player.fallDistance = 0;
-        mc.player.getAbilities().flying = true;
+        mc.player.getAbilities().flying = false;
     }
 }

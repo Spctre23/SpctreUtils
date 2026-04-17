@@ -6,6 +6,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.awt.*;
+
 public class DimensionHelper
 {
     public static Vec3 getOppositePos(Vec3 pos)
@@ -13,9 +15,7 @@ public class DimensionHelper
         Minecraft mc = Minecraft.getInstance();
         ResourceKey dimension = mc.level.dimension();
         if (dimension != Level.END)
-        {
             pos = dimension == Level.NETHER ? pos.scale(8) : pos.scale(0.125);
-        }
         return pos;
     }
 

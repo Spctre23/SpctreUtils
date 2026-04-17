@@ -2,7 +2,10 @@ package spctreutils.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.OptionProvider;
 import spctreutils.key.Keybind;
@@ -13,10 +16,10 @@ import java.util.List;
 
 public abstract class Feature implements OptionProvider
 {
-    protected boolean enabled;
     protected final Minecraft mc;
     protected final String name;
     protected final List<Setting<?>> settings;
+    public boolean enabled;
     private final String description;
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
@@ -40,7 +43,7 @@ public abstract class Feature implements OptionProvider
         for (Setting<?> setting : settings)
             setting.setKey(name);
 
-        initialize();
+        registerEvents();
     }
 
     protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior, List<Setting<?>> settings)
@@ -69,9 +72,13 @@ public abstract class Feature implements OptionProvider
     }
 
     @Override public String getName() { return name; }
+
     @Override public String getDescription() { return description; }
+
     @Override public boolean getEnabled() { return enabled; }
+
     @Override public void setEnabled(boolean value) { setState(value); }
+
     @Override public List<Setting<?>> getSettings() { return settings; }
 
     protected void onEnabled() {}
@@ -84,13 +91,14 @@ public abstract class Feature implements OptionProvider
 
     protected void onTick() {}
 
+    protected void onRender(WorldRenderContext context) {}
+
     protected void toggle() { setState(!enabled); }
 
     protected void setState(boolean state)
     {
         enabled = state;
         setConfigValue(enabled);
-        ConfigManager.save();
         onStateChanged();
     }
 
@@ -102,6 +110,7 @@ public abstract class Feature implements OptionProvider
     private void setConfigValue(boolean value)
     {
         ConfigManager.config.featureStates.put(getClass().getSimpleName(), value);
+        ConfigManager.save();
     }
 
     private void syncFromConfig()
@@ -119,12 +128,16 @@ public abstract class Feature implements OptionProvider
         if (keyBehavior == KEY_BEHAVIOR.TOGGLE) sendToggleNotification();
     }
 
-    private void initialize()
+    private void registerEvents()
     {
         ClientTickEvents.START_CLIENT_TICK.register(client ->
         {
             syncFromConfig();
-            if (enabled && client.player != null) onTick();
+            if (enabled && mc.level != null && client.player != null) onTick();
+        });
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
+        {
+            if (enabled && mc.level != null && mc.player != null) onRender(context);
         });
         registerKeybind();
     }
@@ -141,8 +154,11 @@ public abstract class Feature implements OptionProvider
             if (enabled) onKeyPressed();
         });
 
-        if (keyBehavior == KEY_BEHAVIOR.TRIGGER && enabled)
-            keybind.onReleased(() -> onKeyReleased());
+        if (keyBehavior == KEY_BEHAVIOR.TRIGGER)
+            keybind.onReleased(() ->
+            {
+                if (enabled) onKeyReleased();
+            });
     }
 
     private void sendToggleNotification()

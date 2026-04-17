@@ -7,7 +7,9 @@ import net.minecraft.network.chat.TextColor;
 import spctreutils.SpctreUtils;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Msg
 {
@@ -27,15 +29,22 @@ public class Msg
         sendChat(msg, Color.WHITE);
     }
 
-    public static void sendChat(Color color, String... msgs)
+    public static void sendChat(Color color, String prefixMsg, String... msgs)
     {
-        for (String msg : msgs)
-            sendChat(msg + " ", color);
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefixMsg);
+
+        Arrays.stream(msgs)
+            .skip(0)
+            .map(msg -> "\n• " + msg)
+            .forEach(sb::append);
+
+        sendChat(sb.toString(), color);
     }
 
-    public static void sendChat(String... msgs)
+    public static void sendChat(String prefixMsg, String... msgs)
     {
-        sendChat(Color.WHITE, msgs);
+        sendChat(Color.WHITE, prefixMsg, msgs);
     }
 
     public static <T extends List> void sendChat(T msgs, String prefixMsg, Color color)

@@ -8,9 +8,4 @@ public class ColorHelper
     {
         return color.getRGB() & 0xFFFFFF;
     }
-
-    public static int argbToHex(Color color)
-    {
-        return color.getRGB() & 0xFFFFFFFF;
-    }
 }

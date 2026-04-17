@@ -15,7 +15,7 @@ public class HorseSpeed extends HudElement
     }
 
     @Override
-    public void onTick()
+    protected void onTick()
     {
         if (mc.crosshairPickEntity instanceof Horse horse)
         {

@@ -11,7 +11,7 @@ public class Durability extends HudElement
     }
 
     @Override
-    public void onTick()
+    protected void onTick()
     {
         ItemStack held = mc.player.getMainHandItem();
         if (held.isEmpty() || !held.isDamageableItem())

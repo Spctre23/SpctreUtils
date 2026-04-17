@@ -13,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
-import spctreutils.feature.Feature;
 import spctreutils.hud.impl.*;
 
 import java.awt.*;
@@ -77,46 +76,56 @@ public class HudManager
     public List<Option<?>> getOptions()
     {
         return elements.stream()
-                .filter(element -> element.getSettings().isEmpty())
-                .map(HudElement::createOption)
-                .collect(Collectors.toList());
+            .filter(element -> element.getSettings().isEmpty())
+            .map(HudElement::createOption)
+            .collect(Collectors.toList());
     }
 
     public List<OptionGroup> getGroups()
     {
         return elements.stream()
-                .filter(element -> !element.getSettings().isEmpty())
-                .map(HudElement::createGroup)
-                .collect(Collectors.toList());
+            .filter(element -> !element.getSettings().isEmpty())
+            .map(HudElement::createGroup)
+            .collect(Collectors.toList());
     }
 
-    public List<Option<?>> getExtraOptions()
+    public OptionGroup getExtraOptions()
     {
-        return List.of(
-            Option.<Boolean>createBuilder()
+        return OptionGroup.createBuilder()
+            .name(Component.literal("Global HUD Settings"))
+            .option(Option.<Boolean>createBuilder()
                 .name(Component.literal("Render HUD"))
                 .binding(
                     new ModConfig().hud,
-                    () -> ConfigManager.config.hud,
-                    v -> { ConfigManager.config.hud = v; ConfigManager.save(); })
+                    () -> ConfigManager.config.hud, v ->
+                    {
+                        ConfigManager.config.hud = v;
+                        ConfigManager.save();
+                    })
                 .controller(TickBoxControllerBuilder::create)
-                .build(),
-            Option.<Color>createBuilder()
+                .build())
+            .option(Option.<Color>createBuilder()
                 .name(Component.literal("HUD Prefix Color"))
                 .binding(
                     new Color(new ModConfig().hudPrefixColor, true),
-                    () -> new Color(ConfigManager.config.hudPrefixColor, true),
-                    v -> { ConfigManager.config.hudPrefixColor = v.getRGB(); ConfigManager.save(); })
+                    () -> new Color(ConfigManager.config.hudPrefixColor, true), v ->
+                    {
+                        ConfigManager.config.hudPrefixColor = v.getRGB();
+                        ConfigManager.save();
+                    })
                 .controller(ColorControllerBuilder::create)
-                .build(),
-            Option.<Color>createBuilder()
+                .build())
+            .option(Option.<Color>createBuilder()
                 .name(Component.literal("HUD Text Color"))
                 .binding(
                     new Color(new ModConfig().hudTextColor, true),
-                    () -> new Color(ConfigManager.config.hudTextColor, true),
-                    v -> { ConfigManager.config.hudTextColor = v.getRGB(); ConfigManager.save(); })
+                    () -> new Color(ConfigManager.config.hudTextColor, true), v ->
+                    {
+                        ConfigManager.config.hudTextColor = v.getRGB();
+                        ConfigManager.save();
+                    })
                 .controller(ColorControllerBuilder::create)
-                .build()
-        );
+                .build())
+            .build();
     }
 }
