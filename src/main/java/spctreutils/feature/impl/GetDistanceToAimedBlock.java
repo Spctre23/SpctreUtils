@@ -1,16 +1,12 @@
 package spctreutils.feature.impl;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import org.lwjgl.glfw.GLFW;
 import spctreutils.feature.Feature;
 import spctreutils.helper.*;
-import spctreutils.setting.Setting;
 
 import java.awt.*;
-import java.util.List;
 
 public class GetDistanceToAimedBlock extends Feature
 {

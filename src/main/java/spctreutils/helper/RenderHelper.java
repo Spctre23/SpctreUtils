@@ -156,8 +156,10 @@ public class RenderHelper
         }
 
         CommandEncoder encoder = RenderSystem.getDevice().createCommandEncoder();
-        try (GpuBuffer.MappedView view = encoder.mapBuffer(
-            vertexBuffer.currentBuffer().slice(0, builtBuffer.vertexBuffer().remaining()), false, true))
+        try (
+            GpuBuffer.MappedView view = encoder.mapBuffer(
+                vertexBuffer.currentBuffer().slice(0, builtBuffer.vertexBuffer().remaining()), false, true)
+        )
         {
             MemoryUtil.memCopy(builtBuffer.vertexBuffer(), view.data());
         }
@@ -170,14 +172,16 @@ public class RenderHelper
             .writeTransform(RenderSystem.getModelViewMatrix(), COLOR_MODULATOR,
                 RenderSystem.getModelOffset(), RenderSystem.getTextureMatrix(), 1f);
 
-        try (RenderPass renderPass = RenderSystem.getDevice()
-            .createCommandEncoder()
-            .createRenderPass(
-                () -> SpctreUtils.MOD_ID + " lines_no_depth rendering",
-                client.getMainRenderTarget().getColorTextureView(),
-                OptionalInt.empty(),
-                client.getMainRenderTarget().getDepthTextureView(),
-                OptionalDouble.empty()))
+        try (
+            RenderPass renderPass = RenderSystem.getDevice()
+                .createCommandEncoder()
+                .createRenderPass(
+                    () -> SpctreUtils.MOD_ID + " lines_no_depth rendering",
+                    client.getMainRenderTarget().getColorTextureView(),
+                    OptionalInt.empty(),
+                    client.getMainRenderTarget().getDepthTextureView(),
+                    OptionalDouble.empty())
+        )
         {
             renderPass.setPipeline(pipeline);
             RenderSystem.bindDefaultUniforms(renderPass);

@@ -58,7 +58,7 @@ public class Msg
             {
                 sb.append("\n• " + msg.toString());
             }
-            catch (Exception e) { }
+            catch (Exception e) {}
         }
         sendChat(sb.toString(), color);
     }

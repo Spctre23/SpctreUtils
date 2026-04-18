@@ -1,20 +1,15 @@
 package spctreutils.feature.impl;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import spctreutils.feature.Feature;
-import spctreutils.helper.Delay;
-import spctreutils.helper.Msg;
-import spctreutils.helper.RaycastHelper;
-import spctreutils.helper.RenderHelper;
+import spctreutils.helper.*;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GetEntityCountAtBlock extends Feature
@@ -33,10 +28,10 @@ public class GetEntityCountAtBlock extends Feature
         block = RaycastHelper.getAimedBlock(true);
         if (block == null) return;
 
-        AABB aabb = AABB.ofSize(new Vec3(block.getX(), block.getY(), block.getZ()), 1,1,1);
-        List<LivingEntity> entities = mc.level.getEntitiesOfClass(LivingEntity.class, aabb);
+        AABB aabb = new AABB(block);
+        HashSet<Entity> entities = EntityHelper.getEntities(aabb);
         Map<String, Integer> entityCounts = new LinkedHashMap<>();
-        for (LivingEntity entity : entities)
+        for (Entity entity : entities)
         {
             String name = entity.getType().getDescription().getString();
             entityCounts.merge(name, 1, Integer::sum);

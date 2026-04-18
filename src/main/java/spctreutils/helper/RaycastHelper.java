@@ -30,9 +30,7 @@ public class RaycastHelper
         AABB searchBox = mc.player.getBoundingBox().expandTowards(look.scale(100)).inflate(1.0);
 
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(
-            mc.level, mc.player, start, end, searchBox,
-            entity -> !entity.isSpectator() && entity != mc.player,
-            0.0f
+            mc.level, mc.player, start, end, searchBox, entity -> !entity.isSpectator() && entity != mc.player, 0.0f
         );
         return hit == null || hit.getType() == HitResult.Type.MISS || hit.getEntity() == null ? null : hit.getEntity();
     }
