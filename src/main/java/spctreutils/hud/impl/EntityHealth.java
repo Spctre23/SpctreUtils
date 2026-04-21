@@ -1,7 +1,6 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.entity.LivingEntity;
-import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class EntityHealth extends HudElement

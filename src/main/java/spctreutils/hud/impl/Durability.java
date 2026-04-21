@@ -19,6 +19,7 @@ public class Durability extends HudElement
             removeText();
             return;
         }
+
         int maxDamage = held.getMaxDamage();
         int durability = maxDamage - held.getDamageValue();
         String text = durability + " / " + maxDamage;

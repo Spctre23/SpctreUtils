@@ -5,13 +5,13 @@
 	"mixins": [
 		"core.ClientPacketListenerMixin",
 		"core.PlayerListMixin",
+      	"core.GameRendererMixin",
 		"feature.BlockItemMixin",
 		"feature.BlockStateBaseMixin",
 		"feature.PlayerMixin",
 		"accessor.Vec3iWaypointInvoker",
 		"accessor.ChunkWaypointInvoker",
-		"accessor.AzimuthWaypointInvoker",
-		"accessor.KeyMappingAccessor"
+		"accessor.AzimuthWaypointInvoker"
 	],
 	"injectors": {
 		"defaultRequire": 1

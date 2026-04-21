@@ -24,7 +24,7 @@ public abstract class HudElement implements OptionProvider
     protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
         this.name = name;
-        this.prefix = prefix + ": ";
+        this.prefix = prefix == "" ? "" : prefix + ": ";
         this.description = description;
         this.mc = Minecraft.getInstance();
         this.enabled = getConfigValue();

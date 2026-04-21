@@ -227,4 +227,15 @@ public class RenderHelper
         consumer.addVertex(mat, (float) x1, (float) y1, (float) z1).setColor(r, g, b, a).setNormal(nx, ny, nz);
         consumer.addVertex(mat, (float) x2, (float) y2, (float) z2).setColor(r, g, b, a).setNormal(nx, ny, nz);
     }
+
+    public static void close()
+    {
+        allocator.close();
+
+        if (vertexBuffer != null)
+        {
+            vertexBuffer.close();
+            vertexBuffer = null;
+        }
+    }
 }

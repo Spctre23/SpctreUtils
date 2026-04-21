@@ -23,11 +23,13 @@ public class Position extends HudElement
         Vec3 pos = mc.player.position();
         String posText = String.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z);
         String posScaledText = "";
+
         if (scaled.getValue())
         {
             Vec3 posScaled = DimensionHelper.getOppositePos(pos);
             posScaledText = String.format(" [%.1f, %.1f, %.1f]", posScaled.x, posScaled.y, posScaled.z);
         }
+
         setText(posText + posScaledText);
     }
 }
