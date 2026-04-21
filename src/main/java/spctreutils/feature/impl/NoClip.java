@@ -1,5 +1,4 @@
 package spctreutils.feature.impl;
-
 import spctreutils.feature.Feature;
 
 public class NoClip extends Feature

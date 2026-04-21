@@ -1,6 +1,7 @@
 package spctreutils.feature.impl;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -12,24 +13,33 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class GetEntityCountAtBlock extends Feature
+public class GetEntityCount extends Feature
 {
     private BlockPos block = null;
     private final Delay unrenderDelay = new Delay();
 
-    public GetEntityCountAtBlock()
+    public GetEntityCount()
     {
-        super("Get Entity Count at Block", "Prints number of entities at the block you are looking at.", KEY_BEHAVIOR.TRIGGER);
+        super("Get Entity Count", "Prints number of entities in simulation distance (default), or within the block you are looking at if holding CTRL on activation.", KEY_BEHAVIOR.TRIGGER);
     }
 
     @Override
     protected void onKeyPressed()
     {
-        block = RaycastHelper.getAimedBlock(true);
-        if (block == null) return;
+        HashSet<Entity> entities;
+        boolean getAtBlock = Screen.hasControlDown();
+        if (getAtBlock)
+        {
+            block = RaycastHelper.getAimedBlock(true);
+            if (block == null) return;
+            entities = EntityHelper.getEntities(new AABB(block));
+        }
+        else
+        {
+            block = null;
+            entities = EntityHelper.getEntities();
+        }
 
-        AABB aabb = new AABB(block);
-        HashSet<Entity> entities = EntityHelper.getEntities(aabb);
         Map<String, Integer> entityCounts = new LinkedHashMap<>();
         for (Entity entity : entities)
         {

@@ -27,7 +27,7 @@ public class ChunkHelper
         }
     }
 
-    public static <T extends BlockEntity> HashSet<T> getBlockEntities(Class<T> blockEntityType)
+    public static <T extends BlockEntity> HashSet<T> getBlockEntitiesOfType(Class<T> blockEntityType)
     {
         HashSet<T> blockEntities = new HashSet<>();
         forEach(chunk ->

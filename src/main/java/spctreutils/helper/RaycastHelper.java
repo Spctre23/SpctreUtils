@@ -1,5 +1,6 @@
 package spctreutils.helper;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -14,9 +15,9 @@ public class RaycastHelper
 
     private static Ray getRay()
     {
-        Minecraft mc = Minecraft.getInstance();
-        Vec3 start = mc.gameRenderer.getMainCamera().getPosition();
-        Vec3 look = mc.gameRenderer.getMainCamera().getEntity().getLookAngle();
+        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        Vec3 start = camera.getPosition();
+        Vec3 look = camera.getEntity().getLookAngle();
         Vec3 end = start.add(look.scale(100));
         return new Ray(start, look, end);
     }
@@ -26,11 +27,10 @@ public class RaycastHelper
     {
         Minecraft mc = Minecraft.getInstance();
         Ray ray = getRay();
-        Vec3 start = ray.start(), look = ray.look, end = ray.end();
-        AABB searchBox = mc.player.getBoundingBox().expandTowards(look.scale(100)).inflate(1.0);
+        AABB searchBox = mc.player.getBoundingBox().expandTowards(ray.look.scale(100)).inflate(1.0);
 
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(
-            mc.level, mc.player, start, end, searchBox, entity -> !entity.isSpectator() && entity != mc.player, 0.0f
+            mc.level, mc.player, ray.start, ray.end, searchBox, entity -> !entity.isSpectator() && entity != mc.player, 0.0f
         );
         return hit == null || hit.getType() == HitResult.Type.MISS || hit.getEntity() == null ? null : hit.getEntity();
     }
@@ -40,13 +40,9 @@ public class RaycastHelper
     {
         Minecraft mc = Minecraft.getInstance();
         Ray ray = getRay();
-        Vec3 start = ray.start(), end = ray.end();
 
         BlockHitResult hit = mc.level.clip(new ClipContext(
-            start, end,
-            ClipContext.Block.OUTLINE,
-            ClipContext.Fluid.NONE,
-            mc.gameRenderer.getMainCamera().getEntity()
+            ray.start, ray.end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.gameRenderer.getMainCamera().getEntity()
         ));
 
         if (hit.getType() == HitResult.Type.MISS) return null;

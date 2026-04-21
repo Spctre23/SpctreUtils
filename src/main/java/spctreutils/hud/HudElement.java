@@ -85,10 +85,10 @@ public abstract class HudElement implements OptionProvider
 
     private void registerEvents()
     {
-        ClientTickEvents.START_CLIENT_TICK.register(client ->
+        ClientTickEvents.START_CLIENT_TICK.register(mc ->
         {
             syncFromConfig();
-            if (enabled && mc.level != null && client.player != null) onTick();
+            if (enabled && mc.level != null && mc.player != null) onTick();
         });
     }
 

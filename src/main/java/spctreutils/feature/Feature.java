@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.OptionProvider;
 import spctreutils.key.Keybind;
@@ -130,10 +129,10 @@ public abstract class Feature implements OptionProvider
 
     private void registerEvents()
     {
-        ClientTickEvents.START_CLIENT_TICK.register(client ->
+        ClientTickEvents.START_CLIENT_TICK.register(mc ->
         {
             syncFromConfig();
-            if (enabled && mc.level != null && client.player != null) onTick();
+            if (enabled && mc.level != null && mc.player != null) onTick();
         });
         WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
         {

@@ -38,7 +38,7 @@ public class CopyPos extends Feature
         color = shouldScale ? getOppositeDimensionColor() : Color.YELLOW;
         blockPos = shouldScale ? DimensionHelper.getOppositePos(blockPos) : blockPos;
 
-        String posString = blockPos.getX() + " " + blockPos.getY() + " " + blockPos.getZ();
+        String posString = blockPos.getX() + " " + renderPos.getY() + " " + blockPos.getZ();
         GLFW.glfwSetClipboardString(mc.getWindow().getWindow(), posString);
         Msg.sendHud("Copied position: " + posString, color);
 

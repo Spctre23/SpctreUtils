@@ -27,12 +27,11 @@ public interface OptionProvider
         return Option.<Boolean>createBuilder()
             .name(Component.literal(getName()))
             .description(OptionDescription.of(Component.literal(getDescription())))
-            .binding(false,
-                this::getEnabled, v ->
-                {
-                    setEnabled(v);
-                    ConfigManager.save();
-                })
+            .binding(false, this::getEnabled, v ->
+            {
+                setEnabled(v);
+                ConfigManager.save();
+            })
             .controller(TickBoxControllerBuilder::create)
             .build();
     }
@@ -56,9 +55,7 @@ public interface OptionProvider
         Option.Builder<T> builder = Option.<T>createBuilder()
             .name(Component.literal(setting.getName()).withColor(Color.lightGray.getRGB()))
             .description(OptionDescription.of(Component.literal(setting.getDescription())))
-            .binding(setting.getDefault(),
-                setting::getValue,
-                setting::setValue);
+            .binding(setting.getDefault(), setting::getValue, setting::setValue);
 
         if (setting.getType() == String.class)
             ((Option.Builder<String>) builder).controller(StringControllerBuilder::create);

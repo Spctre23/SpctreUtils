@@ -24,7 +24,7 @@ public class FeatureManager
         features.add(new CopyPos());
         features.add(new ForcePlace());
         features.add(new Invulnerable());
-        features.add(new GetEntityCountAtBlock());
+        features.add(new GetEntityCount());
         features.add(new GetDistanceToAimedBlock());
         features.add(new HighlightRareEntities());
         features.add(new MetadataSearch());
@@ -48,20 +48,17 @@ public class FeatureManager
 
     public List<Option<?>> getExtraOptions()
     {
-        return List.of(
-            Option.<Float>createBuilder()
-                .name(Component.literal("Flying Speed"))
-                .description(OptionDescription.of(Component.literal("Lets you configure creative mode flight speed.")))
-                .binding(
-                    new ModConfig().flyingSpeed,
-                    () -> ConfigManager.config.flyingSpeed, v ->
-                    {
-                        ConfigManager.config.flyingSpeed = v;
-                        ConfigManager.save();
-                    })
-                .controller(opt -> FloatFieldControllerBuilder.create(opt)
-                    .range(0.01f, 1f))
-                .build()
+        return List.of(Option.<Float>createBuilder()
+            .name(Component.literal("Flying Speed"))
+            .description(OptionDescription.of(Component.literal("Lets you configure creative mode flight speed.")))
+            .binding(new ModConfig().flyingSpeed, () -> ConfigManager.config.flyingSpeed, v ->
+            {
+                ConfigManager.config.flyingSpeed = v;
+                ConfigManager.save();
+            })
+            .controller(opt -> FloatFieldControllerBuilder.create(opt)
+                .range(0.01f, 1f))
+            .build()
         );
     }
 }
