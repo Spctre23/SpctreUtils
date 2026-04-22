@@ -1,6 +1,7 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.phys.Vec3;
+import spctreutils.helper.EntityHelper;
 import spctreutils.hud.HudElement;
 import spctreutils.setting.Setting;
 
@@ -11,7 +12,7 @@ public class Acceleration extends HudElement
     private static final Setting<Boolean> measure_gForce = new Setting<>("Also display g-force", true, Boolean.class);
     private static final Setting<Integer> decimalPrecision = new Setting<>("Decimal precision", 1, Integer.class);
 
-    private final double EARTH_GRAVITY = 9.80665;
+    private final EntityHelper.Physics physics = new EntityHelper.Physics();
 
     public Acceleration()
     {
@@ -21,17 +22,20 @@ public class Acceleration extends HudElement
     @Override
     protected void onTick()
     {
-        Vec3 vel = mc.player.getDeltaMovement().scale(20);
-        double accel = Math.sqrt(vel.x) + Math.sqrt(vel.y) + Math.sqrt(vel.z);
-        String accelText = String.format("%.%f m/s²", accel, decimalPrecision.getValue());
-        String gForceText = "";
+        EntityHelper.Physics.Acceleration accel = physics.getAcceleration(physics.getVelocity(mc.player));
+        if (accel == null) return;
 
+        String accelText = String.format("§f%." + decimalPrecision.getValue() + "f §7m/s²", accel.mpsSquared());
+        String gForceText = "";
         if (measure_gForce.getValue())
-        {
-            double gForce = accel * (1 / EARTH_GRAVITY);
-            gForceText = String.format("| %.%f g's", gForce, decimalPrecision.getValue());
-        }
+            gForceText = String.format(" §f%." + decimalPrecision.getValue() + "f §7g's", accel.gForce());
 
         setText(accelText + gForceText);
     }
+
+    @Override
+    protected void onEnabled() { physics.reset(); }
+
+    @Override
+    protected void onDisabled() { physics.reset(); }
 }
