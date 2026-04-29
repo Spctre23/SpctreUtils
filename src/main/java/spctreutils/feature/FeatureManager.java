@@ -30,6 +30,16 @@ public class FeatureManager
         features.add(new MetadataSearch());
     }
 
+    public <T extends Feature> T getFeature(Class<T> type)
+    {
+        for (Feature feature : features)
+        {
+            if (type.isInstance(feature))
+                return type.cast(feature);
+        }
+        return null;
+    }
+
     public List<Option<?>> getOptions()
     {
         return features.stream()

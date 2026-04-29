@@ -18,7 +18,7 @@ public abstract class Feature implements OptionProvider
     protected final Minecraft mc;
     protected final String name;
     protected final List<Setting<?>> settings;
-    public boolean enabled;
+    private boolean enabled;
     private final String description;
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
@@ -100,6 +100,8 @@ public abstract class Feature implements OptionProvider
         setConfigValue(enabled);
         onStateChanged();
     }
+
+    public boolean isEnabled() { return enabled; }
 
     private boolean getConfigValue()
     {

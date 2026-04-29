@@ -18,7 +18,7 @@ public class ModConfig
             .setPath(FabricLoader.getInstance().getConfigDir().resolve("spctreutils.json"))
             .build())
         .build();
-    
+
     @SerialEntry public Map<String, Boolean> featureStates = new HashMap<>();
     @SerialEntry public float flyingSpeed = 0.05f;
 

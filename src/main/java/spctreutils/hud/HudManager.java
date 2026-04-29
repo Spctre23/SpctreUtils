@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class HudManager
 {
-    private List<HudElement> elements = new ArrayList<>();
+    public List<HudElement> elements = new ArrayList<>();
 
     public HudManager()
     {
