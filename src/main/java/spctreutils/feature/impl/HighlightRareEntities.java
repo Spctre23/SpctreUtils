@@ -1,9 +1,9 @@
 package spctreutils.feature.impl;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.world.entity.animal.Panda;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.phys.AABB;
 import spctreutils.feature.Feature;
 import spctreutils.helper.EntityHelper;
@@ -15,7 +15,7 @@ public class HighlightRareEntities extends Feature
 {
     public HighlightRareEntities()
     {
-        super("Highlight Rare Entities", "Highlight rare entities with an outline.");
+        super("Highlight Rare Entities", "Highlights rare entities with an outline.");
     }
 
     @Override

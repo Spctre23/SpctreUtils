@@ -8,16 +8,18 @@ import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MappableRingBuffer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 import spctreutils.SpctreUtils;
@@ -30,13 +32,15 @@ public class RenderHelper
 {
     private static final RenderPipeline LINES_NO_DEPTH = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
-            .withLocation(ResourceLocation.fromNamespaceAndPath(SpctreUtils.MOD_ID, "pipeline/lines_no_depth"))
+            .withLocation(Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "pipeline/lines_no_depth"))
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .build()
     );
 
     private static final ByteBufferBuilder allocator = new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE);
     private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
+    private static final Vector3f MODEL_OFFSET = new Vector3f();
+    private static final Matrix4f TEXTURE_MATRIX = new Matrix4f();
     private static MappableRingBuffer vertexBuffer;
     private static BufferBuilder buffer;
 
@@ -81,8 +85,8 @@ public class RenderHelper
 
     public static void drawOutline(WorldRenderContext context, AABB box, float r, float g, float b, float a, boolean throughWalls)
     {
-        PoseStack poseStack = context.matrixStack();
-        Vec3 cam = context.camera().getPosition();
+        PoseStack poseStack = context.matrices();
+        Vec3 cam = context.gameRenderer().getMainCamera().position();
 
         poseStack.pushPose();
         poseStack.translate(-cam.x, -cam.y, -cam.z);
@@ -117,7 +121,7 @@ public class RenderHelper
                 poseStack.popPose();
                 return;
             }
-            VertexConsumer lines = context.consumers().getBuffer(RenderType.lines());
+            VertexConsumer lines = context.consumers().getBuffer(RenderTypes.lines());
             Matrix4f mat = poseStack.last().pose();
             line(lines, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
             line(lines, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
@@ -170,7 +174,7 @@ public class RenderHelper
 
         GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms()
             .writeTransform(RenderSystem.getModelViewMatrix(), COLOR_MODULATOR,
-                RenderSystem.getModelOffset(), RenderSystem.getTextureMatrix(), 1f);
+                MODEL_OFFSET, TEXTURE_MATRIX);
 
         try (
             RenderPass renderPass = RenderSystem.getDevice()
@@ -209,8 +213,10 @@ public class RenderHelper
         ny /= len;
         nz /= len;
 
-        buffer.addVertex(mat, (float) x1, (float) y1, (float) z1).setColor(r, g, b, a).setNormal(nx, ny, nz);
-        buffer.addVertex(mat, (float) x2, (float) y2, (float) z2).setColor(r, g, b, a).setNormal(nx, ny, nz);
+        buffer.addVertex(mat, (float) x1, (float) y1, (float) z1)
+            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
+        buffer.addVertex(mat, (float) x2, (float) y2, (float) z2)
+            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
     }
 
     private static void line(VertexConsumer consumer, Matrix4f mat,
@@ -224,8 +230,10 @@ public class RenderHelper
         ny /= len;
         nz /= len;
 
-        consumer.addVertex(mat, (float) x1, (float) y1, (float) z1).setColor(r, g, b, a).setNormal(nx, ny, nz);
-        consumer.addVertex(mat, (float) x2, (float) y2, (float) z2).setColor(r, g, b, a).setNormal(nx, ny, nz);
+        consumer.addVertex(mat, (float) x1, (float) y1, (float) z1)
+            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
+        consumer.addVertex(mat, (float) x2, (float) y2, (float) z2)
+            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
     }
 
     public static void close()

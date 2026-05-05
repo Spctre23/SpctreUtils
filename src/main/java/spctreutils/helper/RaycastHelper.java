@@ -16,8 +16,8 @@ public class RaycastHelper
     private static Ray getRay()
     {
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-        Vec3 start = camera.getPosition();
-        Vec3 look = camera.getEntity().getLookAngle();
+        Vec3 start = camera.position();
+        Vec3 look = camera.entity().getLookAngle();
         Vec3 end = start.add(look.scale(100));
         return new Ray(start, look, end);
     }
@@ -42,7 +42,7 @@ public class RaycastHelper
         Ray ray = getRay();
 
         BlockHitResult hit = mc.level.clip(new ClipContext(
-            ray.start, ray.end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.gameRenderer.getMainCamera().getEntity()
+            ray.start, ray.end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.gameRenderer.getMainCamera().entity()
         ));
 
         if (hit.getType() == HitResult.Type.MISS) return null;

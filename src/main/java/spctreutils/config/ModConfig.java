@@ -4,7 +4,7 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class ModConfig
 {
     public static final ConfigClassHandler<ModConfig> HANDLER = ConfigClassHandler.createBuilder(ModConfig.class)
-        .id(ResourceLocation.fromNamespaceAndPath("spctreutils", "config"))
+        .id(Identifier.fromNamespaceAndPath("spctreutils", "config"))
         .serializer(config -> GsonConfigSerializerBuilder.create(config)
             .setPath(FabricLoader.getInstance().getConfigDir().resolve("spctreutils.json"))
             .build())

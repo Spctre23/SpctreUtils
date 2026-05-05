@@ -1,6 +1,7 @@
 package spctreutils.feature.impl;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import dev.isxander.yacl3.gui.utils.KeyUtils;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +28,7 @@ public class GetEntityCount extends Feature
     protected void onKeyPressed()
     {
         HashSet<Entity> entities;
-        boolean getAtBlock = Screen.hasControlDown();
+        boolean getAtBlock = KeyUtils.hasControlDown();
         if (getAtBlock)
         {
             block = RaycastHelper.getAimedBlock(true);

@@ -2,8 +2,8 @@ package spctreutils.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.OptionProvider;
@@ -136,7 +136,7 @@ public abstract class Feature implements OptionProvider
             syncFromConfig();
             if (enabled && mc.level != null && mc.player != null) onTick();
         });
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(context ->
+        WorldRenderEvents.END_MAIN.register(context ->
         {
             if (enabled && mc.level != null && mc.player != null) onRender(context);
         });

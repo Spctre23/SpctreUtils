@@ -1,6 +1,7 @@
 package spctreutils.feature.impl;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import dev.isxander.yacl3.gui.utils.KeyUtils;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -34,12 +35,12 @@ public class CopyPos extends Feature
         if (blockPos == null) return;
         renderPos = blockPos;
 
-        boolean shouldScale = scaled.getValue() && Screen.hasControlDown();
+        boolean shouldScale = scaled.getValue() && KeyUtils.hasControlDown();
         color = shouldScale ? getOppositeDimensionColor() : Color.YELLOW;
         blockPos = shouldScale ? DimensionHelper.getOppositePos(blockPos) : blockPos;
 
         String posString = blockPos.getX() + " " + renderPos.getY() + " " + blockPos.getZ();
-        GLFW.glfwSetClipboardString(mc.getWindow().getWindow(), posString);
+        GLFW.glfwSetClipboardString(mc.getWindow().handle(), posString);
         Msg.sendHud("Copied position: " + posString, color);
 
         unrenderDelay.set(0.5);

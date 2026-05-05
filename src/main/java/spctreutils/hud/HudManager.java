@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
@@ -47,8 +47,8 @@ public class HudManager
     private void initializeHud()
     {
         Minecraft mc = Minecraft.getInstance();
-        ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
-        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, resourceLocation, (guiGraphics, tickDelta) ->
+        Identifier identifier = Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, tickDelta) ->
         {
             if (!ConfigManager.config.hud || mc.player == null || mc.options.hideGui) return;
 

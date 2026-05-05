@@ -1,8 +1,7 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.Horse;
-import spctreutils.config.ConfigManager;
+import net.minecraft.world.entity.animal.equine.Horse;
 import spctreutils.hud.HudElement;
 
 public class HorseSpeed extends HudElement

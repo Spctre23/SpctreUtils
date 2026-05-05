@@ -3,6 +3,7 @@ package spctreutils.feature.impl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.waypoints.PartialTickSupplier;
 import spctreutils.feature.Feature;
 import spctreutils.mixin.accessor.AzimuthWaypointInvoker;
 import spctreutils.mixin.accessor.ChunkWaypointInvoker;
@@ -33,14 +34,14 @@ public class PlayerTracker extends Feature
 
             PlayerInfo playerInfo = connection.getPlayerInfo(uuid);
             if (playerInfo == null) return;
-            String name = playerInfo.getProfile().getName();
+            String name = playerInfo.getProfile().name();
 
             StringBuilder sb = new StringBuilder();
             sb.append("\n" + name + ":\n");
 
             if (waypoint instanceof Vec3iWaypointInvoker vec3iWaypoint)
             {
-                Vec3 pos = vec3iWaypoint.invokePosition(mc.level);
+                Vec3 pos = vec3iWaypoint.invokePosition(mc.level, entity -> 0.0f);
                 sb.append("• Pos: " + Math.round(pos.x) + " " + Math.round(pos.y) + " " + Math.round(pos.z) + " (exact)");
             }
             else if (waypoint instanceof ChunkWaypointInvoker chunkWaypoint)
