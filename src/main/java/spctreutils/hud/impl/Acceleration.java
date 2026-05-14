@@ -1,6 +1,5 @@
 package spctreutils.hud.impl;
 
-import net.minecraft.world.phys.Vec3;
 import spctreutils.helper.EntityHelper;
 import spctreutils.hud.HudElement;
 import spctreutils.setting.Setting;

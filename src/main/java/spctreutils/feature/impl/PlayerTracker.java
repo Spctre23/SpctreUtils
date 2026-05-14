@@ -18,7 +18,7 @@ public class PlayerTracker extends Feature
 {
     public PlayerTracker()
     {
-        super("Player Tracker", "Prints the estimated position of all players on the server (if possible).", KEY_BEHAVIOR.TRIGGER);
+        super("Player Tracker", "Prints the estimated position of all players on the server (if possible). To reliably track player coordinates from any distance, you must trigger PlayerTracker within simulation distance of your target(s) at least once.", KEY_BEHAVIOR.TRIGGER);
     }
 
     @Override
