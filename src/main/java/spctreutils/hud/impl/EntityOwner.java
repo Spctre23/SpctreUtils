@@ -19,6 +19,7 @@ public class EntityOwner extends HudElement
             Entity owner = entity.getOwner();
             if (entity.getOwner() != null)
                 setText(owner.getName().getString());
+            return;
         }
         removeText();
     }

@@ -39,9 +39,9 @@ public class HudManager
         elements.add(new GoatVariant());
         elements.add(new HorseSpeed());
         elements.add(new HorseJump());
-        elements.add(new Ping());
         elements.add(new Speed());
         elements.add(new Acceleration());
+        elements.add(new Ping());
     }
 
     private void initializeHud()
