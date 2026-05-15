@@ -1,10 +1,11 @@
-package spctreutils.config;
+package spctreutils.config.yacl;
 
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.network.chat.Component;
+import spctreutils.config.ConfigManager;
 import spctreutils.setting.Setting;
 
 import java.awt.*;

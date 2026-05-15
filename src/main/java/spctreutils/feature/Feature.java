@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import spctreutils.config.ConfigManager;
-import spctreutils.config.OptionProvider;
+import spctreutils.config.yacl.OptionProvider;
 import spctreutils.key.Keybind;
 import spctreutils.setting.Setting;
 import spctreutils.helper.Msg;
@@ -100,8 +100,6 @@ public abstract class Feature implements OptionProvider
         setConfigValue(enabled);
         onStateChanged();
     }
-
-    public boolean isEnabled() { return enabled; }
 
     private boolean getConfigValue()
     {

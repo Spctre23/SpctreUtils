@@ -1,6 +1,5 @@
 package spctreutils.hud.impl;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
 import spctreutils.helper.DimensionHelper;
 import spctreutils.hud.HudElement;

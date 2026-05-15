@@ -4,7 +4,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
-import spctreutils.config.OptionProvider;
+import spctreutils.config.yacl.HudOptionProvider;
+import spctreutils.config.yacl.OptionProvider;
 import spctreutils.setting.Setting;
 
 import java.util.List;
@@ -24,11 +25,13 @@ public abstract class HudElement implements OptionProvider
     protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
         this.name = name;
-        this.prefix = prefix == "" ? "" : prefix + ": ";
+        this.prefix = prefix.equals("") ? "" : prefix + ": ";
         this.description = description;
         this.mc = Minecraft.getInstance();
         this.enabled = getConfigValue();
         this.settings = settings;
+
+        syncFromConfig();
 
         for (Setting<?> setting : settings)
             setting.setKey(name);
@@ -92,16 +95,14 @@ public abstract class HudElement implements OptionProvider
         });
     }
 
-    public boolean isEnabled() { return enabled; }
-
     private boolean getConfigValue()
     {
         return ConfigManager.config.hudElementStates.getOrDefault(getClass().getSimpleName(), false);
     }
 
-    private void setConfigValue(boolean value)
+    private void setConfigValue(boolean enabled)
     {
-        ConfigManager.config.hudElementStates.put(getClass().getSimpleName(), value);
+        ConfigManager.config.hudElementStates.put(getClass().getSimpleName(), enabled);
         ConfigManager.save();
     }
 
@@ -109,9 +110,11 @@ public abstract class HudElement implements OptionProvider
     {
         prefixColor = ConfigManager.config.hudPrefixColor;
         textColor = ConfigManager.config.hudTextColor;
-        boolean configValue = getConfigValue();
-        if (configValue == enabled) return;
-        enabled = configValue;
+
+        boolean newEnabled = getConfigValue();
+        if (newEnabled == enabled) return;
+        enabled = newEnabled;
+
         onStateChanged();
     }
 

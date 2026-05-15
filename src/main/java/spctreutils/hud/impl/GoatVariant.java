@@ -1,7 +1,6 @@
 package spctreutils.hud.impl;
 
 import net.minecraft.world.entity.animal.goat.Goat;
-import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 import java.awt.*;

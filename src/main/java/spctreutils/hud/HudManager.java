@@ -1,10 +1,12 @@
 package spctreutils.hud;
 
 import com.mojang.blaze3d.platform.Window;
+import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
@@ -13,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
+import spctreutils.config.yacl.HudControllerBuilder;
 import spctreutils.hud.impl.*;
 
 import java.awt.*;
@@ -22,7 +25,8 @@ import java.util.stream.Collectors;
 
 public class HudManager
 {
-    public List<HudElement> elements = new ArrayList<>();
+    @SerialEntry public List<HudElement> elements = new ArrayList<>();
+    public List<HudElement> elementsDefaultOrder = new ArrayList<>();
 
     public HudManager()
     {
@@ -42,7 +46,11 @@ public class HudManager
         elements.add(new Speed());
         elements.add(new Acceleration());
         elements.add(new Ping());
+
+        elementsDefaultOrder = elements;
     }
+
+    public List<HudElement> getElements() { return elements; }
 
     private void initializeHud()
     {
@@ -61,7 +69,7 @@ public class HudManager
             for (HudElement element : elements)
             {
                 Component content = element.getText();
-                if (!element.isEnabled() || content == null) continue;
+                if (!element.getEnabled() || content == null) continue;
 
                 int textWidth = mc.font.width(content);
 
@@ -92,7 +100,7 @@ public class HudManager
             .collect(Collectors.toList());
     }
 
-    public OptionGroup getExtraOptions()
+    public OptionGroup getGlobalOptions()
     {
         return OptionGroup.createBuilder()
             .name(Component.literal("Global HUD Settings"))
@@ -129,6 +137,19 @@ public class HudManager
                     })
                 .controller(ColorControllerBuilder::create)
                 .build())
+            .build();
+    }
+
+    public ListOption<HudElement> getDrawOrderOptions()
+    {
+        return ListOption.<HudElement>createBuilder()
+            .name(Component.literal("HUD Draw Order"))
+            .binding(
+                new ArrayList<>(elementsDefaultOrder),
+                () -> new ArrayList<>(elements),
+                v -> { elements = new ArrayList<>(v); ConfigManager.save(); })
+            .controller(HudControllerBuilder::create)
+            .initial(() -> null)
             .build();
     }
 }

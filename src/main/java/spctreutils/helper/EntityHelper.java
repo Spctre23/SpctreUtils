@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 
 public class EntityHelper
 {
-
     public static <T extends Entity> HashSet<T> getEntitiesOfType(Class<T> entityType)
     {
         HashSet<T> entities = new HashSet<>();

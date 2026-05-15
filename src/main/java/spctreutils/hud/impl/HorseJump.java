@@ -3,7 +3,6 @@ package spctreutils.hud.impl;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.equine.Horse;
-import spctreutils.config.ConfigManager;
 import spctreutils.hud.HudElement;
 
 public class HorseJump extends HudElement
