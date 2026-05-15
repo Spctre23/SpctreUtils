@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
-import spctreutils.config.yacl.HudOptionProvider;
 import spctreutils.config.yacl.OptionProvider;
 import spctreutils.setting.Setting;
 

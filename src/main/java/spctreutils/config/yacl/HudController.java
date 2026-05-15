@@ -8,22 +8,13 @@ import dev.isxander.yacl3.gui.YACLScreen;
 import net.minecraft.network.chat.Component;
 import spctreutils.hud.HudElement;
 
-public class HudController implements Controller<HudElement>
+public record HudController(Option<HudElement> option) implements Controller<HudElement>
 {
-    private final Option<HudElement> option;
-
-    public HudController(Option<HudElement> option)
-    {
-        this.option = option;
-    }
-
-    @Override
-    public Option<HudElement> option() { return option; }
-
     @Override
     public Component formatValue()
     {
-        return Component.literal(option.pendingValue().toString());
+        HudElement element = option.pendingValue();
+        return element != null ? Component.literal(element.getName()) : Component.empty();
     }
 
     @Override
