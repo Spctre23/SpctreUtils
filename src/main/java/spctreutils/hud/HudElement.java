@@ -1,12 +1,20 @@
 package spctreutils.hud;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.ClientboundPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.yacl.OptionProvider;
+import spctreutils.helper.ColorHelper;
+import spctreutils.mixin.core.ClientPacketListenerMixin;
 import spctreutils.setting.Setting;
 
+import java.awt.*;
 import java.util.List;
 
 public abstract class HudElement implements OptionProvider
@@ -81,7 +89,11 @@ public abstract class HudElement implements OptionProvider
 
     protected void onEnabled() {}
 
-    protected void onDisabled() { removeText(); }
+    protected void onDisabled() {}
+
+    protected void onJoin() {}
+
+    protected void onDisconnect() {}
 
     protected void onTick() {}
 
@@ -91,6 +103,12 @@ public abstract class HudElement implements OptionProvider
         {
             syncFromConfig();
             if (enabled && mc.level != null && mc.player != null) onTick();
+        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> onJoin());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
+        {
+            onDisconnect();
+            removeText();
         });
     }
 
@@ -120,20 +138,32 @@ public abstract class HudElement implements OptionProvider
     private void onStateChanged()
     {
         if (enabled) onEnabled();
-        else onDisabled();
+        else
+        {
+            onDisabled();
+            removeText();
+        }
     }
 
     public int getPrefixColor() { return prefixColor; }
 
     public Component getText() { return text; }
 
-    protected void setText(String text, int textColor)
+    protected void setText(String text, int color)
     {
         this.text = Component.literal(prefix).withColor(prefixColor)
-            .append(Component.literal(text).withColor(textColor));
+            .append(Component.literal(text).withColor(color));
     }
 
-    protected void setText(String text) { setText(text, textColor); }
+    protected void setText(String text, Color color)
+    {
+        setText(text, ColorHelper.rgbToHex(color));
+    }
+
+    protected void setText(String text)
+    {
+        setText(text, textColor);
+    }
 
     protected void removeText() { text = null; }
 }

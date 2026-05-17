@@ -47,6 +47,7 @@ public class HudManager
         elements.add(new GoatVariant());
         elements.add(new Ping());
         elements.add(new FPS());
+        elements.add(new TPS());
 
         elementsDefaultOrder = elements;
     }

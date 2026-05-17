@@ -6,6 +6,7 @@
 		"core.ClientPacketListenerMixin",
 		"core.PlayerListMixin",
       	"core.GameRendererMixin",
+		"core.ConnectionMixin",
 		"feature.BlockItemMixin",
 		"feature.BlockStateBaseMixin",
 		"feature.PlayerMixin",
