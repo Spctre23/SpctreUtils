@@ -1,7 +1,7 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
 import spctreutils.helper.EntityHelper;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 import spctreutils.setting.Setting;
 
 import java.util.List;

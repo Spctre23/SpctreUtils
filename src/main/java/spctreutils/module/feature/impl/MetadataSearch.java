@@ -1,4 +1,4 @@
-package spctreutils.feature.impl;
+package spctreutils.module.feature.impl;
 
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.core.BlockPos;
@@ -7,7 +7,7 @@ import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import org.apache.commons.lang3.StringUtils;
-import spctreutils.feature.Feature;
+import spctreutils.module.feature.Feature;
 import spctreutils.helper.ChunkHelper;
 import spctreutils.helper.EntityHelper;
 import spctreutils.helper.RenderHelper;

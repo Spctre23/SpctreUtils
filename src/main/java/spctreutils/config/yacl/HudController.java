@@ -6,7 +6,7 @@ import dev.isxander.yacl3.api.utils.Dimension;
 import dev.isxander.yacl3.gui.AbstractWidget;
 import dev.isxander.yacl3.gui.YACLScreen;
 import net.minecraft.network.chat.Component;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 
 public record HudController(Option<HudElement> option) implements Controller<HudElement>
 {

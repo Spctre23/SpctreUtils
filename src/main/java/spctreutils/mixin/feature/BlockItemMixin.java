@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import spctreutils.config.ConfigManager;
-import spctreutils.feature.impl.ForcePlace;
+import spctreutils.module.feature.impl.ForcePlace;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin

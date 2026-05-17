@@ -1,11 +1,9 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.world.InteractionResult;
 import spctreutils.event.PacketEvent;
-import spctreutils.helper.ColorHelper;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 
 import java.awt.*;
 

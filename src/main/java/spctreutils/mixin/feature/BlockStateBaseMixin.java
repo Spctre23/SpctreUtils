@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
-import spctreutils.feature.impl.NoClip;
+import spctreutils.module.feature.impl.NoClip;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public class BlockStateBaseMixin

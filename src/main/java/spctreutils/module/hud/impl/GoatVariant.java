@@ -1,7 +1,7 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
 import net.minecraft.world.entity.animal.goat.Goat;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 
 import java.awt.*;
 

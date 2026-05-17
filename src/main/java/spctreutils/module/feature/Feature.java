@@ -1,25 +1,18 @@
-package spctreutils.feature;
+package spctreutils.module.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
-import net.minecraft.client.Minecraft;
+import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
-import spctreutils.config.yacl.OptionProvider;
+import spctreutils.helper.Msg;
 import spctreutils.key.Keybind;
 import spctreutils.setting.Setting;
-import spctreutils.helper.Msg;
 
 import java.util.List;
 
-public abstract class Feature implements OptionProvider
+public abstract class Feature extends Module
 {
-    protected final Minecraft mc;
-    protected final String name;
-    protected final List<Setting<?>> settings;
-    private boolean enabled;
-    private final String description;
     private final Keybind keybind;
     private final KEY_BEHAVIOR keyBehavior;
 
@@ -31,18 +24,11 @@ public abstract class Feature implements OptionProvider
 
     protected Feature(String name, String description, int keyCode, KEY_BEHAVIOR keyBehavior, List<Setting<?>> settings)
     {
-        this.name = name;
-        this.description = description;
+        super(name, description, settings);
         this.keybind = new Keybind(name, keyCode);
         this.keyBehavior = keyBehavior;
-        this.settings = settings;
-        this.mc = Minecraft.getInstance();
-        this.enabled = getConfigValue();
 
-        for (Setting<?> setting : settings)
-            setting.setKey(name);
-
-        registerEvents();
+        registerKeybind();
     }
 
     protected Feature(String name, String description, KEY_BEHAVIOR keyBehavior, List<Setting<?>> settings)
@@ -70,75 +56,45 @@ public abstract class Feature implements OptionProvider
         this(name, "");
     }
 
-    @Override public String getName() { return name; }
-
-    @Override public String getDescription() { return description; }
-
-    @Override public boolean getEnabled() { return enabled; }
-
-    @Override public void setEnabled(boolean value) { setState(value); }
-
-    @Override public List<Setting<?>> getSettings() { return settings; }
-
-    protected void onEnabled() {}
-
-    protected void onDisabled() {}
-
     protected void onKeyPressed() {}
 
     protected void onKeyReleased() {}
 
-    protected void onTick() {}
-
     protected void onRender(WorldRenderContext context) {}
 
-    protected void toggle() { setState(!enabled); }
-
-    protected void setState(boolean state)
+    protected void toggle()
     {
-        enabled = state;
-        setConfigValue(enabled);
-        onStateChanged();
+        setState(!enabled);
     }
 
-    private boolean getConfigValue()
+    @Override
+    protected boolean getConfigValue()
     {
         return ConfigManager.config.featureStates.getOrDefault(getClass().getSimpleName(), false);
     }
 
-    private void setConfigValue(boolean value)
+    @Override
+    protected void setConfigValue(boolean value)
     {
         ConfigManager.config.featureStates.put(getClass().getSimpleName(), value);
         ConfigManager.save();
     }
 
-    private void syncFromConfig()
+    @Override
+    protected void onStateChanged()
     {
-        boolean configValue = getConfigValue();
-        if (configValue == enabled) return;
-        enabled = configValue;
-        onStateChanged();
-    }
-
-    private void onStateChanged()
-    {
-        if (enabled) onEnabled();
-        else onDisabled();
+        super.onStateChanged();
         if (keyBehavior == KEY_BEHAVIOR.TOGGLE) sendToggleNotification();
     }
 
-    private void registerEvents()
+    @Override
+    protected void registerEvents()
     {
-        ClientTickEvents.START_CLIENT_TICK.register(mc ->
-        {
-            syncFromConfig();
-            if (enabled && mc.level != null && mc.player != null) onTick();
-        });
+        super.registerEvents();
         WorldRenderEvents.END_MAIN.register(context ->
         {
             if (enabled && mc.level != null && mc.player != null) onRender(context);
         });
-        registerKeybind();
     }
 
     private void registerKeybind()
@@ -154,10 +110,12 @@ public abstract class Feature implements OptionProvider
         });
 
         if (keyBehavior == KEY_BEHAVIOR.TRIGGER)
+        {
             keybind.onReleased(() ->
             {
                 if (enabled) onKeyReleased();
             });
+        }
     }
 
     private void sendToggleNotification()

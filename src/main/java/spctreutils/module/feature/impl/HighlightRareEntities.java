@@ -1,11 +1,11 @@
-package spctreutils.feature.impl;
+package spctreutils.module.feature.impl;
 
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.phys.AABB;
-import spctreutils.feature.Feature;
+import spctreutils.module.feature.Feature;
 import spctreutils.helper.EntityHelper;
 import spctreutils.helper.RenderHelper;
 

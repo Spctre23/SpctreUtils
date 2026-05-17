@@ -1,15 +1,14 @@
 package spctreutils.helper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import spctreutils.SpctreUtils;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Msg
 {
@@ -70,8 +69,9 @@ public class Msg
 
     public static void sendHud(String msg, Color color)
     {
-        if (SpctreUtils.localPlayer == null) return;
-        SpctreUtils.localPlayer.displayClientMessage(Component.literal(msg)
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
+        player.displayClientMessage(Component.literal(msg)
             .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color)))), true);
     }
 

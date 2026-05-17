@@ -1,4 +1,4 @@
-package spctreutils.hud;
+package spctreutils.module.hud;
 
 import com.mojang.blaze3d.platform.Window;
 import dev.isxander.yacl3.api.ListOption;
@@ -16,7 +16,7 @@ import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
 import spctreutils.config.yacl.HudControllerBuilder;
-import spctreutils.hud.impl.*;
+import spctreutils.module.hud.impl.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,17 +37,17 @@ public class HudManager
     private void registerElements()
     {
         elements.add(new Position());
+        elements.add(new HorseSpeed());
+        elements.add(new HorseJump());
+        elements.add(new GoatVariant());
         elements.add(new Durability());
         elements.add(new Acceleration());
         elements.add(new Speed());
         elements.add(new EntityHealth());
         elements.add(new EntityOwner());
-        elements.add(new HorseSpeed());
-        elements.add(new HorseJump());
-        elements.add(new GoatVariant());
-        elements.add(new Ping());
-        elements.add(new FPS());
         elements.add(new TPS());
+        elements.add(new FPS());
+        elements.add(new Ping());
 
         elementsDefaultOrder = elements;
     }

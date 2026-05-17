@@ -1,8 +1,8 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 
 public class EntityOwner extends HudElement
 {

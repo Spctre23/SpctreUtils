@@ -1,14 +1,13 @@
-package spctreutils.feature.impl;
+package spctreutils.module.feature.impl;
 
 import dev.isxander.yacl3.gui.utils.KeyUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
-import spctreutils.feature.Feature;
+import spctreutils.module.feature.Feature;
 import spctreutils.helper.*;
 import spctreutils.setting.Setting;
 

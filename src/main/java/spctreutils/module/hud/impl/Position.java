@@ -1,8 +1,8 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
 import net.minecraft.world.phys.Vec3;
 import spctreutils.helper.DimensionHelper;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 import spctreutils.setting.Setting;
 
 import java.util.List;

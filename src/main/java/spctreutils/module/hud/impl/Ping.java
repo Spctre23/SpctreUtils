@@ -1,7 +1,7 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
 import net.minecraft.client.multiplayer.PlayerInfo;
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 
 public class Ping extends HudElement
 {

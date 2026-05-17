@@ -1,6 +1,6 @@
-package spctreutils.hud.impl;
+package spctreutils.module.hud.impl;
 
-import spctreutils.hud.HudElement;
+import spctreutils.module.hud.HudElement;
 
 public class FPS extends HudElement
 {

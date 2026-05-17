@@ -1,10 +1,9 @@
-package spctreutils.feature.impl;
+package spctreutils.module.feature.impl;
 
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.waypoints.PartialTickSupplier;
-import spctreutils.feature.Feature;
+import spctreutils.module.feature.Feature;
 import spctreutils.mixin.accessor.AzimuthWaypointInvoker;
 import spctreutils.mixin.accessor.ChunkWaypointInvoker;
 import spctreutils.mixin.accessor.Vec3iWaypointInvoker;

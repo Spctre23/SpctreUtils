@@ -2,6 +2,7 @@ package spctreutils.mixin.core;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.protocol.game.ClientboundLoginPacket;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,8 +28,8 @@ public abstract class ClientPacketListenerMixin
 
     private void initializeServerPlayer()
     {
-        SpctreUtils.localPlayer = Minecraft.getInstance().player;
-        if (SpctreUtils.localPlayer == null || SpctreUtils.serverPlayer != null) return;
-        SpctreUtils.serverPlayer = SpctreUtils.serverPlayers.get(SpctreUtils.localPlayer.getUUID());
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || SpctreUtils.serverPlayer != null) return;
+        SpctreUtils.serverPlayer = SpctreUtils.serverPlayers.get(player.getUUID());
     }
 }

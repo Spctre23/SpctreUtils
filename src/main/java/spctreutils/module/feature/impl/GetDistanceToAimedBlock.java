@@ -1,9 +1,9 @@
-package spctreutils.feature.impl;
+package spctreutils.module.feature.impl;
 
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import spctreutils.feature.Feature;
+import spctreutils.module.feature.Feature;
 import spctreutils.helper.*;
 
 import java.awt.*;

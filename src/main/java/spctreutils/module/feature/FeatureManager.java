@@ -1,4 +1,4 @@
-package spctreutils.feature;
+package spctreutils.module.feature;
 
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -7,7 +7,7 @@ import dev.isxander.yacl3.api.controller.FloatFieldControllerBuilder;
 import net.minecraft.network.chat.Component;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
-import spctreutils.feature.impl.*;
+import spctreutils.module.feature.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;

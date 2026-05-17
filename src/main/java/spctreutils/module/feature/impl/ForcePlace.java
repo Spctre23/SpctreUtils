@@ -1,6 +1,6 @@
-package spctreutils.feature.impl;
+package spctreutils.module.feature.impl;
 
-import spctreutils.feature.Feature;
+import spctreutils.module.feature.Feature;
 
 public class ForcePlace extends Feature
 {
