@@ -1,6 +1,6 @@
 # SpctreUtils
 
-A QOL client-side mod for fabric 1.21.6 which adds random utilities I find useful.
+A QOL client-side mod for fabric 1.21.11 which adds random utilities I find useful.
 
 
 ## Features
@@ -49,7 +49,8 @@ A QOL client-side mod for fabric 1.21.6 which adds random utilities I find usefu
    - **Horse Jump Height**
         - Displays the jump height stat of the horse you are looking at.
    - **Ping**
-        - Displays your ping.
+   - **FPS**
+   - **TPS**
    - **Speed**
         - Displays your speed in m/s. Vertical speed is optional as well.
    - **Acceleration**
