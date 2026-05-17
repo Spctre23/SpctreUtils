@@ -48,14 +48,13 @@ A QOL client-side mod for fabric 1.21.11 which adds random utilities I find usef
         - Displays the maximum speed stat of the horse you are looking at.
    - **Horse Jump Height**
         - Displays the jump height stat of the horse you are looking at.
-   - **Ping**
-   - **FPS**
-   - **TPS**
    - **Speed**
         - Displays your speed in m/s. Vertical speed is optional as well.
    - **Acceleration**
         - Displays player acceleration in m/s² or g's.
-
+   - **Ping**
+   - **FPS**
+   - **TPS**
 
 
 ## Dependencies
