@@ -11,8 +11,7 @@ public class Armor extends HudElement
     {
         super("Armor", "", "Displays your armor and durability.");
 
-        setElementFlags(new ElementFlags(AttachType.BOTTOM_LEFT, false));
-        setSubElementFlags(new SubElementFlags(25, 15));
+        setLayout(new Layout(AttachTo.BOTTOM_LEFT, false, 25, 15));
     }
 
     @Override

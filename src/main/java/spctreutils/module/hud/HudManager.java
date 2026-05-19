@@ -68,69 +68,69 @@ public class HudManager
 
             for (HudElement element : elements)
             {
-                HudElement.ElementFlags elementFlags = element.getElementFlags();
+                HudElement.Layout layout = element.getLayout();
 
-                for (HudElement.ItemSubElement itemElement : element.getItemElements().values())
+                for (HudElement.ItemPart itemPart : element.getItemParts().values())
                 {
-                    if (itemElement.item == null) continue;
+                    if (itemPart.item == null) continue;
 
                     int itemX = 0;
                     int itemSize = 16;
-                    int itemY = itemElement.yOffset + (height - chatBarHeight - itemSize);
+                    int itemY = itemPart.yOffset + (height - chatBarHeight - itemSize);
 
-                    switch (elementFlags.attachType())
+                    switch (layout.attachTo())
                     {
                         case NONE:
-                            itemX = itemElement.xOffset + (width / 2);
+                            itemX = itemPart.xOffset + (width / 2);
                             itemY += Math.round((height / 2.0f) - 8.0f);
                             break;
                         case BOTTOM_LEFT:
-                            itemX = itemElement.xOffset;
+                            itemX = itemPart.xOffset;
                             break;
                         case BOTTOM_RIGHT:
-                            itemX = itemElement.xOffset + (width - itemSize);
+                            itemX = itemPart.xOffset + (width - itemSize);
                             break;
                     }
 
                     guiGraphics.renderItem(
-                        itemElement.item.getDefaultInstance(),
+                        itemPart.item.getDefaultInstance(),
                         itemX,
                         itemY
                     );
                 }
 
-                for (HudElement.TextSubElement textElement : element.getTextElements().values())
+                for (HudElement.TextPart textPart : element.getTextParts().values())
                 {
-                    if (textElement.text == null) continue;
+                    if (textPart.text == null) continue;
 
                     int textX = 0;
-                    int textY = textElement.yOffset + (height - chatBarHeight - mc.font.lineHeight);
-                    int textWidth = mc.font.width(textElement.text);
+                    int textY = textPart.yOffset + (height - chatBarHeight - mc.font.lineHeight);
+                    int textWidth = mc.font.width(textPart.text);
 
-                    switch (elementFlags.attachType())
+                    switch (layout.attachTo())
                     {
                         case NONE:
-                            textX = textElement.xOffset + (width / 2);
+                            textX = textPart.xOffset + (width / 2);
                             textY += Math.round((height / 2.0f) - 8.0f);
                             break;
                         case BOTTOM_LEFT:
-                            textX = textElement.xOffset;
-                            if (elementFlags.verticalStack())
+                            textX = textPart.xOffset;
+                            if (layout.verticalStack())
                                 verticalStackOffset -= mc.font.lineHeight;
                             break;
                         case BOTTOM_RIGHT:
-                            textX = textElement.xOffset + (width - textWidth);
-                            if (elementFlags.verticalStack())
+                            textX = textPart.xOffset + (width - textWidth);
+                            if (layout.verticalStack())
                                 verticalStackOffset -= mc.font.lineHeight;
                             break;
                     }
 
-                    if (elementFlags.verticalStack())
+                    if (layout.verticalStack())
                         textY = verticalStackOffset;
 
                     guiGraphics.drawString(
                         mc.font,
-                        textElement.text,
+                        textPart.text,
                         textX,
                         textY,
                         element.getPrefixColor()

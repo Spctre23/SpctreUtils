@@ -3,7 +3,6 @@ package spctreutils.module.hud;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import org.joml.Vector2d;
-import spctreutils.helper.Msg;
 import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
 import spctreutils.helper.ColorHelper;
@@ -16,14 +15,14 @@ import java.util.Map;
 
 public abstract class HudElement extends Module
 {
-    private ElementFlags elementFlags = new ElementFlags(AttachType.BOTTOM_RIGHT, true);
-    private SubElementFlags subElementFlags = new SubElementFlags(15, 15) ;
+    private final String prefix;
     private int prefixColor = ConfigManager.config.hudPrefixColor;
     private int textColor = ConfigManager.config.hudTextColor;
-    private final String prefix;
 
-    private final Map<Vector2d, ItemSubElement> itemElements = new HashMap<>();
-    private final Map<Vector2d, TextSubElement> textElements = new HashMap<>();
+    private final Map<Vector2d, ItemPart> itemParts = new HashMap<>();
+    private final Map<Vector2d, TextPart> textParts = new HashMap<>();
+
+    private Layout layout = new Layout(AttachTo.BOTTOM_RIGHT, true, 15, 15);
 
     protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
@@ -76,12 +75,6 @@ public abstract class HudElement extends Module
         dispose();
     }
 
-    @Override
-    protected void dispose()
-    {
-        clearElements();
-    }
-
     protected int getPrefixColor()
     {
         return prefixColor;
@@ -92,14 +85,9 @@ public abstract class HudElement extends Module
         return textColor;
     }
 
-    public Map<Vector2d, ItemSubElement> getItemElements()
+    public Map<Vector2d, TextPart> getTextParts()
     {
-        return itemElements;
-    }
-
-    public Map<Vector2d, TextSubElement> getTextElements()
-    {
-        return textElements;
+        return textParts;
     }
 
     protected void setText(String text, int color, int x, int y)
@@ -108,14 +96,14 @@ public abstract class HudElement extends Module
         Component contents = Component.literal(prefix).withColor(prefixColor)
             .append(Component.literal(text).withColor(color));
 
-        if (!textElements.containsKey(pos))
+        if (!textParts.containsKey(pos))
         {
-            textElements.put(pos, new TextSubElement(contents, (int) pos.x, (int) pos.y));
+            textParts.put(pos, new TextPart(contents, (int) pos.x, (int) pos.y));
         }
         else
         {
-            TextSubElement textElement = textElements.get(pos);
-            textElement.text = contents;
+            TextPart textPart = textParts.get(pos);
+            textPart.text = contents;
         }
     }
 
@@ -144,78 +132,81 @@ public abstract class HudElement extends Module
         setText(text, 0, 0);
     }
 
+    public Map<Vector2d, ItemPart> getItemParts()
+    {
+        return itemParts;
+    }
+
     protected void setItem(Item item, int x, int y)
     {
         Vector2d pos = new Vector2d(x, y);
-        if (!itemElements.containsKey(pos))
+        if (!itemParts.containsKey(pos))
         {
-            itemElements.put(pos, new ItemSubElement(item, (int) pos.x, (int) pos.y));
-            Msg.sendChat("list size: " + itemElements.size());
+            itemParts.put(pos, new ItemPart(item, (int) pos.x, (int) pos.y));
         }
         else
         {
-            ItemSubElement itemElement = itemElements.get(pos);
-            itemElement.item = item;
+            ItemPart itemPart = itemParts.get(pos);
+            itemPart.item = item;
         }
     }
 
-    protected void clearElements()
+    public class ItemPart
     {
-        itemElements.clear();
-        textElements.clear();
+        Item item;
+        int xOffset;
+        int yOffset;
+
+        private ItemPart(Item item, int xOffset, int yOffset)
+        {
+            this.item = item;
+            this.xOffset = xOffset * layout.partSpacingX;
+            this.yOffset = yOffset * layout.partSpacingY;
+        }
     }
 
-    protected ElementFlags getElementFlags()
+    public class TextPart
     {
-        return elementFlags;
+        Component text;
+        int xOffset;
+        int yOffset;
+
+        private TextPart(Component text, int xOffset, int yOffset)
+        {
+            this.text = text;
+            this.xOffset = xOffset * layout.partSpacingX;
+            this.yOffset = yOffset * layout.partSpacingY;
+        }
     }
 
-    protected void setElementFlags(ElementFlags elementFlags)
+    protected Layout getLayout()
     {
-        this.elementFlags = elementFlags;
+        return layout;
     }
 
-    protected void setSubElementFlags(SubElementFlags subElementFlags)
+    protected void setLayout(Layout layout)
     {
-        this.subElementFlags = subElementFlags;
+        this.layout = layout;
     }
 
-    public enum AttachType
+    public enum AttachTo
     {
         NONE,
         BOTTOM_LEFT,
         BOTTOM_RIGHT
     }
 
-    public record ElementFlags(AttachType attachType, boolean verticalStack) {}
+    public record Layout(AttachTo attachTo, boolean verticalStack, int partSpacingX, int partSpacingY) {}
 
-    public record SubElementFlags(int xSeparator, int ySeparator) {}
-
-    public class ItemSubElement
+    protected void clearElements()
     {
-        Item item;
-        int xOffset;
-        int yOffset;
-
-        private ItemSubElement(Item item, int xOffset, int yOffset)
-        {
-            this.item = item;
-            this.xOffset = xOffset * subElementFlags.xSeparator;
-            this.yOffset = yOffset * subElementFlags.ySeparator;
-        }
+        itemParts.clear();
+        textParts.clear();
     }
 
-    public class TextSubElement
+    @Override
+    protected void dispose()
     {
-        Component text;
-        int xOffset;
-        int yOffset;
-
-        private TextSubElement(Component text, int xOffset, int yOffset)
-        {
-            this.text = text;
-            this.xOffset = xOffset * subElementFlags.xSeparator;
-            this.yOffset = yOffset * subElementFlags.ySeparator;
-        }
+        clearElements();
     }
 }
