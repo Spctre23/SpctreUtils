@@ -1,6 +1,7 @@
 package spctreutils.module.hud.impl;
 
 import net.minecraft.world.item.ItemStack;
+import spctreutils.helper.ItemHelper;
 import spctreutils.module.hud.HudElement;
 
 public class Durability extends HudElement
@@ -20,9 +21,7 @@ public class Durability extends HudElement
             return;
         }
 
-        int maxDamage = held.getMaxDamage();
-        int durability = maxDamage - held.getDamageValue();
-        String text = durability + " / " + maxDamage;
+        String text = ItemHelper.getDurability(held) + " / " + ItemHelper.getMaxDurability(held);
         setText(text);
     }
 }

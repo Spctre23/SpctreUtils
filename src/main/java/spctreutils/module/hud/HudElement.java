@@ -1,30 +1,29 @@
 package spctreutils.module.hud;
 
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.Nullable;
-import org.w3c.dom.Text;
-import spctreutils.helper.ListHelper;
+import org.joml.Vector2d;
+import spctreutils.helper.Msg;
 import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
 import spctreutils.helper.ColorHelper;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class HudElement extends Module
 {
+    private ElementFlags elementFlags = new ElementFlags(AttachType.BOTTOM_RIGHT, true);
+    private SubElementFlags subElementFlags = new SubElementFlags(15, 15) ;
     private int prefixColor = ConfigManager.config.hudPrefixColor;
     private int textColor = ConfigManager.config.hudTextColor;
     private final String prefix;
 
-    private final List<ItemElement> itemElements = new ArrayList<>();
-    private final List<TextElement> textElements = new ArrayList<>();
+    private final Map<Vector2d, ItemSubElement> itemElements = new HashMap<>();
+    private final Map<Vector2d, TextSubElement> textElements = new HashMap<>();
 
     protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
@@ -93,61 +92,31 @@ public abstract class HudElement extends Module
         return textColor;
     }
 
-    @Nullable
-    public TextElement getTextElement(int textElementIndex)
-    {
-        if (!ListHelper.indexExists(textElements, textElementIndex)) return null;
-        return textElements.get(textElementIndex);
-    }
-
-    @Nullable
-    public TextElement getTextElement()
-    {
-        return getTextElements().getFirst();
-    }
-
-    @Nullable
-    public ItemElement getItemElement(int itemElementIndex)
-    {
-        if (!ListHelper.indexExists(itemElements, itemElementIndex)) return null;
-        return itemElements.get(itemElementIndex);
-    }
-
-    @Nullable
-    public ItemElement getItemElement()
-    {
-        return getItemElements().getFirst();
-    }
-
-    public List<ItemElement> getItemElements()
+    public Map<Vector2d, ItemSubElement> getItemElements()
     {
         return itemElements;
     }
 
-    public List<TextElement> getTextElements()
+    public Map<Vector2d, TextSubElement> getTextElements()
     {
         return textElements;
     }
 
-    protected void setText(int textElementIndex, String text, int color, int x, int y)
+    protected void setText(String text, int color, int x, int y)
     {
+        Vector2d pos = new Vector2d(x, y);
         Component contents = Component.literal(prefix).withColor(prefixColor)
             .append(Component.literal(text).withColor(color));
 
-        if (!ListHelper.indexExists(textElements, textElementIndex))
-            textElements.add(new TextElement(contents, x, y));
-
-        textElements.get(textElementIndex).text = contents;
-    }
-
-    protected void setText(int textElementIndex, String text, Color color, int x, int y)
-    {
-        setText(textElementIndex, text, ColorHelper.rgbToHex(color), x, y);
-    }
-
-    protected void setText(String text, int color, int x, int y)
-    {
-        setText(0, text, color, x, y);
+        if (!textElements.containsKey(pos))
+        {
+            textElements.put(pos, new TextSubElement(contents, (int) pos.x, (int) pos.y));
+        }
+        else
+        {
+            TextSubElement textElement = textElements.get(pos);
+            textElement.text = contents;
+        }
     }
 
     protected void setText(String text, Color color, int x, int y)
@@ -158,16 +127,6 @@ public abstract class HudElement extends Module
     protected void setText(String text, int x, int y)
     {
         setText(text, textColor, x, y);
-    }
-
-    protected void setText(int textElementIndex, String text, int color)
-    {
-        setText(textElementIndex, text, color, 0, 0);
-    }
-
-    protected void setText(int textElementIndex, String text, Color color)
-    {
-        setText(textElementIndex, text, color, 0, 0);
     }
 
     protected void setText(String text, int color)
@@ -185,17 +144,19 @@ public abstract class HudElement extends Module
         setText(text, 0, 0);
     }
 
-    protected void setItem(int itemElementIndex, Item item, int x, int y)
-    {
-        if (!ListHelper.indexExists(itemElements, itemElementIndex))
-            itemElements.add(new ItemElement(item, x, y));
-
-        getItemElement(itemElementIndex).item = item;
-    }
-
     protected void setItem(Item item, int x, int y)
     {
-        setItem(0, item, x, y);
+        Vector2d pos = new Vector2d(x, y);
+        if (!itemElements.containsKey(pos))
+        {
+            itemElements.put(pos, new ItemSubElement(item, (int) pos.x, (int) pos.y));
+            Msg.sendChat("list size: " + itemElements.size());
+        }
+        else
+        {
+            ItemSubElement itemElement = itemElements.get(pos);
+            itemElement.item = item;
+        }
     }
 
     protected void clearElements()
@@ -204,31 +165,57 @@ public abstract class HudElement extends Module
         textElements.clear();
     }
 
-    public class ItemElement
+    protected ElementFlags getElementFlags()
+    {
+        return elementFlags;
+    }
+
+    protected void setElementFlags(ElementFlags elementFlags)
+    {
+        this.elementFlags = elementFlags;
+    }
+
+    protected void setSubElementFlags(SubElementFlags subElementFlags)
+    {
+        this.subElementFlags = subElementFlags;
+    }
+
+    public enum AttachType
+    {
+        NONE,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT
+    }
+
+    public record ElementFlags(AttachType attachType, boolean verticalStack) {}
+
+    public record SubElementFlags(int xSeparator, int ySeparator) {}
+
+    public class ItemSubElement
     {
         Item item;
         int xOffset;
         int yOffset;
 
-        private ItemElement(Item item, int xOffset, int yOffset)
+        private ItemSubElement(Item item, int xOffset, int yOffset)
         {
             this.item = item;
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
+            this.xOffset = xOffset * subElementFlags.xSeparator;
+            this.yOffset = yOffset * subElementFlags.ySeparator;
         }
     }
 
-    public class TextElement
+    public class TextSubElement
     {
         Component text;
         int xOffset;
         int yOffset;
 
-        private TextElement(Component text, int xOffset, int yOffset)
+        private TextSubElement(Component text, int xOffset, int yOffset)
         {
             this.text = text;
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
+            this.xOffset = xOffset * subElementFlags.xSeparator;
+            this.yOffset = yOffset * subElementFlags.ySeparator;
         }
     }
 }

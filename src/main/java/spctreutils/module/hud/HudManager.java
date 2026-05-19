@@ -27,7 +27,6 @@ public class HudManager
 {
     @SerialEntry public List<HudElement> elements = new ArrayList<>();
     public List<HudElement> elementsDefaultOrder = new ArrayList<>();
-    private static final int TEXTURE_SIZE = 15;
 
     public HudManager()
     {
@@ -65,16 +64,33 @@ public class HudManager
             int width = window.getGuiScaledWidth();
             int height = window.getGuiScaledHeight();
             int chatBarHeight = mc.gui.getChat().isChatFocused() ? 14 : 0;
-            int textY = height - chatBarHeight;
+            int verticalStackOffset = height - chatBarHeight;
 
             for (HudElement element : elements)
             {
-                for (HudElement.ItemElement itemElement : element.getItemElements())
+                HudElement.ElementFlags elementFlags = element.getElementFlags();
+
+                for (HudElement.ItemSubElement itemElement : element.getItemElements().values())
                 {
                     if (itemElement.item == null) continue;
 
-                    int itemX = itemElement.xOffset + ((width - TEXTURE_SIZE) / 2);
-                    int itemY = itemElement.yOffset + (Math.round((height / 2.0f) - 8.0f));
+                    int itemX = 0;
+                    int itemSize = 16;
+                    int itemY = itemElement.yOffset + (height - chatBarHeight - itemSize);
+
+                    switch (elementFlags.attachType())
+                    {
+                        case NONE:
+                            itemX = itemElement.xOffset + (width / 2);
+                            itemY += Math.round((height / 2.0f) - 8.0f);
+                            break;
+                        case BOTTOM_LEFT:
+                            itemX = itemElement.xOffset;
+                            break;
+                        case BOTTOM_RIGHT:
+                            itemX = itemElement.xOffset + (width - itemSize);
+                            break;
+                    }
 
                     guiGraphics.renderItem(
                         itemElement.item.getDefaultInstance(),
@@ -83,17 +99,34 @@ public class HudManager
                     );
                 }
 
-                for (HudElement.TextElement textElement : element.getTextElements())
+                for (HudElement.TextSubElement textElement : element.getTextElements().values())
                 {
                     if (textElement.text == null) continue;
 
+                    int textX = 0;
+                    int textY = textElement.yOffset + (height - chatBarHeight - mc.font.lineHeight);
                     int textWidth = mc.font.width(textElement.text);
-                    int textX = textElement.xOffset + (width - textWidth);
 
-                    if (textElement.yOffset == 0)
-                        textY -= mc.font.lineHeight;
-                    else
-                        textY = textElement.yOffset;
+                    switch (elementFlags.attachType())
+                    {
+                        case NONE:
+                            textX = textElement.xOffset + (width / 2);
+                            textY += Math.round((height / 2.0f) - 8.0f);
+                            break;
+                        case BOTTOM_LEFT:
+                            textX = textElement.xOffset;
+                            if (elementFlags.verticalStack())
+                                verticalStackOffset -= mc.font.lineHeight;
+                            break;
+                        case BOTTOM_RIGHT:
+                            textX = textElement.xOffset + (width - textWidth);
+                            if (elementFlags.verticalStack())
+                                verticalStackOffset -= mc.font.lineHeight;
+                            break;
+                    }
+
+                    if (elementFlags.verticalStack())
+                        textY = verticalStackOffset;
 
                     guiGraphics.drawString(
                         mc.font,
@@ -106,44 +139,6 @@ public class HudManager
             }
         });
     }
-
-/*    private void initializeHud()
-    {
-        Minecraft mc = Minecraft.getInstance();
-        Identifier identifier = Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
-        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, tickDelta) ->
-        {
-            if (!ConfigManager.config.hud || mc.player == null || mc.options.hideGui) return;
-
-            Window window = mc.getWindow();
-            int width = window.getGuiScaledWidth();
-            int height = window.getGuiScaledHeight();
-            int chatBarHeight = mc.gui.getChat().isChatFocused() ? 14 : 0;
-            int offset = height - chatBarHeight;
-
-            for (HudElement element : elements)
-            {
-                Component content = element.getText();
-                if (!element.getEnabled() || content == null) continue;
-
-                int textWidth = mc.font.width(content);
-
-                int screenWidth = mc.getWindow().getGuiScaledWidth();
-                int screenHeight = mc.getWindow().getGuiScaledHeight();
-
-                int x = (screenWidth - TEXTURE_SIZE) / 2;
-                int y = Math.round((screenHeight / 2.0f) - 8.0f);
-
-                guiGraphics.drawString(
-                    mc.font,
-                    content,
-                    width - textWidth,
-                    offset -= mc.font.lineHeight,
-                    element.getPrefixColor()
-                );
-            }
-        });
-    }*/
 
     public List<Option<?>> getOptions()
     {
