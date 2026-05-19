@@ -19,10 +19,10 @@ public class GoatVariant extends HudElement
         {
             boolean isScreaming = goat.isScreamingGoat();
             String variant = isScreaming ? "Screaming" : "Regular";
-            int variantColor = isScreaming ? Color.RED.getRGB() : textColor;
+            int variantColor = isScreaming ? Color.RED.getRGB() : getTextColor();
             setText(variant, variantColor);
             return;
         }
-        removeText();
+        clearElements();
     }
 }

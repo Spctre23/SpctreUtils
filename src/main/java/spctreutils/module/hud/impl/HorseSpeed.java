@@ -22,6 +22,6 @@ public class HorseSpeed extends HudElement
             setText(speed);
             return;
         }
-        removeText();
+        clearElements();
     }
 }

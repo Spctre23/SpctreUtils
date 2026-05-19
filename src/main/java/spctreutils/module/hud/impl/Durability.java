@@ -16,7 +16,7 @@ public class Durability extends HudElement
         ItemStack held = mc.player.getMainHandItem();
         if (held.isEmpty() || !held.isDamageableItem())
         {
-            removeText();
+            clearElements();
             return;
         }
 

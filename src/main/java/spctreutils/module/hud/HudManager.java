@@ -27,6 +27,7 @@ public class HudManager
 {
     @SerialEntry public List<HudElement> elements = new ArrayList<>();
     public List<HudElement> elementsDefaultOrder = new ArrayList<>();
+    private static final int TEXTURE_SIZE = 15;
 
     public HudManager()
     {
@@ -48,13 +49,65 @@ public class HudManager
         elements.add(new TPS());
         elements.add(new FPS());
         elements.add(new Ping());
+        elements.add(new Armor());
 
         elementsDefaultOrder = elements;
     }
 
-    public List<HudElement> getElements() { return elements; }
-
     private void initializeHud()
+    {
+        Minecraft mc = Minecraft.getInstance();
+        Identifier identifier = Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
+
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, tickDelta) ->
+        {
+            Window window = mc.getWindow();
+            int width = window.getGuiScaledWidth();
+            int height = window.getGuiScaledHeight();
+            int chatBarHeight = mc.gui.getChat().isChatFocused() ? 14 : 0;
+            int textY = height - chatBarHeight;
+
+            for (HudElement element : elements)
+            {
+                for (HudElement.ItemElement itemElement : element.getItemElements())
+                {
+                    if (itemElement.item == null) continue;
+
+                    int itemX = itemElement.xOffset + ((width - TEXTURE_SIZE) / 2);
+                    int itemY = itemElement.yOffset + (Math.round((height / 2.0f) - 8.0f));
+
+                    guiGraphics.renderItem(
+                        itemElement.item.getDefaultInstance(),
+                        itemX,
+                        itemY
+                    );
+                }
+
+                for (HudElement.TextElement textElement : element.getTextElements())
+                {
+                    if (textElement.text == null) continue;
+
+                    int textWidth = mc.font.width(textElement.text);
+                    int textX = textElement.xOffset + (width - textWidth);
+
+                    if (textElement.yOffset == 0)
+                        textY -= mc.font.lineHeight;
+                    else
+                        textY = textElement.yOffset;
+
+                    guiGraphics.drawString(
+                        mc.font,
+                        textElement.text,
+                        textX,
+                        textY,
+                        element.getPrefixColor()
+                    );
+                }
+            }
+        });
+    }
+
+/*    private void initializeHud()
     {
         Minecraft mc = Minecraft.getInstance();
         Identifier identifier = Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
@@ -75,6 +128,12 @@ public class HudManager
 
                 int textWidth = mc.font.width(content);
 
+                int screenWidth = mc.getWindow().getGuiScaledWidth();
+                int screenHeight = mc.getWindow().getGuiScaledHeight();
+
+                int x = (screenWidth - TEXTURE_SIZE) / 2;
+                int y = Math.round((screenHeight / 2.0f) - 8.0f);
+
                 guiGraphics.drawString(
                     mc.font,
                     content,
@@ -84,7 +143,7 @@ public class HudManager
                 );
             }
         });
-    }
+    }*/
 
     public List<Option<?>> getOptions()
     {
