@@ -13,4 +13,9 @@ public class ItemHelper
     {
         return item.getMaxDamage();
     }
+
+    public static boolean isArmor(ItemStack item)
+    {
+        return (!item.isEmpty() && item.isDamageableItem());
+    }
 }

@@ -40,12 +40,12 @@ public class HudManager
         elements.add(new HorseSpeed());
         elements.add(new HorseJump());
         elements.add(new GoatVariant());
-        elements.add(new Durability());
-        elements.add(new LightLevel());
         elements.add(new Acceleration());
         elements.add(new Speed());
+        elements.add(new Durability());
         elements.add(new EntityHealth());
         elements.add(new EntityOwner());
+        elements.add(new LightLevel());
         elements.add(new TPS());
         elements.add(new FPS());
         elements.add(new Ping());
@@ -61,37 +61,32 @@ public class HudManager
 
         HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, tickDelta) ->
         {
-            Window window = mc.getWindow();
-            int width = window.getGuiScaledWidth();
-            int height = window.getGuiScaledHeight();
-            int chatBarHeight = mc.gui.getChat().isChatFocused() ? 14 : 0;
-            int verticalStackOffset = height - chatBarHeight;
+            final Window window = mc.getWindow();
+            final int width = window.getGuiScaledWidth();
+            final int height = window.getGuiScaledHeight();
+            final int chatBarHeight = mc.gui.getChat().isChatFocused() ? 14 : 0;
+            int topStackOffset = 0;
+            int bottomStackOffset = 0;
 
             for (HudElement element : elements)
             {
                 HudElement.Layout layout = element.getLayout();
+                final boolean isTop = (layout.attachTo() == HudElement.AttachTo.TOP_LEFT || layout.attachTo() == HudElement.AttachTo.TOP_RIGHT);
+                final boolean isRight = (layout.attachTo() == HudElement.AttachTo.TOP_RIGHT || layout.attachTo() == HudElement.AttachTo.BOTTOM_RIGHT);
 
                 for (HudElement.ItemPart itemPart : element.getItemParts().values())
                 {
                     if (itemPart.item == null) continue;
 
-                    int itemX = 0;
-                    int itemSize = 16;
-                    int itemY = itemPart.yOffset + (height - chatBarHeight - itemSize);
+                    int itemX = itemPart.xOffset;
+                    int itemY = itemPart.yOffset;
+                    final int itemSize = 16;
 
-                    switch (layout.attachTo())
-                    {
-                        case NONE:
-                            itemX = itemPart.xOffset + (width / 2);
-                            itemY += Math.round((height / 2.0f) - 8.0f);
-                            break;
-                        case BOTTOM_LEFT:
-                            itemX = itemPart.xOffset;
-                            break;
-                        case BOTTOM_RIGHT:
-                            itemX = itemPart.xOffset + (width - itemSize);
-                            break;
-                    }
+                    if (!isTop)
+                        itemY += height - chatBarHeight - itemSize;
+
+                    if (isRight)
+                        itemX += width - ((itemSize * element.getItemParts().size()) + ((layout.partSpacingX() - itemSize) * (element.getItemParts().size() - 1)));
 
                     guiGraphics.renderItem(
                         itemPart.item.getDefaultInstance(),
@@ -104,30 +99,26 @@ public class HudManager
                 {
                     if (textPart.text == null) continue;
 
-                    int textX = 0;
-                    int textY = textPart.yOffset + (height - chatBarHeight - mc.font.lineHeight);
-                    int textWidth = mc.font.width(textPart.text);
+                    int textX = textPart.xOffset;
+                    int textY = textPart.yOffset;
+                    final int textWidth = mc.font.width(textPart.text);
+                    final int topBuffer = 3;
 
-                    switch (layout.attachTo())
+                    if (isTop)
                     {
-                        case NONE:
-                            textX = textPart.xOffset + (width / 2);
-                            textY += Math.round((height / 2.0f) - 8.0f);
-                            break;
-                        case BOTTOM_LEFT:
-                            textX = textPart.xOffset;
-                            if (layout.verticalStack())
-                                verticalStackOffset -= mc.font.lineHeight;
-                            break;
-                        case BOTTOM_RIGHT:
-                            textX = textPart.xOffset + (width - textWidth);
-                            if (layout.verticalStack())
-                                verticalStackOffset -= mc.font.lineHeight;
-                            break;
+                        textY += topBuffer + topStackOffset;
+                        if (layout.verticalStack())
+                            topStackOffset += mc.font.lineHeight;
+                    }
+                    else
+                    {
+                        textY += bottomStackOffset + height - chatBarHeight - mc.font.lineHeight;
+                        if (layout.verticalStack())
+                            bottomStackOffset -= mc.font.lineHeight;
                     }
 
-                    if (layout.verticalStack())
-                        textY = verticalStackOffset;
+                    if (isRight)
+                        textX += width - ((textWidth * element.getTextParts().size()) + ((layout.partSpacingX() - textWidth) * (element.getTextParts().size() - 1)));
 
                     guiGraphics.drawString(
                         mc.font,

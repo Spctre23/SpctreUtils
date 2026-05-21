@@ -14,23 +14,23 @@ public class LightLevel extends HudElement
 
     public LightLevel()
     {
-        super("Light Level", "Displays the light level at your position.", List.of(skyLight));
+        super("Light Level", "", "Displays the light level at your position.", List.of(skyLight));
     }
 
     @Override
     protected void onTick()
     {
-        BlockPos pos = mc.player.getOnPos();
+        BlockPos pos = mc.player.blockPosition();
         LevelLightEngine lightEngine = mc.level.getChunkSource().getLightEngine();
         int blockLightLevel = lightEngine.getLayerListener(LightLayer.BLOCK).getLightValue(pos);
 
-        StringBuilder sb = new StringBuilder("BL: ");
+        StringBuilder sb = new StringBuilder("§7BL: §f");
         sb.append(blockLightLevel);
 
         if (skyLight.getValue())
         {
-            int skyLightLevel = lightEngine.getLayerListener(LightLayer.BLOCK).getLightValue(pos);
-            sb.append("| SL:" + skyLightLevel);
+            int skyLightLevel = lightEngine.getLayerListener(LightLayer.SKY).getLightValue(pos);
+            sb.append(" §7SL: §f" + skyLightLevel);
         }
 
         setText(sb.toString());

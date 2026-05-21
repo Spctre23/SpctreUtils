@@ -19,6 +19,6 @@ public class EntityHealth extends HudElement
             setText(healthText);
             return;
         }
-        clearElements();
+        clearParts();
     }
 }

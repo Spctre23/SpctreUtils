@@ -23,6 +23,6 @@ public class GoatVariant extends HudElement
             setText(variant, variantColor);
             return;
         }
-        clearElements();
+        clearParts();
     }
 }

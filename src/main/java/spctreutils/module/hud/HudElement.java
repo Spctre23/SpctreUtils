@@ -22,7 +22,7 @@ public abstract class HudElement extends Module
     private final Map<Vector2d, ItemPart> itemParts = new HashMap<>();
     private final Map<Vector2d, TextPart> textParts = new HashMap<>();
 
-    private Layout layout = new Layout(AttachTo.BOTTOM_RIGHT, true, 15, 15);
+    private Layout layout = new Layout(AttachTo.TOP_RIGHT, true, 15, 15);
 
     protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
@@ -132,6 +132,12 @@ public abstract class HudElement extends Module
         setText(text, 0, 0);
     }
 
+    protected void removeText(int x, int y)
+    {
+        Vector2d pos = new Vector2d(x, y);
+        textParts.remove(pos);
+    }
+
     public Map<Vector2d, ItemPart> getItemParts()
     {
         return itemParts;
@@ -149,6 +155,12 @@ public abstract class HudElement extends Module
             ItemPart itemPart = itemParts.get(pos);
             itemPart.item = item;
         }
+    }
+
+    protected void removeItem(int x, int y)
+    {
+        Vector2d pos = new Vector2d(x, y);
+        itemParts.remove(pos);
     }
 
     public class ItemPart
@@ -191,22 +203,29 @@ public abstract class HudElement extends Module
 
     public enum AttachTo
     {
-        NONE,
         BOTTOM_LEFT,
-        BOTTOM_RIGHT
+        BOTTOM_RIGHT,
+        TOP_LEFT,
+        TOP_RIGHT
     }
 
     public record Layout(AttachTo attachTo, boolean verticalStack, int partSpacingX, int partSpacingY) {}
 
-    protected void clearElements()
+    protected void clearParts()
     {
         itemParts.clear();
         textParts.clear();
     }
 
+    protected void removePart(int x, int y)
+    {
+        removeItem(x, y);
+        removeText(x, y);
+    }
+
     @Override
     protected void dispose()
     {
-        clearElements();
+        clearParts();
     }
 }

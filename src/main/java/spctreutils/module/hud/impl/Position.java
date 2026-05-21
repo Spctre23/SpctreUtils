@@ -1,5 +1,6 @@
 package spctreutils.module.hud.impl;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import spctreutils.helper.DimensionHelper;
 import spctreutils.module.hud.HudElement;
@@ -14,19 +15,21 @@ public class Position extends HudElement
     public Position()
     {
         super("Position", "Pos", "Displays your coordinates.", List.of(scaled));
+
+        setLayout(new Layout(AttachTo.BOTTOM_LEFT, false, 15, 15));
     }
 
     @Override
     protected void onTick()
     {
-        Vec3 pos = mc.player.position();
-        String posText = String.format("§7x: §f%.0f §7y: §f%.0f §7z: §f%.0f", pos.x, pos.y, pos.z);
+        BlockPos pos = mc.player.blockPosition();
+        String posText = String.format("§7x: §f%d §7y: §f%d §7z: §f%d", pos.getX(), pos.getY(), pos.getZ());
         String posScaledText = "";
 
         if (scaled.getValue())
         {
-            Vec3 posScaled = DimensionHelper.getOppositePos(pos);
-            posScaledText = String.format(" [§7x: §f%.1f §7y: §f%.1f §7z: §f%.1f]", posScaled.x, pos.y, posScaled.z);
+            BlockPos posScaled = DimensionHelper.getOppositePos(pos);
+            posScaledText = String.format(" [§7x: §f%d §7y: §f%d §7z: §f%d]", posScaled.getX(), pos.getY(), posScaled.getZ());
         }
 
         setText(posText + posScaledText);

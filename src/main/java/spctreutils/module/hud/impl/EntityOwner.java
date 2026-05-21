@@ -21,6 +21,6 @@ public class EntityOwner extends HudElement
                 setText(owner.getName().getString());
             return;
         }
-        clearElements();
+        clearParts();
     }
 }

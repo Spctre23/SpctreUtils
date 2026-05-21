@@ -11,38 +11,31 @@ public class Armor extends HudElement
     {
         super("Armor", "", "Displays your armor and durability.");
 
-        setLayout(new Layout(AttachTo.BOTTOM_LEFT, false, 25, 15));
+        setLayout(new Layout(AttachTo.BOTTOM_RIGHT, false, 25, 15));
     }
 
     @Override
     protected void onTick()
     {
         ItemStack helmet = mc.player.getItemBySlot(EquipmentSlot.HEAD);
-        if (!helmet.isEmpty() && helmet.isDamageableItem())
-        {
-            setText(String.valueOf(ItemHelper.getDurability(helmet)), helmet.getBarColor(), 0, -1);
-            setItem(helmet.getItem(), 0, 0);
-        }
-
         ItemStack chestplate = mc.player.getItemBySlot(EquipmentSlot.CHEST);
-        if (!chestplate.isEmpty() && chestplate.isDamageableItem())
-        {
-            setText(String.valueOf(ItemHelper.getDurability(chestplate)), chestplate.getBarColor(), 1, -1);
-            setItem(chestplate.getItem(), 1, 0);
-        }
-
         ItemStack leggings = mc.player.getItemBySlot(EquipmentSlot.LEGS);
-        if (!leggings.isEmpty() && leggings.isDamageableItem())
-        {
-            setText(String.valueOf(ItemHelper.getDurability(leggings)), leggings.getBarColor(), 2, -1);
-            setItem(leggings.getItem(), 2, 0);
-        }
-
         ItemStack boots = mc.player.getItemBySlot(EquipmentSlot.FEET);
-        if (!boots.isEmpty() && boots.isDamageableItem())
+
+        setArmorPart(helmet, 0);
+        setArmorPart(chestplate, 1);
+        setArmorPart(leggings, 2);
+        setArmorPart(boots, 3);
+    }
+
+    private void setArmorPart(ItemStack item, int x)
+    {
+        if (ItemHelper.isArmor(item))
         {
-            setText(String.valueOf(ItemHelper.getDurability(boots)), boots.getBarColor(), 3, -1);
-            setItem(boots.getItem(), 3, 0);
+            setText(String.valueOf(ItemHelper.getDurability(item)), item.getBarColor(), x, -1);
         }
+        else setText("", x, -1);
+
+        setItem(item.getItem(), x, 0);
     }
 }

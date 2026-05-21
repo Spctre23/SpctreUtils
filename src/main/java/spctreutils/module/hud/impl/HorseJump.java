@@ -21,7 +21,7 @@ public class HorseJump extends HudElement
             setText(jumpHeight);
             return;
         }
-        clearElements();
+        clearParts();
     }
 
     // Calculations obtained from MiniHud
