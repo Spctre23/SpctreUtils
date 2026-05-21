@@ -41,6 +41,7 @@ public class HudManager
         elements.add(new HorseJump());
         elements.add(new GoatVariant());
         elements.add(new Durability());
+        elements.add(new LightLevel());
         elements.add(new Acceleration());
         elements.add(new Speed());
         elements.add(new EntityHealth());
