@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class ModConfig
 {
@@ -19,9 +20,9 @@ public class ModConfig
         .build();
 
     @SerialEntry public Map<String, Boolean> featureStates = new HashMap<>();
-    @SerialEntry public float flyingSpeed = 0.05f;
 
     @SerialEntry public Map<String, Boolean> hudElementStates = new HashMap<>();
+    @SerialEntry public List<String> hudElementOrder = new ArrayList<>();
     @SerialEntry public boolean hud = false;
     @SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();
     @SerialEntry public int hudTextColor = Color.WHITE.getRGB();

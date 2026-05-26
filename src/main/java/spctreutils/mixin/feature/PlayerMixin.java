@@ -7,7 +7,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import spctreutils.config.ConfigManager;
+import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.FeatureManager;
+import spctreutils.module.feature.impl.FlySpeed;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin
@@ -15,10 +17,11 @@ public abstract class PlayerMixin
     @Shadow
     public abstract Abilities getAbilities();
 
-    @Inject(at = @At("HEAD"), method = "tick", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "tick")
     private void tick(CallbackInfo ci)
     {
-        if (ConfigManager.config == null) return;
-        this.getAbilities().setFlyingSpeed(ConfigManager.config.flyingSpeed);
+        Feature feature = FeatureManager.getFeature(FlySpeed.class);
+        if (feature == null || !feature.getEnabled())
+        this.getAbilities().setFlyingSpeed(FlySpeed.speed.getValue());
     }
 }

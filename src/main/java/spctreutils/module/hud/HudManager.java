@@ -12,30 +12,36 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 import spctreutils.SpctreUtils;
 import spctreutils.config.ConfigManager;
 import spctreutils.config.ModConfig;
 import spctreutils.config.yacl.HudControllerBuilder;
 import spctreutils.module.hud.impl.*;
+import spctreutils.module.hud.impl.Dimension;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HudManager
 {
-    @SerialEntry public List<HudElement> elements = new ArrayList<>();
-    public List<HudElement> elementsDefaultOrder = new ArrayList<>();
+    private List<HudElement> elements = new ArrayList<>();
+    private List<HudElement> elementsDefaultOrder = new ArrayList<>();
 
     public HudManager()
     {
         registerElements();
+        reorderElements();
         initializeHud();
     }
 
     private void registerElements()
     {
+        elements.add(new Biome());
+        elements.add(new Dimension());
         elements.add(new Position());
         elements.add(new HorseSpeed());
         elements.add(new HorseJump());
@@ -54,6 +60,15 @@ public class HudManager
         elementsDefaultOrder = elements;
     }
 
+    @Nullable
+    public HudElement getElement(String className)
+    {
+        return elements.stream()
+            .filter(e -> e.getClass().getSimpleName().equals(className))
+            .findFirst()
+            .orElse(null);
+    }
+
     private void initializeHud()
     {
         Minecraft mc = Minecraft.getInstance();
@@ -61,6 +76,8 @@ public class HudManager
 
         HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, tickDelta) ->
         {
+            if (!ConfigManager.config.hud) return;
+
             final Window window = mc.getWindow();
             final int width = window.getGuiScaledWidth();
             final int height = window.getGuiScaledHeight();
@@ -188,18 +205,54 @@ public class HudManager
             .build();
     }
 
-    public ListOption<HudElement> getDrawOrderOptions()
+    public ListOption<String> getDrawOrderOption()
     {
-        return ListOption.<HudElement>createBuilder()
+        return ListOption.<String>createBuilder()
             .name(Component.literal("HUD Draw Order"))
             .binding(
-                new ArrayList<>(elementsDefaultOrder),
-                () -> new ArrayList<>(elements),
-                v -> { elements = new ArrayList<>(v); ConfigManager.save(); })
+                getDefaultOrder(),
+                () -> ConfigManager.config.hudElementOrder,
+                v ->
+                {
+                    ConfigManager.config.hudElementOrder = new ArrayList<>(v);
+                    reorderElements();
+                    ConfigManager.save();
+                })
             .controller(HudControllerBuilder::create)
             .minimumNumberOfEntries(elementsDefaultOrder.size())
             .maximumNumberOfEntries(elementsDefaultOrder.size())
             .initial(() -> null)
             .build();
+    }
+
+    private void reorderElements()
+    {
+        if (ConfigManager.config.hudElementOrder.isEmpty())
+        {
+            ConfigManager.config.hudElementOrder = getDefaultOrder();
+            ConfigManager.save();
+        }
+
+        Map<String, HudElement> byName = elements.stream()
+            .collect(Collectors.toMap(e -> e.getClass().getSimpleName(), e -> e));
+
+        List<HudElement> reordered = new ArrayList<>();
+        for (String name : ConfigManager.config.hudElementOrder)
+        {
+            HudElement element = byName.get(name);
+            if (element != null) reordered.add(element);
+        }
+
+        for (HudElement element : elements)
+            if (!reordered.contains(element)) reordered.add(element);
+
+        elements = reordered;
+    }
+
+    private List<String> getDefaultOrder()
+    {
+        return elementsDefaultOrder.stream()
+            .map(e -> e.getClass().getSimpleName())
+            .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import spctreutils.module.hud.impl.Dimension;
 
 public class DimensionHelper
 {
@@ -21,5 +22,11 @@ public class DimensionHelper
     {
         Vec3 vec3 = getOppositePos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         return new BlockPos((int)vec3.x, (int)vec3.y, (int)vec3.z);
+    }
+
+    public static String getDimension() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return "None";
+        return mc.level.dimension().identifier().getPath();
     }
 }

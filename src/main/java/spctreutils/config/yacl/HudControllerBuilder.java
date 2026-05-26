@@ -6,7 +6,7 @@ import spctreutils.module.hud.HudElement;
 
 public class HudControllerBuilder
 {
-    public static ControllerBuilder<HudElement> create(Option<HudElement> option)
+    public static ControllerBuilder<String> create(Option<String> option)
     {
         return () -> new HudController(option);
     }

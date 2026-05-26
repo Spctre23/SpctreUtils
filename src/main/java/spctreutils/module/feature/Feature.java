@@ -3,6 +3,8 @@ package spctreutils.module.feature;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.minecraft.world.InteractionResult;
+import spctreutils.event.MouseEvent;
 import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
 import spctreutils.helper.Msg;
@@ -60,6 +62,8 @@ public abstract class Feature extends Module
 
     protected void onKeyReleased() {}
 
+    protected void onMouseScrolled(double delta) {}
+
     protected void onRender(WorldRenderContext context) {}
 
     protected void toggle()
@@ -94,6 +98,11 @@ public abstract class Feature extends Module
         WorldRenderEvents.END_MAIN.register(context ->
         {
             if (enabled && mc.level != null && mc.player != null) onRender(context);
+        });
+        MouseEvent.SCROLL.register(delta ->
+        {
+            onMouseScrolled(delta);
+            return InteractionResult.PASS;
         });
     }
 

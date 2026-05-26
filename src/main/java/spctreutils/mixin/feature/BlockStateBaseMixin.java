@@ -13,17 +13,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import spctreutils.SpctreUtils;
-import spctreutils.config.ConfigManager;
+import spctreutils.module.feature.FeatureManager;
 import spctreutils.module.feature.impl.NoClip;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public class BlockStateBaseMixin
 {
     @Inject(method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", at = @At("RETURN"), cancellable = true)
-    private void onGetCollisionShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext, CallbackInfoReturnable<VoxelShape> cir)
+    private void getCollisionShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext, CallbackInfoReturnable<VoxelShape> cir)
     {
-        if (ConfigManager.config == null ||
-            !ConfigManager.config.featureStates.getOrDefault(NoClip.class.getSimpleName(), false) ||
+        if (!FeatureManager.isEnabled(NoClip.class) ||
             SpctreUtils.serverPlayer == null ||
             !(collisionContext instanceof EntityCollisionContext entityCollisionContext) ||
             !(entityCollisionContext.getEntity() instanceof Player player) ||

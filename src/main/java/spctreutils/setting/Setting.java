@@ -31,7 +31,6 @@ public class Setting<T>
         this.key = featureName + "." + name;
     }
 
-    @SuppressWarnings("unchecked")
     public T getValue()
     {
         Object raw = ConfigManager.config.settings.get(key);

@@ -7,9 +7,11 @@
 		"core.PlayerListMixin",
       	"core.GameRendererMixin",
 		"core.ConnectionMixin",
+		"core.MouseHandlerMixin",
 		"feature.BlockItemMixin",
 		"feature.BlockStateBaseMixin",
 		"feature.PlayerMixin",
+		"feature.MultiPlayerGamemodeMixin",
 		"accessor.Vec3iWaypointInvoker",
 		"accessor.ChunkWaypointInvoker",
 		"accessor.AzimuthWaypointInvoker"

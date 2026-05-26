@@ -6,15 +6,19 @@ import dev.isxander.yacl3.api.utils.Dimension;
 import dev.isxander.yacl3.gui.AbstractWidget;
 import dev.isxander.yacl3.gui.YACLScreen;
 import net.minecraft.network.chat.Component;
+import spctreutils.SpctreUtils;
 import spctreutils.module.hud.HudElement;
 
-public record HudController(Option<HudElement> option) implements Controller<HudElement>
+public record HudController(Option<String> option) implements Controller<String>
 {
     @Override
     public Component formatValue()
     {
-        HudElement element = option.pendingValue();
-        return element != null ? Component.literal(element.getName()) : Component.empty();
+        String className = option.pendingValue();
+        if (className == null) return Component.empty();
+
+        HudElement element = SpctreUtils.instance.hud.getElement(className);
+        return element != null ? Component.literal(element.getName()) : Component.literal(className);
     }
 
     @Override
