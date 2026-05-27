@@ -24,8 +24,10 @@ public class LivingEntityMixin
         if (FeatureManager.isEnabled(FlySpeed.class))
         {
             Minecraft mc = Minecraft.getInstance();
-            if (mc.player != null && mc.player.getAbilities().flying && !mc.player.onGround())
-                drag = FlySpeed.drag.getValue();
+            if (FlySpeed.noDrag.getValue() && mc.player != null && mc.player.getAbilities().flying && !mc.player.onGround())
+            {
+                drag = 0.0f;
+            }
         }
         return drag;
     }
