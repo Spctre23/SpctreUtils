@@ -10,10 +10,11 @@ import java.util.List;
 public class FlySpeed extends Feature
 {
     public static final Setting<Float> speed = new Setting<>("Speed", 0.1f, Float.class);
+    public static final Setting<Float> drag = new Setting<>("Drag", 0.91f, Float.class);
 
     public FlySpeed()
     {
-        super("Fly Speed", "Custom creative flight speed. CTRL + scroll to adjust.", List.of(speed));
+        super("Fly Speed", "Custom creative flight speed. CTRL + scroll to adjust.", List.of(speed, drag));
     }
 
     @Override

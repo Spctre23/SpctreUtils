@@ -1,13 +1,8 @@
 package spctreutils.module.feature;
 
 import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.FloatFieldControllerBuilder;
-import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
-import spctreutils.config.ConfigManager;
-import spctreutils.config.ModConfig;
 import spctreutils.module.feature.impl.*;
 
 import java.util.ArrayList;
@@ -16,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class FeatureManager
 {
-    private static List<Feature> features = new ArrayList<>();
+    private static final List<Feature> features = new ArrayList<>();
 
     public FeatureManager()
     {
@@ -31,6 +26,7 @@ public class FeatureManager
         features.add(new MetadataSearch());
         features.add(new FlySpeed());
         features.add(new NoBreakDelay());
+        features.add(new NoResourcePackLoadingScreen());
     }
 
     @Nullable
