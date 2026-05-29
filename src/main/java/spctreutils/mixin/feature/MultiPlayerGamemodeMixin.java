@@ -15,7 +15,7 @@ public class MultiPlayerGamemodeMixin
     @Shadow private int destroyDelay;
 
     @Redirect(method = "continueDestroyBlock", at = @At(value = "FIELD", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyDelay:I", opcode = Opcodes.PUTFIELD))
-    private void continueDestroyBlock(MultiPlayerGameMode interactionManager, int value)
+    private void continueDestroyBlock(MultiPlayerGameMode instance, int value)
     {
         if (FeatureManager.isEnabled(NoBreakDelay.class))
         {

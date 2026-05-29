@@ -12,7 +12,6 @@
 		"feature.BlockStateBaseMixin",
 		"feature.PlayerMixin",
 		"feature.MultiPlayerGamemodeMixin",
-		"feature.LivingEntityMixin",
 		"accessor.Vec3iWaypointInvoker",
 		"accessor.ChunkWaypointInvoker",
 		"accessor.AzimuthWaypointInvoker"
