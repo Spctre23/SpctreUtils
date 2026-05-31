@@ -3,24 +3,28 @@ package spctreutils.helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import spctreutils.component.TextComp;
 
 import java.awt.*;
 import java.util.Arrays;
-import java.util.List;
 
 public class Msg
 {
-    public static void sendChat(String msg, Color color)
+    public static void sendChat(Component component)
     {
         Minecraft mc = Minecraft.getInstance();
-        if (mc == null) return;
-        mc.gui.getChat()
-            .addMessage(Component.literal("[SpctreUtils]: ")
-                .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FFFF)))
-                .append(Component.literal(msg)
-                    .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color))))));
+        mc.gui.getChat().addMessage(Component.literal("[SpctreUtils]: ")
+            .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FFFF)))
+            .append(component));
+    }
+
+    public static void sendChat(String msg, Color color)
+    {
+        sendChat(Component.literal(msg)
+            .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color)))));
     }
 
     public static void sendChat(String msg)
@@ -28,7 +32,23 @@ public class Msg
         sendChat(msg, Color.WHITE);
     }
 
-    public static void sendChat(Color color, String prefixMsg, String... msgs)
+    public static void sendMulticoloredChat(int spacing, TextComp... comps)
+    {
+        MutableComponent text = Component.empty();
+        for (TextComp comp : comps)
+        {
+            text.append(comp.getText() + " ".repeat(spacing)).withColor(ColorHelper.rgbToHex(comp.getColor()));
+        }
+
+        sendChat(text);
+    }
+
+    public static void sendMulticoloredChat(TextComp... comps)
+    {
+        sendMulticoloredChat(1, comps);
+    }
+
+    public static void sendBulletedListChat(Color color, String prefixMsg, String... msgs)
     {
         StringBuilder sb = new StringBuilder();
         sb.append(prefixMsg);
@@ -41,38 +61,38 @@ public class Msg
         sendChat(sb.toString(), color);
     }
 
-    public static void sendChat(String prefixMsg, String... msgs)
+    public static void sendBulletedListChat(String prefixMsg, String... msgs)
     {
-        sendChat(Color.WHITE, prefixMsg, msgs);
+        sendBulletedListChat(Color.WHITE, prefixMsg, msgs);
     }
 
-    public static <T extends List> void sendChat(T msgs, String prefixMsg, Color color)
+    public static void sendHud(Component component)
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append(prefixMsg);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
 
-        for (Object msg : msgs)
+        player.displayClientMessage(component, true);
+    }
+
+    public static void sendHud(TextComp... comps)
+    {
+        MutableComponent text = Component.empty();
+        for (TextComp comp : comps)
         {
-            try
-            {
-                sb.append("\n• " + msg.toString());
-            }
-            catch (Exception e) {}
+            text.append(comp.getText()).withColor(ColorHelper.rgbToHex(comp.getColor()));
         }
-        sendChat(sb.toString(), color);
-    }
 
-    public static <T extends List> void sendChat(T msgs, String prefixMsg)
-    {
-        sendChat(msgs, prefixMsg, Color.WHITE);
+        sendHud(text);
     }
 
     public static void sendHud(String msg, Color color)
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
-        player.displayClientMessage(Component.literal(msg)
-            .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color)))), true);
+
+        Component component = Component.literal(msg)
+            .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(ColorHelper.rgbToHex(color))));
+        sendHud(component);
     }
 
     public static void sendHud(String msg)

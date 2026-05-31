@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.world.InteractionResult;
+import spctreutils.component.TextComp;
 import spctreutils.event.MouseEvent;
 import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
@@ -11,6 +12,7 @@ import spctreutils.helper.Msg;
 import spctreutils.key.Keybind;
 import spctreutils.setting.Setting;
 
+import java.awt.*;
 import java.util.List;
 
 public abstract class Feature extends Module
@@ -129,6 +131,8 @@ public abstract class Feature extends Module
 
     private void sendToggleNotification()
     {
-        Msg.sendHud(enabled ? "§a" + name + " = ON" : "§c" + name + " = OFF");
+        Color color = enabled ? Color.GREEN : Color.RED;
+        String text = enabled ? name + " = ON" : name + " = OFF";
+        Msg.sendHud(new TextComp(text, color));
     }
 }

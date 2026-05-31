@@ -58,7 +58,7 @@ public class CopyPos extends Feature
     private Color getOppositeDimensionColor()
     {
         Minecraft mc = Minecraft.getInstance();
-        ResourceKey dimension = mc.level.dimension();
+        ResourceKey<Level> dimension = mc.level.dimension();
         if (dimension == Level.NETHER) return Color.CYAN;
         if (dimension == Level.OVERWORLD) return Color.RED;
         return Color.YELLOW;

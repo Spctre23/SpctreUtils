@@ -30,7 +30,7 @@ public class GetDistanceToAimedBlock extends Feature
         double distanceY = Math.abs(blockPos.getY() - mc.player.getY());
         double distanceZ = Math.abs(blockPos.getZ() - mc.player.getZ());
 
-        Msg.sendChat(String.format("Total distance: %.2f", totalDistance),
+        Msg.sendBulletedListChat(String.format("Total distance: %.2f", totalDistance),
             String.format("X: %.0f", distanceX),
             String.format("Y: %.0f", distanceY),
             String.format("Z: %.0f", distanceZ));

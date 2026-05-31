@@ -26,6 +26,7 @@ public class FeatureManager
         features.add(new MetadataSearch());
         features.add(new FlySpeed());
         features.add(new NoBreakDelay());
+        features.add(new FastUse());
         features.add(new NoResourcePackLoadingScreen());
     }
 
