@@ -13,6 +13,6 @@ public class Dimension extends HudElement
     @Override
     protected void onTick()
     {
-        setText(DimensionHelper.getDimension());
+        setText(DimensionHelper.getDimensionPath());
     }
 }

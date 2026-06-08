@@ -28,6 +28,9 @@ public class FeatureManager
         features.add(new NoBreakDelay());
         features.add(new FastUse());
         features.add(new NoResourcePackLoadingScreen());
+        features.add(new SwitchCreative());
+        features.add(new SwitchSurvival());
+        features.add(new SwitchSpectator());
     }
 
     @Nullable

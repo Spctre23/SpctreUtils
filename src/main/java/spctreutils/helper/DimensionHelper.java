@@ -23,7 +23,7 @@ public class DimensionHelper
         return new BlockPos((int)vec3.x, (int)vec3.y, (int)vec3.z);
     }
 
-    public static String getDimension() {
+    public static String getDimensionPath() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return "None";
         return mc.level.dimension().identifier().getPath();
