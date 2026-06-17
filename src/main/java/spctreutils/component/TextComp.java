@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class TextComp
 {
-    private String text;
-    private Color color;
+    private final String text;
+    private final Color color;
 
     public TextComp(String text, Color color)
     {

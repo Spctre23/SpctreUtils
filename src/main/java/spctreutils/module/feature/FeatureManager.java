@@ -31,6 +31,7 @@ public class FeatureManager
         features.add(new SwitchCreative());
         features.add(new SwitchSurvival());
         features.add(new SwitchSpectator());
+        features.add(new NoExperimentalWarning());
     }
 
     @Nullable

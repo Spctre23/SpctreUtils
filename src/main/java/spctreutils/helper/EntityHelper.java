@@ -40,7 +40,7 @@ public class EntityHelper
         Minecraft mc = Minecraft.getInstance();
         for (Entity entity : mc.level.entitiesForRendering())
         {
-            if (entity != null && entityClass.isInstance(entity))
+            if (entityClass.isInstance(entity))
                 action.accept((T) entity);
         }
     }
@@ -50,7 +50,6 @@ public class EntityHelper
         Minecraft mc = Minecraft.getInstance();
         for (Entity entity : mc.level.entitiesForRendering())
         {
-            if (entity == null) continue;
             action.accept(entity);
         }
     }

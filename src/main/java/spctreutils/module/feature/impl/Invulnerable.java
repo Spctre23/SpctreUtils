@@ -12,7 +12,7 @@ public class Invulnerable extends Feature
     }
 
     @Override
-    protected void onEnabled()
+    protected void onTick()
     {
         Player player = SpctreUtils.serverPlayer;
         if (player == null) return;

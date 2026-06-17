@@ -13,6 +13,7 @@
 		"feature.PlayerMixin",
 		"feature.MultiPlayerGamemodeMixin",
 		"feature.MinecraftMixin",
+		"feature.WorldOpenFlowsMixin",
 		"accessor.Vec3iWaypointInvoker",
 		"accessor.ChunkWaypointInvoker",
 		"accessor.AzimuthWaypointInvoker"
