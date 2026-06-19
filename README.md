@@ -59,9 +59,5 @@ A QOL client-side mod for fabric 1.21.11 which adds random utilities I find usef
 
 ## Dependencies
 
-- **Yet Another Config Lib**
-    - Download: 
-        - https://cdn.modrinth.com/data/1eAoo2KR/versions/iPLhsWMM/yet_another_config_lib_v3-3.8.2%2B1.21.6-fabric.jar
-- **Mod Menu**
-    - Download:
-        - https://cdn.modrinth.com/data/mOgUt4GM/versions/ku5NivOP/modmenu-15.0.2.jar
+- **Yet Another Config Lib:** [Download](https://cdn.modrinth.com/data/1eAoo2KR/versions/pHWDw3Vc/yet_another_config_lib_v3-3.8.2%2B1.21.11-fabric.jar?mr_download_reason=standalone&mr_game_version=1.21.11)
+- **Mod Menu:** [Download](https://cdn.modrinth.com/data/mOgUt4GM/versions/Tyk71iSw/modmenu-17.0.0.jar?mr_download_reason=standalone&mr_game_version=1.21.11)
