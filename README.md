@@ -1,6 +1,6 @@
 # SpctreUtils
 
-A QOL client-side mod for fabric 26.2 which adds random utilities I find useful.
+A client-side fabric mod for Minecraft 26.2 which adds various QOL features I find useful.
 
 
 ## Features
@@ -73,5 +73,5 @@ A QOL client-side mod for fabric 26.2 which adds random utilities I find useful.
 
 ## Dependencies
 
-- **Yet Another Config Lib:** [Download](https://cdn.modrinth.com/data/1eAoo2KR/versions/pHWDw3Vc/yet_another_config_lib_v3-3.8.2%2B1.21.11-fabric.jar?mr_download_reason=standalone&mr_game_version=1.21.11)
-- **Mod Menu:** [Download](https://cdn.modrinth.com/data/mOgUt4GM/versions/Tyk71iSw/modmenu-17.0.0.jar?mr_download_reason=standalone&mr_game_version=1.21.11)
+- **Yet Another Config Lib:** [Download](https://cdn.modrinth.com/data/1eAoo2KR/versions/cnfPzuFU/yet_another_config_lib_v3-3.9.6%2B26.2-fabric.jar?mr_download_reason=standalone)
+- **Mod Menu:** [Download](https://cdn.modrinth.com/data/mOgUt4GM/versions/njXb639R/modmenu-20.0.1.jar?mr_download_reason=standalone)
