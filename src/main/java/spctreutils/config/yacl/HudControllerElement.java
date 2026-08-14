@@ -3,8 +3,9 @@ package spctreutils.config.yacl;
 import dev.isxander.yacl3.api.utils.Dimension;
 import dev.isxander.yacl3.gui.YACLScreen;
 import dev.isxander.yacl3.gui.controllers.ControllerWidget;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
+import org.jspecify.annotations.NonNull;
 
 public class HudControllerElement extends ControllerWidget<HudController>
 {
@@ -14,9 +15,9 @@ public class HudControllerElement extends ControllerWidget<HudController>
     }
 
     @Override
-    protected void drawValueText(GuiGraphics graphics, int mouseX, int mouseY, float delta)
+    protected void extractValueText(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a)
     {
-        super.drawValueText(graphics, mouseX, mouseY, delta);
+        super.extractValueText(graphics, mouseX, mouseY, a);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class HudControllerElement extends ControllerWidget<HudController>
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick)
+    public boolean mouseClicked(@NonNull MouseButtonEvent mouseButtonEvent, boolean doubleClick)
     {
         return super.mouseClicked(mouseButtonEvent, doubleClick);
     }

@@ -15,7 +15,7 @@ public class NoResourcePackLoadingScreen extends Feature
     @Override
     protected void onTick()
     {
-        if (mc.getOverlay() instanceof LoadingOverlay)
-            mc.setOverlay(null);
+        if (mc.gui.overlay() instanceof LoadingOverlay)
+            mc.gui.setOverlay(null);
     }
 }

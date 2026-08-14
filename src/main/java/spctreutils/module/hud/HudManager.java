@@ -6,7 +6,6 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.Minecraft;
@@ -81,7 +80,7 @@ public class HudManager
             final Window window = mc.getWindow();
             final int width = window.getGuiScaledWidth();
             final int height = window.getGuiScaledHeight();
-            final int chatBarHeight = mc.gui.getChat().isChatFocused() ? 14 : 0;
+            final int chatBarHeight = mc.gui.hud.getChat().isChatFocused() ? 14 : 0;
             int topStackOffset = 0;
             int bottomStackOffset = 0;
 
@@ -105,7 +104,7 @@ public class HudManager
                     if (isRight)
                         itemX += width - ((itemSize * element.getItemParts().size()) + ((layout.partSpacingX() - itemSize) * (element.getItemParts().size() - 1)));
 
-                    guiGraphics.renderItem(
+                    guiGraphics.item(
                         itemPart.item.getDefaultInstance(),
                         itemX,
                         itemY
@@ -137,12 +136,13 @@ public class HudManager
                     if (isRight)
                         textX += width - ((textWidth * element.getTextParts().size()) + ((layout.partSpacingX() - textWidth) * (element.getTextParts().size() - 1)));
 
-                    guiGraphics.drawString(
+                    guiGraphics.text(
                         mc.font,
                         textPart.text,
                         textX,
                         textY,
-                        element.getPrefixColor()
+                        element.getPrefixColor(),
+                        true
                     );
                 }
             }

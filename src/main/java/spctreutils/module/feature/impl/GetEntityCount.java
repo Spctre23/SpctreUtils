@@ -1,7 +1,7 @@
 package spctreutils.module.feature.impl;
 
 import dev.isxander.yacl3.gui.utils.KeyUtils;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -57,7 +57,7 @@ public class GetEntityCount extends Feature
     }
 
     @Override
-    protected void onRender(WorldRenderContext context)
+    protected void onRender(LevelRenderContext context)
     {
         if (block == null || unrenderDelay.isOver()) return;
         RenderHelper.drawOutline(context, block, Color.YELLOW, true);

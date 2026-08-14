@@ -13,8 +13,8 @@ public class ChunkHelper
     {
         Minecraft mc = Minecraft.getInstance();
         int renderDist = mc.options.renderDistance().get();
-        int chunkX = mc.player.chunkPosition().x;
-        int chunkZ = mc.player.chunkPosition().z;
+        int chunkX = mc.player.chunkPosition().x();
+        int chunkZ = mc.player.chunkPosition().z();
 
         for (int x = chunkX - renderDist; x <= chunkX + renderDist; x++)
         {

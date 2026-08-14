@@ -1,6 +1,6 @@
 package spctreutils.module.feature.impl;
 
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.panda.Panda;
@@ -19,7 +19,7 @@ public class HighlightRareEntities extends Feature
     }
 
     @Override
-    protected void onRender(WorldRenderContext context)
+    protected void onRender(LevelRenderContext context)
     {
         EntityHelper.forEach(entity ->
         {

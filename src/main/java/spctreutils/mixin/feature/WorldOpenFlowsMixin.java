@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import net.minecraft.server.WorldStem;
 import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.world.level.storage.LevelDataAndDimensions;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.WorldData;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,8 +27,9 @@ public abstract class WorldOpenFlowsMixin
     {
         if (FeatureManager.isEnabled(NoExperimentalWarning.class))
         {
-            WorldData worldData = worldStem.worldData();
-            boolean isOldCustomized = worldData.worldGenOptions().isOldCustomizedWorld();
+            LevelDataAndDimensions.WorldDataAndGenSettings worldDataGenSettings = worldStem.worldDataAndGenSettings();
+            WorldData worldData = worldDataGenSettings.data();
+            boolean isOldCustomized = worldDataGenSettings.genSettings().options().isOldCustomizedWorld();
             boolean isExperimental = worldData.worldGenSettingsLifecycle() != Lifecycle.stable();
             if (isOldCustomized || isExperimental)
             {

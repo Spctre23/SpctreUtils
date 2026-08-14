@@ -1,6 +1,6 @@
 package spctreutils.module.feature.impl;
 
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -43,7 +43,7 @@ public class MetadataSearch extends Feature
     }
 
     @Override
-    protected void onRender(WorldRenderContext context)
+    protected void onRender(LevelRenderContext context)
     {
         if (searchSigns.getValue())
         {

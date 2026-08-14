@@ -2,18 +2,17 @@ package spctreutils.helper;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
-import com.mojang.blaze3d.systems.CommandEncoder;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MappableRingBuffer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
@@ -25,6 +24,7 @@ import org.lwjgl.system.MemoryUtil;
 import spctreutils.SpctreUtils;
 
 import java.awt.*;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
@@ -33,7 +33,7 @@ public class RenderHelper
     private static final RenderPipeline LINES_NO_DEPTH = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "pipeline/lines_no_depth"))
-            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+            .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
             .build()
     );
 
@@ -46,47 +46,47 @@ public class RenderHelper
 
     // --- Block outline overloads ---
 
-    public static void drawOutline(WorldRenderContext context, BlockPos pos, Color color)
+    public static void drawOutline(LevelRenderContext context, BlockPos pos, Color color)
     {
         drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, false);
     }
 
-    public static void drawOutline(WorldRenderContext context, BlockPos pos, Color color, boolean throughWalls)
+    public static void drawOutline(LevelRenderContext context, BlockPos pos, Color color, boolean throughWalls)
     {
         drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, throughWalls);
     }
 
-    public static void drawOutline(WorldRenderContext context, BlockPos pos, float r, float g, float b, float a)
+    public static void drawOutline(LevelRenderContext context, BlockPos pos, float r, float g, float b, float a)
     {
         drawOutline(context, new AABB(pos), r, g, b, a, false);
     }
 
-    public static void drawOutline(WorldRenderContext context, BlockPos pos, float r, float g, float b, float a, boolean throughWalls)
+    public static void drawOutline(LevelRenderContext context, BlockPos pos, float r, float g, float b, float a, boolean throughWalls)
     {
         drawOutline(context, new AABB(pos), r, g, b, a, throughWalls);
     }
 
     // --- AABB outline overloads ---
 
-    public static void drawOutline(WorldRenderContext context, AABB box, Color color)
+    public static void drawOutline(LevelRenderContext context, AABB box, Color color)
     {
         drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, false);
     }
 
-    public static void drawOutline(WorldRenderContext context, AABB box, Color color, boolean throughWalls)
+    public static void drawOutline(LevelRenderContext context, AABB box, Color color, boolean throughWalls)
     {
         drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, throughWalls);
     }
 
-    public static void drawOutline(WorldRenderContext context, AABB box, float r, float g, float b, float a)
+    public static void drawOutline(LevelRenderContext context, AABB box, float r, float g, float b, float a)
     {
         drawOutline(context, box, r, g, b, a, false);
     }
 
-    public static void drawOutline(WorldRenderContext context, AABB box, float r, float g, float b, float a, boolean throughWalls)
+    public static void drawOutline(LevelRenderContext context, AABB box, float r, float g, float b, float a, boolean throughWalls)
     {
-        PoseStack poseStack = context.matrices();
-        Vec3 cam = context.gameRenderer().getMainCamera().position();
+        PoseStack poseStack = context.poseStack();
+        Vec3 cam = context.gameRenderer().mainCamera().position();
 
         poseStack.pushPose();
         poseStack.translate(-cam.x, -cam.y, -cam.z);
@@ -97,7 +97,7 @@ public class RenderHelper
         if (throughWalls)
         {
             if (buffer == null)
-                buffer = new BufferBuilder(allocator, LINES_NO_DEPTH.getVertexFormatMode(), LINES_NO_DEPTH.getVertexFormat());
+                buffer = new BufferBuilder(allocator, LINES_NO_DEPTH.getPrimitiveTopology(), LINES_NO_DEPTH.getVertexFormatBinding(0));
 
             Matrix4f mat = poseStack.last().pose();
             addLineToBuffer(buffer, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
@@ -113,28 +113,6 @@ public class RenderHelper
             addLineToBuffer(buffer, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
             addLineToBuffer(buffer, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
             drawBuffer(Minecraft.getInstance(), LINES_NO_DEPTH);
-        }
-        else
-        {
-            if (context.consumers() == null)
-            {
-                poseStack.popPose();
-                return;
-            }
-            VertexConsumer lines = context.consumers().getBuffer(RenderTypes.lines());
-            Matrix4f mat = poseStack.last().pose();
-            line(lines, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
-            line(lines, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
-            line(lines, mat, x2, y1, z2, x1, y1, z2, r, g, b, a);
-            line(lines, mat, x1, y1, z2, x1, y1, z1, r, g, b, a);
-            line(lines, mat, x1, y2, z1, x2, y2, z1, r, g, b, a);
-            line(lines, mat, x2, y2, z1, x2, y2, z2, r, g, b, a);
-            line(lines, mat, x2, y2, z2, x1, y2, z2, r, g, b, a);
-            line(lines, mat, x1, y2, z2, x1, y2, z1, r, g, b, a);
-            line(lines, mat, x1, y1, z1, x1, y2, z1, r, g, b, a);
-            line(lines, mat, x2, y1, z1, x2, y2, z1, r, g, b, a);
-            line(lines, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
-            line(lines, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
         }
 
         poseStack.popPose();
@@ -159,40 +137,41 @@ public class RenderHelper
             );
         }
 
-        CommandEncoder encoder = RenderSystem.getDevice().createCommandEncoder();
-        try (
-            GpuBuffer.MappedView view = encoder.mapBuffer(
-                vertexBuffer.currentBuffer().slice(0, builtBuffer.vertexBuffer().remaining()), false, true)
-        )
+        try (GpuBufferSlice.MappedView view = vertexBuffer.currentBuffer()
+            .slice(0, builtBuffer.vertexBuffer().remaining())
+            .map(false, true))
         {
             MemoryUtil.memCopy(builtBuffer.vertexBuffer(), view.data());
         }
 
         GpuBuffer vertices = vertexBuffer.currentBuffer();
-        RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
+        RenderSystem.AutoStorageIndexBuffer indexBuffer =
+            RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
         GpuBuffer indices = indexBuffer.getBuffer(drawParams.indexCount());
 
         GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms()
-            .writeTransform(RenderSystem.getModelViewMatrix(), COLOR_MODULATOR,
-                MODEL_OFFSET, TEXTURE_MATRIX);
+            .writeTransform(
+                RenderSystem.getModelViewMatrixCopy(),
+                new Vector4f(1f, 1f, 1f, 1f),
+                new Vector3f(0f, 0f, 0f),
+                new Matrix4f()
+            );
 
-        try (
-            RenderPass renderPass = RenderSystem.getDevice()
-                .createCommandEncoder()
-                .createRenderPass(
-                    () -> SpctreUtils.MOD_ID + " lines_no_depth rendering",
-                    client.getMainRenderTarget().getColorTextureView(),
-                    OptionalInt.empty(),
-                    client.getMainRenderTarget().getDepthTextureView(),
-                    OptionalDouble.empty())
-        )
+        try (RenderPass renderPass = RenderSystem.getDevice()
+            .createCommandEncoder()
+            .createRenderPass(
+                () -> SpctreUtils.MOD_ID + " lines_no_depth rendering",
+                client.gameRenderer.mainRenderTarget().getColorTextureView(),
+                Optional.empty(),
+                client.gameRenderer.mainRenderTarget().getDepthTextureView(),
+                OptionalDouble.empty()))
         {
             renderPass.setPipeline(pipeline);
             RenderSystem.bindDefaultUniforms(renderPass);
             renderPass.setUniform("DynamicTransforms", dynamicTransforms);
-            renderPass.setVertexBuffer(0, vertices);
+            renderPass.setVertexBuffer(0, vertices.slice());
             renderPass.setIndexBuffer(indices, indexBuffer.type());
-            renderPass.drawIndexed(0, 0, drawParams.indexCount(), 1);
+            renderPass.drawIndexed(drawParams.indexCount(), 1, 0, 0, 0);
         }
 
         builtBuffer.close();

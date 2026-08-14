@@ -1,8 +1,8 @@
 package spctreutils.module.feature;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.world.InteractionResult;
 import spctreutils.component.TextComp;
 import spctreutils.event.MouseEvent;
@@ -66,7 +66,7 @@ public abstract class Feature extends Module
 
     protected void onMouseScrolled(double delta) {}
 
-    protected void onRender(WorldRenderContext context) {}
+    protected void onRender(LevelRenderContext context) {}
 
     protected void toggle()
     {
@@ -97,7 +97,7 @@ public abstract class Feature extends Module
     protected void registerEvents()
     {
         super.registerEvents();
-        WorldRenderEvents.END_MAIN.register(context ->
+        LevelRenderEvents.END_MAIN.register(context ->
         {
             if (enabled && mc.level != null && mc.player != null) onRender(context);
         });

@@ -16,7 +16,7 @@ public class Msg
     public static void sendChat(Component component)
     {
         Minecraft mc = Minecraft.getInstance();
-        mc.gui.getChat().addMessage(Component.literal("[SpctreUtils]: ")
+        mc.gui.hud.getChat().addClientSystemMessage(Component.literal("[SpctreUtils]: ")
             .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FFFF)))
             .append(component));
     }
@@ -71,7 +71,7 @@ public class Msg
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        player.displayClientMessage(component, true);
+        player.sendOverlayMessage(component);
     }
 
     public static void sendHud(TextComp... comps)

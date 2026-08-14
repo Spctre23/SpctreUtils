@@ -1,7 +1,7 @@
 package spctreutils.module.feature.impl;
 
 import dev.isxander.yacl3.gui.utils.KeyUtils;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -46,7 +46,7 @@ public class CopyPos extends Feature
     }
 
     @Override
-    protected void onRender(WorldRenderContext context)
+    protected void onRender(LevelRenderContext context)
     {
         if (renderPos == null || unrenderDelay.isOver()) return;
         RenderHelper.drawOutline(context, renderPos, color, true);

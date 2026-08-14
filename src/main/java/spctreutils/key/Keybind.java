@@ -1,7 +1,7 @@
 package spctreutils.key;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 
@@ -13,7 +13,7 @@ public class Keybind
 
     public Keybind(String name, int keyCode)
     {
-        key = KeyBindingHelper.registerKeyBinding(new KeyMapping(name, keyCode, CATEGORY));
+        key = KeyMappingHelper.registerKeyMapping(new KeyMapping(name, keyCode, CATEGORY));
     }
 
     public void onPressed(Runnable pressedAction)

@@ -22,7 +22,7 @@ public class ModMenuIntegration implements ModMenuApi
         openConfigMenuKey.onPressed(() ->
         {
             Minecraft mc = Minecraft.getInstance();
-            mc.setScreen(createScreen(null));
+            mc.gui.setScreen(createScreen(null));
         });
     }
 
