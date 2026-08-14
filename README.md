@@ -1,6 +1,6 @@
 # SpctreUtils
 
-A QOL client-side mod for fabric 1.21.11 which adds random utilities I find useful.
+A QOL client-side mod for fabric 26.2 which adds random utilities I find useful.
 
 
 ## Features
