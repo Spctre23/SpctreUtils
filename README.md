@@ -17,8 +17,9 @@ A QOL client-side mod for fabric 1.21.11 which adds random utilities I find usef
        - Copies the coordinates of the block you are looking at to clipboard.
    - **Player Tracker**
        - Prints the estimated coordinates of all players on a server, retrieved from the player locator bar.
-   - **Configurable Fly Speed**
-       - Lets you configure creative mode flight speed.
+   - **Scrollable Flight Speed**
+       - Lets you easily adjust creative mode flight speed similar with CTRL+Scroll.
+       - Also gives the option to disable glide / momentum for more precise flying.
    - **Get Distance to Aimed Block**
        - Prints the distance along each axis to the block you are looking at.
    - **Get Entity Count**
@@ -29,6 +30,16 @@ A QOL client-side mod for fabric 1.21.11 which adds random utilities I find usef
        - Makes you invincible. Must be in singleplayer.
    - **Metadata Search**
        - Highlights signs or item frames that contain a specified string.
+   - **Remove Resource Pack Loading Screen**
+       - Removes the annoying resource pack reloading screen.
+   - **Remove Experimental Warning**
+       - Removes the annoying experimental warning. Useful for datapack developers.
+   - **Gamemode Switch Keybinds**
+       - Adds keybinds for each gamemode, for people who want to switch gamemodes even faster than F3+F4.
+   - **Fast Use**
+       - Removes right click delay.
+   - **No Break Delay**
+       - Removes block breaking delay.
    
         
 ## Informational HUD
@@ -52,10 +63,13 @@ A QOL client-side mod for fabric 1.21.11 which adds random utilities I find usef
         - Displays your speed in m/s. Vertical speed is optional as well.
    - **Acceleration**
         - Displays player acceleration in m/s² or g's.
+   - **Biome**
+   - **Dimension**
+   - **Light Level**
+   - **Armor**
    - **Ping**
    - **FPS**
    - **TPS**
-
 
 ## Dependencies
 
