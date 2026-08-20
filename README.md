@@ -5,6 +5,9 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
 
 ## Features
 
+   - **Easy Build**
+       - Allows you to effortlessly draw and fill an area with blocks.
+       - Significantly quicker than using WorldEdit and vanilla fill commands for simple building operations.
    - **Noclip**
        - Gives you flight and allows you to phase through blocks. 
        - Useful for building in singleplayer. 
@@ -63,6 +66,8 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
         - Displays your speed in m/s. Vertical speed is optional as well.
    - **Acceleration**
         - Displays player acceleration in m/s² or g's.
+   - **Rotation**
+        - Displays yaw and pitch in degrees.
    - **Biome**
    - **Dimension**
    - **Light Level**
