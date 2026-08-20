@@ -7,7 +7,7 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
 
    - **Easy Build**
        - Allows you to effortlessly draw and fill an area with blocks.
-       - Significantly quicker than using WorldEdit and vanilla fill commands for simple building operations.
+       - Significantly quicker than using WorldEdit or vanilla fill commands for simple building operations.
    - **Noclip**
        - Gives you flight and allows you to phase through blocks. 
        - Useful for building in singleplayer. 
