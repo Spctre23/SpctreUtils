@@ -28,6 +28,11 @@ public final class FillDispatcher
         });
     }
 
+    public static void queueFill(AABB area, Block blockType)
+    {
+        queueFill(area, blockType, 32767);
+    }
+
     public static void queueFill(AABB area, Block blockType, int maxVolume)
     {
         BoundingBox region = BoundingBoxHelper.toRegion(area);

@@ -22,6 +22,31 @@ public class RaycastHelper
         return new Ray(start, look, end);
     }
 
+    public static BlockHitResult getBlockHitResult()
+    {
+        Minecraft mc = Minecraft.getInstance();
+        Ray ray = getRay();
+
+        return mc.level.clip(new ClipContext(
+            ray.start, ray.end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.gameRenderer.mainCamera().entity()
+        ));
+    }
+
+    public static BlockPos getAimedBlock(boolean adjacent)
+    {
+        BlockHitResult hit = getBlockHitResult();
+        if (hit.getType() == HitResult.Type.MISS) return null;
+
+        BlockPos pos = hit.getBlockPos();
+        if (!adjacent) return pos;
+        return pos.relative(hit.getDirection());
+    }
+
+    public static BlockPos getAimedBlock()
+    {
+        return getAimedBlock(false);
+    }
+
     @Nullable
     public static Entity getAimedEntity()
     {
@@ -32,29 +57,6 @@ public class RaycastHelper
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(
             mc.level, mc.player, ray.start, ray.end, searchBox, entity -> !entity.isSpectator() && entity != mc.player, 0.0f
         );
-        return hit == null || hit.getType() == HitResult.Type.MISS || hit.getEntity() == null ? null : hit.getEntity();
-    }
-
-    @Nullable
-    public static BlockPos getAimedBlock(boolean adjacent)
-    {
-        Minecraft mc = Minecraft.getInstance();
-        Ray ray = getRay();
-
-        BlockHitResult hit = mc.level.clip(new ClipContext(
-            ray.start, ray.end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.gameRenderer.mainCamera().entity()
-        ));
-
-        if (hit.getType() == HitResult.Type.MISS) return null;
-
-        BlockPos pos = hit.getBlockPos();
-        if (!adjacent) return pos;
-        return pos.relative(hit.getDirection());
-    }
-
-    @Nullable
-    public static BlockPos getAimedBlock()
-    {
-        return getAimedBlock(false);
+        return hit == null || hit.getType() == HitResult.Type.MISS ? null : hit.getEntity();
     }
 }

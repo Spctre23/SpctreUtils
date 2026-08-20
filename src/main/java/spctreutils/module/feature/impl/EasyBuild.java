@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3fc;
 import spctreutils.helper.Drawing.DragSession;
@@ -17,6 +16,7 @@ import spctreutils.helper.Drawing.DragShape;
 import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.FillDispatcher;
+import spctreutils.helper.World.RaycastHelper;
 import spctreutils.key.Keybind;
 import spctreutils.module.feature.Feature;
 
@@ -65,7 +65,7 @@ public class EasyBuild extends Feature
 
         if (session == null)
         {
-            if (!(mc.hitResult instanceof BlockHitResult hit) || hit.getType() != HitResult.Type.BLOCK) return;
+            BlockHitResult hit = RaycastHelper.getBlockHitResult();
             session = DragSession.begin(hit.getBlockPos(), hit.getDirection());
         }
 
@@ -114,13 +114,13 @@ public class EasyBuild extends Feature
             ItemStack mainHandItem = mc.player.getMainHandItem();
             if (mainHandItem.getItem() instanceof BlockItem blockItem)
             {
-                FillDispatcher.queueFill(previewBox, blockItem.getBlock(), 32000);
+                FillDispatcher.queueFill(previewBox, blockItem.getBlock());
             }
         }
 
         while (mc.options.keyAttack.consumeClick())
         {
-            FillDispatcher.queueFill(previewBox, Blocks.AIR, 32000);
+            FillDispatcher.queueFill(previewBox, Blocks.AIR);
         }
     }
 
