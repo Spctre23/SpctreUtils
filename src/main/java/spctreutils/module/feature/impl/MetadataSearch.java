@@ -8,9 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import org.apache.commons.lang3.StringUtils;
 import spctreutils.module.feature.Feature;
-import spctreutils.helper.ChunkHelper;
-import spctreutils.helper.EntityHelper;
-import spctreutils.helper.RenderHelper;
+import spctreutils.helper.World.ChunkHelper;
+import spctreutils.helper.World.EntityHelper;
+import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
@@ -50,7 +50,7 @@ public class MetadataSearch extends Feature
             for (BlockPos pos : matchingSignPositions)
             {
                 if (pos == null) continue;
-                RenderHelper.drawOutline(context, pos, 1f, 1f, 1f, 1f, true);
+                RenderHelper.drawOutline(context, pos, 1f, 1f, 1f, 1f);
             }
         }
 
@@ -66,7 +66,7 @@ public class MetadataSearch extends Feature
 
             boolean matches = item.contains(target) || (includeRenamedItems.getValue() && name != null && name.getString().toLowerCase().contains(target));
             if (!matches) return;
-            RenderHelper.drawOutline(context, frame.getBoundingBox(), Color.WHITE, true);
+            RenderHelper.drawOutline(context, frame.getBoundingBox(), Color.WHITE);
         });
     }
 

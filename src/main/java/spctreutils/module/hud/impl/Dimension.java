@@ -1,6 +1,6 @@
 package spctreutils.module.hud.impl;
 
-import spctreutils.helper.DimensionHelper;
+import spctreutils.helper.World.DimensionHelper;
 import spctreutils.module.hud.HudElement;
 
 public class Dimension extends HudElement

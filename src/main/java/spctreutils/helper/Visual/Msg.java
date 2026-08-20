@@ -1,4 +1,4 @@
-package spctreutils.helper;
+package spctreutils.helper.Visual;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

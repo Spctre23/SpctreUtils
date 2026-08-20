@@ -8,7 +8,7 @@ import spctreutils.component.TextComp;
 import spctreutils.event.MouseEvent;
 import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
-import spctreutils.helper.Msg;
+import spctreutils.helper.Visual.Msg;
 import spctreutils.key.Keybind;
 import spctreutils.setting.Setting;
 
@@ -64,7 +64,10 @@ public abstract class Feature extends Module
 
     protected void onKeyReleased() {}
 
-    protected void onMouseScrolled(double delta) {}
+    protected InteractionResult onMouseScrolled(double delta)
+    {
+        return InteractionResult.PASS;
+    }
 
     protected void onRender(LevelRenderContext context) {}
 
@@ -101,11 +104,7 @@ public abstract class Feature extends Module
         {
             if (enabled && mc.level != null && mc.player != null) onRender(context);
         });
-        MouseEvent.SCROLL.register(delta ->
-        {
-            onMouseScrolled(delta);
-            return InteractionResult.PASS;
-        });
+        MouseEvent.SCROLL.register(this::onMouseScrolled);
     }
 
     private void registerKeybind()

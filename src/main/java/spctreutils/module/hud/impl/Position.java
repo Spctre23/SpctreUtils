@@ -1,8 +1,7 @@
 package spctreutils.module.hud.impl;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import spctreutils.helper.DimensionHelper;
+import spctreutils.helper.World.DimensionHelper;
 import spctreutils.module.hud.HudElement;
 import spctreutils.setting.Setting;
 

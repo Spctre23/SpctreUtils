@@ -1,6 +1,6 @@
 package spctreutils.module.hud.impl;
 
-import spctreutils.helper.EntityHelper;
+import spctreutils.helper.World.EntityHelper;
 import spctreutils.module.hud.HudElement;
 import spctreutils.setting.Setting;
 

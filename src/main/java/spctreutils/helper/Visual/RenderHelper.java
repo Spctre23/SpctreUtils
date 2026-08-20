@@ -1,4 +1,4 @@
-package spctreutils.helper;
+package spctreutils.helper.Visual;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -26,7 +26,6 @@ import spctreutils.SpctreUtils;
 import java.awt.*;
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 public class RenderHelper
 {
@@ -48,42 +47,22 @@ public class RenderHelper
 
     public static void drawOutline(LevelRenderContext context, BlockPos pos, Color color)
     {
-        drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, false);
-    }
-
-    public static void drawOutline(LevelRenderContext context, BlockPos pos, Color color, boolean throughWalls)
-    {
-        drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, throughWalls);
+        drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f);
     }
 
     public static void drawOutline(LevelRenderContext context, BlockPos pos, float r, float g, float b, float a)
     {
-        drawOutline(context, new AABB(pos), r, g, b, a, false);
-    }
-
-    public static void drawOutline(LevelRenderContext context, BlockPos pos, float r, float g, float b, float a, boolean throughWalls)
-    {
-        drawOutline(context, new AABB(pos), r, g, b, a, throughWalls);
+        drawOutline(context, new AABB(pos), r, g, b, a);
     }
 
     // --- AABB outline overloads ---
 
     public static void drawOutline(LevelRenderContext context, AABB box, Color color)
     {
-        drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, false);
-    }
-
-    public static void drawOutline(LevelRenderContext context, AABB box, Color color, boolean throughWalls)
-    {
-        drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f, throughWalls);
+        drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f);
     }
 
     public static void drawOutline(LevelRenderContext context, AABB box, float r, float g, float b, float a)
-    {
-        drawOutline(context, box, r, g, b, a, false);
-    }
-
-    public static void drawOutline(LevelRenderContext context, AABB box, float r, float g, float b, float a, boolean throughWalls)
     {
         PoseStack poseStack = context.poseStack();
         Vec3 cam = context.gameRenderer().mainCamera().position();
@@ -94,26 +73,23 @@ public class RenderHelper
         double x1 = box.minX, y1 = box.minY, z1 = box.minZ;
         double x2 = box.maxX, y2 = box.maxY, z2 = box.maxZ;
 
-        if (throughWalls)
-        {
-            if (buffer == null)
-                buffer = new BufferBuilder(allocator, LINES_NO_DEPTH.getPrimitiveTopology(), LINES_NO_DEPTH.getVertexFormatBinding(0));
+        if (buffer == null)
+            buffer = new BufferBuilder(allocator, LINES_NO_DEPTH.getPrimitiveTopology(), LINES_NO_DEPTH.getVertexFormatBinding(0));
 
-            Matrix4f mat = poseStack.last().pose();
-            addLineToBuffer(buffer, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
-            addLineToBuffer(buffer, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
-            addLineToBuffer(buffer, mat, x2, y1, z2, x1, y1, z2, r, g, b, a);
-            addLineToBuffer(buffer, mat, x1, y1, z2, x1, y1, z1, r, g, b, a);
-            addLineToBuffer(buffer, mat, x1, y2, z1, x2, y2, z1, r, g, b, a);
-            addLineToBuffer(buffer, mat, x2, y2, z1, x2, y2, z2, r, g, b, a);
-            addLineToBuffer(buffer, mat, x2, y2, z2, x1, y2, z2, r, g, b, a);
-            addLineToBuffer(buffer, mat, x1, y2, z2, x1, y2, z1, r, g, b, a);
-            addLineToBuffer(buffer, mat, x1, y1, z1, x1, y2, z1, r, g, b, a);
-            addLineToBuffer(buffer, mat, x2, y1, z1, x2, y2, z1, r, g, b, a);
-            addLineToBuffer(buffer, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
-            addLineToBuffer(buffer, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
-            drawBuffer(Minecraft.getInstance(), LINES_NO_DEPTH);
-        }
+        Matrix4f mat = poseStack.last().pose();
+        addLineToBuffer(buffer, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
+        addLineToBuffer(buffer, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
+        addLineToBuffer(buffer, mat, x2, y1, z2, x1, y1, z2, r, g, b, a);
+        addLineToBuffer(buffer, mat, x1, y1, z2, x1, y1, z1, r, g, b, a);
+        addLineToBuffer(buffer, mat, x1, y2, z1, x2, y2, z1, r, g, b, a);
+        addLineToBuffer(buffer, mat, x2, y2, z1, x2, y2, z2, r, g, b, a);
+        addLineToBuffer(buffer, mat, x2, y2, z2, x1, y2, z2, r, g, b, a);
+        addLineToBuffer(buffer, mat, x1, y2, z2, x1, y2, z1, r, g, b, a);
+        addLineToBuffer(buffer, mat, x1, y1, z1, x1, y2, z1, r, g, b, a);
+        addLineToBuffer(buffer, mat, x2, y1, z1, x2, y2, z1, r, g, b, a);
+        addLineToBuffer(buffer, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
+        addLineToBuffer(buffer, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
+        drawBuffer(Minecraft.getInstance(), LINES_NO_DEPTH);
 
         poseStack.popPose();
     }

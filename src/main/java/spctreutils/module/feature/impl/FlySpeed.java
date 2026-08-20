@@ -2,11 +2,12 @@ package spctreutils.module.feature.impl;
 
 import dev.isxander.yacl3.gui.utils.KeyUtils;
 import net.minecraft.client.player.ClientInput;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import spctreutils.component.TextComp;
 import spctreutils.helper.MathHelper;
-import spctreutils.helper.Msg;
+import spctreutils.helper.Visual.Msg;
 import spctreutils.module.feature.Feature;
 import spctreutils.setting.Setting;
 
@@ -24,15 +25,18 @@ public class FlySpeed extends Feature
     }
 
     @Override
-    protected void onMouseScrolled(double delta)
+    protected InteractionResult onMouseScrolled(double delta)
     {
-        if (!KeyUtils.hasControlDown()) return;
+        if (!KeyUtils.hasControlDown())
+            return InteractionResult.PASS;
 
         float flySpeed = (float) MathHelper.round(Math.clamp(speed.getValue() + (delta * 0.01), 0.0, Float.MAX_VALUE), 3);
         speed.setValue(flySpeed);
 
         Color color = flySpeed >= speed.getDefault() ? Color.GREEN : Color.YELLOW;
         Msg.sendHud(new TextComp("Fly Speed: "), new TextComp(String.format("%.2f", flySpeed), color));
+
+        return InteractionResult.SUCCESS;
     }
 
     @Override

@@ -3,6 +3,9 @@ package spctreutils.module.feature.impl;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
+import spctreutils.helper.Visual.Msg;
+import spctreutils.helper.Visual.RenderHelper;
+import spctreutils.helper.World.RaycastHelper;
 import spctreutils.module.feature.Feature;
 import spctreutils.helper.*;
 
@@ -42,7 +45,7 @@ public class GetDistanceToAimedBlock extends Feature
     protected void onRender(LevelRenderContext context)
     {
         if (renderPos == null || unrenderDelay.isOver()) return;
-        RenderHelper.drawOutline(context, renderPos, Color.YELLOW, true);
+        RenderHelper.drawOutline(context, renderPos, Color.YELLOW);
     }
 
     @Override

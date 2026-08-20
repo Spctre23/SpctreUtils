@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import org.joml.Vector2d;
 import spctreutils.module.Module;
 import spctreutils.config.ConfigManager;
-import spctreutils.helper.ColorHelper;
+import spctreutils.helper.Visual.ColorHelper;
 import spctreutils.setting.Setting;
 
 import java.awt.*;

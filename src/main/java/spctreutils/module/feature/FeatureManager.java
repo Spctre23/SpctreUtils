@@ -32,6 +32,7 @@ public class FeatureManager
         features.add(new SwitchSurvival());
         features.add(new SwitchSpectator());
         features.add(new NoExperimentalWarning());
+        features.add(new EasyBuild());
     }
 
     @Nullable

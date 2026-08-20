@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.renderer.GameRenderer;
-import spctreutils.helper.RenderHelper;
+import spctreutils.helper.Visual.RenderHelper;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin

@@ -33,4 +33,9 @@ public class Keybind
             wasDown = isDown;
         });
     }
+
+    public boolean isDown()
+    {
+        return key.isDown();
+    }
 }

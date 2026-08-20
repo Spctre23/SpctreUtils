@@ -7,6 +7,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
+import spctreutils.helper.Visual.Msg;
+import spctreutils.helper.Visual.RenderHelper;
+import spctreutils.helper.World.DimensionHelper;
+import spctreutils.helper.World.RaycastHelper;
 import spctreutils.module.feature.Feature;
 import spctreutils.helper.*;
 import spctreutils.setting.Setting;
@@ -49,7 +53,7 @@ public class CopyPos extends Feature
     protected void onRender(LevelRenderContext context)
     {
         if (renderPos == null || unrenderDelay.isOver()) return;
-        RenderHelper.drawOutline(context, renderPos, color, true);
+        RenderHelper.drawOutline(context, renderPos, color);
     }
 
     @Override

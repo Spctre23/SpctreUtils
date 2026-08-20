@@ -1,7 +1,7 @@
 package spctreutils.module.hud.impl;
 
 import net.minecraft.world.item.ItemStack;
-import spctreutils.helper.ItemHelper;
+import spctreutils.helper.World.ItemHelper;
 import spctreutils.module.hud.HudElement;
 
 public class Durability extends HudElement

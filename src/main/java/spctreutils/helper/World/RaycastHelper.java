@@ -1,4 +1,4 @@
-package spctreutils.helper;
+package spctreutils.helper.World;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
