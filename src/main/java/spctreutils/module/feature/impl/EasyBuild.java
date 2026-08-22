@@ -6,7 +6,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -19,16 +21,21 @@ import spctreutils.helper.World.FillDispatcher;
 import spctreutils.helper.World.RaycastHelper;
 import spctreutils.key.Keybind;
 import spctreutils.module.feature.Feature;
+import spctreutils.setting.Setting;
 
 import java.awt.*;
+import java.util.List;
 
 public class EasyBuild extends Feature
 {
+    private static final Setting<Boolean> mirrorBlockState = new Setting<>("Mirror start pos block state", true, Boolean.class);
+
     private final Color LINE_COLOR = Color.GREEN;
     private final Color BOX_COLOR = Color.CYAN;
     private final Keybind DRAW_MODIFIER = new Keybind("Easy Build - Draw Modifier", InputConstants.KEY_LALT);
     private final Keybind SWITCH_SHAPE = new Keybind("Easy Build - Switch Shape", InputConstants.MOUSE_BUTTON_4);
 
+    private BlockHitResult startHit;
     private DragSession session;
     private AABB previewBox;
     private DragShape shape = DragShape.BOX;
@@ -44,7 +51,8 @@ public class EasyBuild extends Feature
                 There are two shape modes, LINE and PLANE.
                 - When in PLANE mode, you can extend its depth to create a BOX by scrolling the mouse wheel.
                 - Cycle between shape modes with the SWITCH SHAPE modifier.""",
-            KEY_BEHAVIOR.TOGGLE);
+            KEY_BEHAVIOR.TOGGLE,
+            List.of(mirrorBlockState));
 
         registerModifierBind();
         FillDispatcher.init();
@@ -65,8 +73,8 @@ public class EasyBuild extends Feature
 
         if (session == null)
         {
-            BlockHitResult hit = RaycastHelper.getBlockHitResult();
-            session = DragSession.begin(hit.getBlockPos(), hit.getDirection());
+            startHit = RaycastHelper.getBlockHitResult();
+            session = DragSession.begin(startHit.getBlockPos(), startHit.getDirection());
         }
 
         AABB box = session.currentBox(mc.gameRenderer.mainCamera().position(), look, shape);
@@ -101,6 +109,7 @@ public class EasyBuild extends Feature
             shape = DragShape.values()[shapeIndex];
 
             Component hudMessage = Component.literal("Draw Shape = ").append(shape.name()).withColor(getShapeColor(shape).getRGB());
+
             Msg.sendHud(hudMessage);
         });
     }
@@ -114,13 +123,26 @@ public class EasyBuild extends Feature
             ItemStack mainHandItem = mc.player.getMainHandItem();
             if (mainHandItem.getItem() instanceof BlockItem blockItem)
             {
-                FillDispatcher.queueFill(previewBox, blockItem.getBlock());
+                if (startHit == null) return;
+
+                Block heldBlock = blockItem.getBlock();
+                BlockState blockState = heldBlock.defaultBlockState();
+                if (mirrorBlockState.getValue())
+                {
+                    BlockState startBlockState = mc.level.getBlockState(startHit.getBlockPos());
+                    if (blockState.getProperties().equals(startBlockState.getProperties()))
+                    {
+                        blockState = heldBlock.withPropertiesOf(startBlockState);
+                    }
+                }
+
+                FillDispatcher.queueFill(previewBox, blockState);
             }
         }
 
         while (mc.options.keyAttack.consumeClick())
         {
-            FillDispatcher.queueFill(previewBox, Blocks.AIR);
+            FillDispatcher.queueFill(previewBox, Blocks.AIR.defaultBlockState());
         }
     }
 

@@ -21,7 +21,6 @@ public class ChunkHelper
             for (int z = chunkZ - renderDist; z <= chunkZ + renderDist; z++)
             {
                 LevelChunk chunk = mc.level.getChunk(x, z);
-                if (chunk == null) continue;
                 action.accept(chunk);
             }
         }

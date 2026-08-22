@@ -1,8 +1,8 @@
 package spctreutils.helper.World;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 
@@ -28,27 +28,24 @@ public final class FillDispatcher
         });
     }
 
-    public static void queueFill(AABB area, Block blockType)
-    {
-        queueFill(area, blockType, 32767);
-    }
-
-    public static void queueFill(AABB area, Block blockType, int maxVolume)
+    public static void queueFill(AABB area, BlockState state)
     {
         BoundingBox region = BoundingBoxHelper.toRegion(area);
-        for (BoundingBox slice : sliceByY(region, maxVolume))
+        for (BoundingBox slice : slice(region))
         {
-            QUEUE.add("fill %d %d %d %d %d %d %s".formatted(
+            QUEUE.add("fill %d %d %d %d %d %d %s replace".formatted(
                 slice.minX(), slice.minY(), slice.minZ(),
-                slice.maxX(), slice.maxY(), slice.maxZ(), BuiltInRegistries.BLOCK.getKey(blockType)));
+                slice.maxX(), slice.maxY(), slice.maxZ(),
+                BlockStateParser.serialize(state)
+            ));
         }
     }
 
-    private static List<BoundingBox> sliceByY(BoundingBox r, int maxVolume)
+    private static List<BoundingBox> slice(BoundingBox r)
     {
         List<BoundingBox> out = new ArrayList<>();
         long layerSize = (long) r.getXSpan() * r.getZSpan();
-        int layers = (int) Math.max(1, maxVolume / Math.max(1, layerSize));
+        int layers = (int) Math.max(1, 32767 / Math.max(1, layerSize));
 
         for (int y = r.minY(); y <= r.maxY(); y += layers)
         {

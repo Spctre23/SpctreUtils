@@ -15,6 +15,7 @@ public class FeatureManager
 
     public FeatureManager()
     {
+        features.add(new EasyBuild());
         features.add(new NoClip());
         features.add(new PlayerTracker());
         features.add(new CopyPos());
@@ -32,7 +33,6 @@ public class FeatureManager
         features.add(new SwitchSurvival());
         features.add(new SwitchSpectator());
         features.add(new NoExperimentalWarning());
-        features.add(new EasyBuild());
     }
 
     @Nullable
