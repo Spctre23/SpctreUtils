@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class FeatureManager
 {
-    private static final List<Feature> features = new ArrayList<>();
+    private static final List<FeatureBase> features = new ArrayList<>();
 
     public FeatureManager()
     {
@@ -36,9 +36,9 @@ public class FeatureManager
     }
 
     @Nullable
-    public static <T extends Feature> T getFeature(Class<T> type)
+    public static <T extends FeatureBase> T getFeature(Class<T> type)
     {
-        for (Feature feature : features)
+        for (FeatureBase feature : features)
         {
             if (type.isInstance(feature))
                 return type.cast(feature);
@@ -46,9 +46,9 @@ public class FeatureManager
         return null;
     }
 
-    public static <T extends Feature> boolean isEnabled(Class<T> type)
+    public static <T extends FeatureBase> boolean isEnabled(Class<T> type)
     {
-        Feature feature = getFeature(type);
+        FeatureBase feature = getFeature(type);
         return feature != null && feature.getEnabled();
     }
 
@@ -56,7 +56,7 @@ public class FeatureManager
     {
         return features.stream()
             .filter(feature -> feature.getSettings().isEmpty())
-            .map(Feature::createOption)
+            .map(FeatureBase::createOption)
             .collect(Collectors.toList());
     }
 
@@ -64,7 +64,7 @@ public class FeatureManager
     {
         return features.stream()
             .filter(feature -> !feature.getSettings().isEmpty())
-            .map(Feature::createGroup)
+            .map(FeatureBase::createGroup)
             .collect(Collectors.toList());
     }
 }

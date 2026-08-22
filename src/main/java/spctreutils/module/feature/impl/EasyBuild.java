@@ -20,13 +20,13 @@ import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.FillDispatcher;
 import spctreutils.helper.World.RaycastHelper;
 import spctreutils.key.Keybind;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
 import java.util.List;
 
-public class EasyBuild extends Feature
+public class EasyBuild extends ToggleFeature
 {
     private static final Setting<Boolean> mirrorBlockState = new Setting<>("Mirror start pos block state", true, Boolean.class);
 
@@ -51,7 +51,6 @@ public class EasyBuild extends Feature
                 There are two shape modes, LINE and PLANE.
                 - When in PLANE mode, you can extend its depth to create a BOX by scrolling the mouse wheel.
                 - Cycle between shape modes with the SWITCH SHAPE modifier.""",
-            KEY_BEHAVIOR.TOGGLE,
             List.of(mirrorBlockState));
 
         registerModifierBind();
@@ -61,10 +60,11 @@ public class EasyBuild extends Feature
     @Override
     protected void onTick()
     {
-        if (!DRAW_MODIFIER.isDown())
+        if (!DRAW_MODIFIER.isDown() || mc.player.gameMode().isSurvival())
         {
             session = null;
             previewBox = null;
+            startHit = null;
             return;
         }
 

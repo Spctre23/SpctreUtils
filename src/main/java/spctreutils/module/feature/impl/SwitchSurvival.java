@@ -1,12 +1,12 @@
 package spctreutils.module.feature.impl;
 
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.TriggerFeature;
 
-public class SwitchSurvival extends Feature
+public class SwitchSurvival extends TriggerFeature
 {
     public SwitchSurvival()
     {
-        super("Gamemode Survival Keybind", "Keybind to switch to survival.", KEY_BEHAVIOR.TRIGGER);
+        super("Gamemode Survival Keybind", "Keybind to switch to survival.");
     }
 
     @Override

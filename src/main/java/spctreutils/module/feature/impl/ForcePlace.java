@@ -1,8 +1,8 @@
 package spctreutils.module.feature.impl;
 
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 
-public class ForcePlace extends Feature
+public class ForcePlace extends ToggleFeature
 {
     public ForcePlace()
     {

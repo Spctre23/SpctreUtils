@@ -2,29 +2,9 @@ package spctreutils.component;
 
 import java.awt.*;
 
-public class TextComp
-{
-    private final String text;
-    private final Color color;
+public record TextComp(String text, Color color) {
 
-    public TextComp(String text, Color color)
-    {
-        this.text = text;
-        this.color = color;
-    }
-
-    public TextComp(String text)
-    {
+    public TextComp(String text) {
         this(text, Color.WHITE);
-    }
-
-    public String getText()
-    {
-        return text;
-    }
-
-    public Color getColor()
-    {
-        return color;
     }
 }

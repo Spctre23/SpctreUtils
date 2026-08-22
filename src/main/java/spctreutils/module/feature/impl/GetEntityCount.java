@@ -9,22 +9,22 @@ import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.EntityHelper;
 import spctreutils.helper.World.RaycastHelper;
-import spctreutils.module.feature.Feature;
 import spctreutils.helper.*;
+import spctreutils.module.feature.TriggerFeature;
 
 import java.awt.*;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class GetEntityCount extends Feature
+public class GetEntityCount extends TriggerFeature
 {
     private BlockPos block = null;
     private final Delay unrenderDelay = new Delay();
 
     public GetEntityCount()
     {
-        super("Get Entity Count", "Prints number of entities in simulation distance (default), or within the block you are looking at if holding CTRL on activation.", KEY_BEHAVIOR.TRIGGER);
+        super("Get Entity Count", "Prints number of entities in simulation distance (default), or within the block you are looking at if holding CTRL on activation.");
     }
 
     @Override

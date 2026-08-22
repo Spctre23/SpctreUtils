@@ -8,13 +8,13 @@ import net.minecraft.world.phys.Vec3;
 import spctreutils.component.TextComp;
 import spctreutils.helper.MathHelper;
 import spctreutils.helper.Visual.Msg;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
 import java.util.List;
 
-public class FlySpeed extends Feature
+public class FlySpeed extends ToggleFeature
 {
     public static final Setting<Float> speed = new Setting<>("Speed", 0.1f, Float.class);
     public static final Setting<Boolean> noGlide = new Setting<>("No Glide", false, Boolean.class);

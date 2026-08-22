@@ -11,14 +11,14 @@ import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.DimensionHelper;
 import spctreutils.helper.World.RaycastHelper;
-import spctreutils.module.feature.Feature;
 import spctreutils.helper.*;
+import spctreutils.module.feature.TriggerFeature;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
 import java.util.List;
 
-public class CopyPos extends Feature
+public class CopyPos extends TriggerFeature
 {
     private static final Setting<Boolean> scaled = new Setting<>("Copy opposite dimension coords : CTRL", false, Boolean.class);
 
@@ -28,7 +28,7 @@ public class CopyPos extends Feature
 
     public CopyPos()
     {
-        super("Copy Coords of Aimed Block", "Copies the coordinates of the block you are looking at to clipboard.", KEY_BEHAVIOR.TRIGGER, List.of(scaled));
+        super("Copy Coords of Aimed Block", "Copies the coordinates of the block you are looking at to clipboard.", List.of(scaled));
     }
 
     @Override

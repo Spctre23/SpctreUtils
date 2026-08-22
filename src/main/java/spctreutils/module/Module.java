@@ -98,8 +98,8 @@ public abstract class Module implements OptionProvider
             syncFromConfig();
             if (enabled && mc.level != null && mc.player != null) onTick();
         });
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> onJoin());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
+        ClientPlayConnectionEvents.JOIN.register((_, _, _) -> onJoin());
+        ClientPlayConnectionEvents.DISCONNECT.register((_, _) ->
         {
             onDisconnect();
             dispose();

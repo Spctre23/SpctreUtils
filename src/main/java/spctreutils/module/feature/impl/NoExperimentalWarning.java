@@ -1,10 +1,10 @@
 package spctreutils.module.feature.impl;
 
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.FeatureBase;
 
 import java.util.List;
 
-public class NoExperimentalWarning extends Feature
+public class NoExperimentalWarning extends FeatureBase
 {
     public NoExperimentalWarning()
     {

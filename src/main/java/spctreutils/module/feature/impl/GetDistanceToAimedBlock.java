@@ -6,19 +6,20 @@ import net.minecraft.world.phys.Vec3;
 import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.RaycastHelper;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 import spctreutils.helper.*;
+import spctreutils.module.feature.TriggerFeature;
 
 import java.awt.*;
 
-public class GetDistanceToAimedBlock extends Feature
+public class GetDistanceToAimedBlock extends TriggerFeature
 {
     private BlockPos renderPos = null;
     private final Delay unrenderDelay = new Delay();
 
     public GetDistanceToAimedBlock()
     {
-        super("Get Distance to Aimed Block", "Prints the distance along each axis to the block you are looking at.", KEY_BEHAVIOR.TRIGGER);
+        super("Get Distance to Aimed Block", "Prints the distance along each axis to the block you are looking at.");
     }
 
     @Override

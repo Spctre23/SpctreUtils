@@ -37,7 +37,7 @@ public class Msg
         MutableComponent text = Component.empty();
         for (TextComp comp : comps)
         {
-            text.append(comp.getText() + " ".repeat(spacing)).withColor(ColorHelper.rgbToHex(comp.getColor()));
+            text.append(comp.text() + " ".repeat(spacing)).withColor(ColorHelper.rgbToHex(comp.color()));
         }
 
         sendChat(text);
@@ -79,7 +79,7 @@ public class Msg
         MutableComponent text = Component.empty();
         for (TextComp comp : comps)
         {
-            text.append(comp.getText()).withColor(ColorHelper.rgbToHex(comp.getColor()));
+            text.append(comp.text()).withColor(ColorHelper.rgbToHex(comp.color()));
         }
 
         sendHud(text);

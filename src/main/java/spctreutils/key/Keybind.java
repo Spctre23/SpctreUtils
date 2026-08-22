@@ -18,7 +18,7 @@ public class Keybind
 
     public void onPressed(Runnable pressedAction)
     {
-        ClientTickEvents.END_CLIENT_TICK.register(mc ->
+        ClientTickEvents.END_CLIENT_TICK.register(_ ->
         {
             while (key.consumeClick()) pressedAction.run();
         });
@@ -26,7 +26,7 @@ public class Keybind
 
     public void onReleased(Runnable releasedAction)
     {
-        ClientTickEvents.END_CLIENT_TICK.register(mc ->
+        ClientTickEvents.END_CLIENT_TICK.register(_ ->
         {
             boolean isDown = key.isDown();
             if (wasDown && !isDown) releasedAction.run();

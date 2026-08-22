@@ -7,21 +7,20 @@ import spctreutils.helper.Visual.Msg;
 import spctreutils.mixin.accessor.AzimuthWaypointInvoker;
 import spctreutils.mixin.accessor.ChunkWaypointInvoker;
 import spctreutils.mixin.accessor.Vec3iWaypointInvoker;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.TriggerFeature;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.UUID;
 
-public class PlayerTracker extends Feature
+public class PlayerTracker extends TriggerFeature
 {
     public PlayerTracker()
     {
         super("Player Tracker", """
                 Prints the estimated position of all players on the server (if possible).
                 
-                To reliably track player coordinates from any distance, you must trigger PlayerTracker within simulation distance of your target(s) at least once.""",
-            KEY_BEHAVIOR.TRIGGER);
+                To reliably track player coordinates from any distance, you must trigger PlayerTracker within simulation distance of your target(s) at least once.""");
     }
 
     @Override

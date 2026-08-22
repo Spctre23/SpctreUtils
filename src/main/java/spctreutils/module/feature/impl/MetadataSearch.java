@@ -7,7 +7,7 @@ import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import org.apache.commons.lang3.StringUtils;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 import spctreutils.helper.World.ChunkHelper;
 import spctreutils.helper.World.EntityHelper;
 import spctreutils.helper.Visual.RenderHelper;
@@ -17,7 +17,7 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 
-public class MetadataSearch extends Feature
+public class MetadataSearch extends ToggleFeature
 {
     private static final Setting<Boolean> searchSigns = new Setting<>("Search signs", true, Boolean.class);
     private static final Setting<Boolean> searchItemFrames = new Setting<>("Search item frames", true, Boolean.class);

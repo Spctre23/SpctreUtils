@@ -5,13 +5,13 @@ import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.phys.AABB;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 import spctreutils.helper.World.EntityHelper;
 import spctreutils.helper.Visual.RenderHelper;
 
 import java.awt.*;
 
-public class HighlightRareEntities extends Feature
+public class HighlightRareEntities extends ToggleFeature
 {
     public HighlightRareEntities()
     {

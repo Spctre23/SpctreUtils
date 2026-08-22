@@ -1,11 +1,11 @@
 package spctreutils.module.feature.impl;
 
 import net.minecraft.client.gui.screens.LoadingOverlay;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.FeatureBase;
 
 import java.util.List;
 
-public class NoResourcePackLoadingScreen extends Feature
+public class NoResourcePackLoadingScreen extends FeatureBase
 {
     public NoResourcePackLoadingScreen()
     {

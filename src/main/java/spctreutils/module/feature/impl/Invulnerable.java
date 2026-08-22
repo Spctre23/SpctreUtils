@@ -2,9 +2,9 @@ package spctreutils.module.feature.impl;
 
 import net.minecraft.world.entity.player.Player;
 import spctreutils.SpctreUtils;
-import spctreutils.module.feature.Feature;
+import spctreutils.module.feature.ToggleFeature;
 
-public class Invulnerable extends Feature
+public class Invulnerable extends ToggleFeature
 {
     public Invulnerable()
     {
