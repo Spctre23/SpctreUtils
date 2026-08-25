@@ -10,7 +10,6 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
        - Significantly quicker than using WorldEdit or vanilla fill commands for simple building operations.
    - **Noclip**
        - Gives you flight and allows you to phase through blocks. 
-       - Useful for building in singleplayer. 
        - Must be in singleplayer.
    - **Force Place**
        - Removes placement restrictions.
