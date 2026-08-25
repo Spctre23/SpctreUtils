@@ -16,12 +16,12 @@ import java.util.List;
 
 public class FlySpeed extends ToggleFeature
 {
-    public static final Setting<Float> speed = new Setting<>("Speed", 0.1f, Float.class);
-    public static final Setting<Boolean> noGlide = new Setting<>("No Glide", false, Boolean.class);
+    public static final Setting<Float> SPEED = new Setting<>("Speed", 0.1f, Float.class);
+    public static final Setting<Boolean> NO_GLIDE = new Setting<>("No Glide", false, Boolean.class);
 
     public FlySpeed()
     {
-        super("Fly Speed", "Custom creative flight speed. CTRL + scroll to adjust.", List.of(speed, noGlide));
+        super("Fly Speed", "Custom creative flight speed. CTRL + scroll to adjust.", List.of(SPEED, NO_GLIDE));
     }
 
     @Override
@@ -30,10 +30,10 @@ public class FlySpeed extends ToggleFeature
         if (!KeyUtils.hasControlDown())
             return InteractionResult.PASS;
 
-        float flySpeed = (float) MathHelper.round(Math.clamp(speed.getValue() + (delta * 0.01), 0.0, Float.MAX_VALUE), 3);
-        speed.setValue(flySpeed);
+        float flySpeed = (float) MathHelper.round(Math.clamp(SPEED.getValue() + (delta * 0.01), 0.0, Float.MAX_VALUE), 3);
+        SPEED.setValue(flySpeed);
 
-        Color color = flySpeed >= speed.getDefault() ? Color.GREEN : Color.YELLOW;
+        Color color = flySpeed >= SPEED.getDefault() ? Color.GREEN : Color.YELLOW;
         Msg.sendHud(new TextComp("Fly Speed: "), new TextComp(String.format("%.2f", flySpeed), color));
 
         return InteractionResult.SUCCESS;
@@ -42,7 +42,7 @@ public class FlySpeed extends ToggleFeature
     @Override
     protected void onTick()
     {
-        if (!mc.player.getAbilities().flying || !noGlide.getValue()) return;
+        if (!mc.player.getAbilities().flying || !NO_GLIDE.getValue()) return;
 
         Vec2 moveInput = mc.player.input.getMoveVector();
         boolean horizontalInput = moveInput.x != 0 || moveInput.y != 0;
@@ -83,6 +83,6 @@ public class FlySpeed extends ToggleFeature
     @Override
     protected void onDisabled()
     {
-        mc.player.getAbilities().setFlyingSpeed(speed.getDefault());
+        mc.player.getAbilities().setFlyingSpeed(SPEED.getDefault());
     }
 }

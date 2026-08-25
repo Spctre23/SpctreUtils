@@ -20,6 +20,6 @@ public abstract class PlayerMixin
     private void tick(CallbackInfo ci)
     {
         if (FeatureManager.isEnabled(FlySpeed.class))
-            getAbilities().setFlyingSpeed(FlySpeed.speed.getValue());
+            getAbilities().setFlyingSpeed(FlySpeed.SPEED.getValue());
     }
 }

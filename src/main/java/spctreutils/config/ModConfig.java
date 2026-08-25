@@ -26,8 +26,8 @@ public class ModConfig
     @SerialEntry public Map<String, Boolean> hudElementStates = new HashMap<>();
     @SerialEntry public List<String> hudElementOrder = new ArrayList<>();
     @SerialEntry public boolean hud = false;
-    @SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();
-    @SerialEntry public int hudTextColor = Color.WHITE.getRGB();
+    //@SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();
+    //@SerialEntry public int hudTextColor = Color.WHITE.getRGB();
 
     @SerialEntry public Map<String, Object> settings = new HashMap<>();
 }

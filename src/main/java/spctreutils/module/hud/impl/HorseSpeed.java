@@ -6,7 +6,7 @@ import spctreutils.module.hud.HudElement;
 
 public class HorseSpeed extends HudElement
 {
-    private final double SPEED_CONVERSION = 43.17; // Conversion to m/s
+    private final double speedConversion = 43.17; // Conversion to m/s
 
     public HorseSpeed()
     {
@@ -18,7 +18,7 @@ public class HorseSpeed extends HudElement
     {
         if (mc.crosshairPickEntity instanceof Horse horse)
         {
-            String speed = String.format("%.3f m/s", horse.getAttributeValue(Attributes.MOVEMENT_SPEED) * SPEED_CONVERSION);
+            String speed = String.format("%.3f m/s", horse.getAttributeValue(Attributes.MOVEMENT_SPEED) * speedConversion);
             setText(speed);
             return;
         }

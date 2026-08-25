@@ -153,7 +153,7 @@ public class HudManager
     public List<Option<?>> getOptions()
     {
         return elements.stream()
-            .filter(element -> element.getSettings().isEmpty())
+            //.filter(element -> element.getSettings().isEmpty())
             .map(HudElement::createOption)
             .collect(Collectors.toList());
     }
@@ -161,7 +161,7 @@ public class HudManager
     public List<OptionGroup> getGroups()
     {
         return elements.stream()
-            .filter(element -> !element.getSettings().isEmpty())
+            //.filter(element -> !element.getSettings().isEmpty())
             .map(HudElement::createGroup)
             .collect(Collectors.toList());
     }
@@ -181,7 +181,7 @@ public class HudManager
                     })
                 .controller(TickBoxControllerBuilder::create)
                 .build())
-            .option(Option.<Color>createBuilder()
+/*            .option(Option.<Color>createBuilder()
                 .name(Component.literal("HUD Prefix Color"))
                 .binding(
                     new Color(new ModConfig().hudPrefixColor, true),
@@ -202,7 +202,7 @@ public class HudManager
                         ConfigManager.save();
                     })
                 .controller(ColorControllerBuilder::create)
-                .build())
+                .build())*/
             .build();
     }
 

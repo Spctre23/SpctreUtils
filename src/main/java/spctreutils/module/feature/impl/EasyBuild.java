@@ -28,12 +28,12 @@ import java.util.List;
 
 public class EasyBuild extends ToggleFeature
 {
-    private static final Setting<Boolean> mirrorBlockState = new Setting<>("Mirror start pos block state", true, Boolean.class);
+    private static final Setting<Boolean> MIRROR_BLOCK_STATE = new Setting<>("Mirror start pos block state", true, Boolean.class);
 
-    private final Color LINE_COLOR = Color.GREEN;
-    private final Color BOX_COLOR = Color.CYAN;
-    private final Keybind DRAW_MODIFIER = new Keybind("Easy Build - Draw Modifier", InputConstants.KEY_LALT);
-    private final Keybind SWITCH_SHAPE = new Keybind("Easy Build - Switch Shape", InputConstants.MOUSE_BUTTON_4);
+    private final Color lineColor = Color.GREEN;
+    private final Color boxColor = Color.CYAN;
+    private final Keybind drawModifierBind = new Keybind("Easy Build - Draw Modifier", InputConstants.KEY_LALT);
+    private final Keybind switchShapeBind = new Keybind("Easy Build - Switch Shape", InputConstants.MOUSE_BUTTON_4);
 
     private BlockHitResult startHit;
     private DragSession session;
@@ -51,7 +51,7 @@ public class EasyBuild extends ToggleFeature
                 There are two shape modes, LINE and PLANE.
                 - When in PLANE mode, you can extend its depth to create a BOX by scrolling the mouse wheel.
                 - Cycle between shape modes with the SWITCH SHAPE modifier.""",
-            List.of(mirrorBlockState));
+            List.of(MIRROR_BLOCK_STATE));
 
         registerModifierBind();
         FillDispatcher.init();
@@ -60,7 +60,7 @@ public class EasyBuild extends ToggleFeature
     @Override
     protected void onTick()
     {
-        if (!DRAW_MODIFIER.isDown() || mc.player.gameMode().isSurvival())
+        if (!drawModifierBind.isDown() || mc.player.gameMode().isSurvival())
         {
             session = null;
             previewBox = null;
@@ -86,7 +86,7 @@ public class EasyBuild extends ToggleFeature
     @Override
     protected InteractionResult onMouseScrolled(double delta)
     {
-        if (!DRAW_MODIFIER.isDown() || session == null || shape != DragShape.BOX)
+        if (!drawModifierBind.isDown() || session == null || shape != DragShape.BOX)
             return InteractionResult.PASS;
 
         session.adjustDepth(delta > 0 ? 1 : -1);
@@ -96,15 +96,17 @@ public class EasyBuild extends ToggleFeature
     @Override
     protected void onRender(LevelRenderContext context)
     {
-        if (session == null || previewBox == null || !DRAW_MODIFIER.isDown()) return;
+        if (session == null || previewBox == null || !drawModifierBind.isDown()) return;
 
         RenderHelper.drawOutline(context, previewBox, getShapeColor(shape));
     }
 
     private void registerModifierBind()
     {
-        SWITCH_SHAPE.onPressed(() ->
+        switchShapeBind.onPressed(() ->
         {
+            if (mc.player.gameMode().isSurvival()) return;
+
             shapeIndex = (shapeIndex + 1) % DragShape.values().length;
             shape = DragShape.values()[shapeIndex];
 
@@ -127,7 +129,7 @@ public class EasyBuild extends ToggleFeature
 
                 Block heldBlock = blockItem.getBlock();
                 BlockState blockState = heldBlock.defaultBlockState();
-                if (mirrorBlockState.getValue())
+                if (MIRROR_BLOCK_STATE.getValue())
                 {
                     BlockState startBlockState = mc.level.getBlockState(startHit.getBlockPos());
                     if (blockState.getProperties().equals(startBlockState.getProperties()))
@@ -150,8 +152,8 @@ public class EasyBuild extends ToggleFeature
     {
         return switch (shape)
         {
-            case LINE -> LINE_COLOR;
-            case BOX -> BOX_COLOR;
+            case LINE -> lineColor;
+            case BOX -> boxColor;
         };
     }
 }

@@ -2,7 +2,6 @@ package spctreutils.config.yacl;
 
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.controller.ControllerBuilder;
-import spctreutils.module.hud.HudElement;
 
 public class HudControllerBuilder
 {

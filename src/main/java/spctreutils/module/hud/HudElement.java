@@ -16,8 +16,9 @@ import java.util.Map;
 public abstract class HudElement extends Module
 {
     private final String prefix;
-    private int prefixColor = ConfigManager.config.hudPrefixColor;
-    private int textColor = ConfigManager.config.hudTextColor;
+
+    private final Setting<Color> HUD_PREFIX_COLOR = new Setting<>("Prefix Color", Color.LIGHT_GRAY, Color.class);
+    private final Setting<Color> HUD_TEXT_COLOR = new Setting<>("Text Color", Color.WHITE, Color.class);
 
     private final Map<Vector2d, ItemPart> itemParts = new HashMap<>();
     private final Map<Vector2d, TextPart> textParts = new HashMap<>();
@@ -59,30 +60,30 @@ public abstract class HudElement extends Module
         ConfigManager.save();
     }
 
-    @Override
+/*    @Override
     protected void syncFromConfig()
     {
         super.syncFromConfig();
 
         prefixColor = ConfigManager.config.hudPrefixColor;
         textColor = ConfigManager.config.hudTextColor;
-    }
+    }*/
 
-    @Override
+/*    @Override
     protected void onStateChanged()
     {
         super.onStateChanged();
         dispose();
-    }
+    }*/
 
     protected int getPrefixColor()
     {
-        return prefixColor;
+        return HUD_PREFIX_COLOR.getValue().getRGB();
     }
 
     protected int getTextColor()
     {
-        return textColor;
+        return HUD_TEXT_COLOR.getValue().getRGB();
     }
 
     public Map<Vector2d, TextPart> getTextParts()
@@ -93,7 +94,7 @@ public abstract class HudElement extends Module
     protected void setText(String text, int color, int x, int y)
     {
         Vector2d pos = new Vector2d(x, y);
-        Component contents = Component.literal(prefix).withColor(prefixColor)
+        Component contents = Component.literal(prefix).withColor(HUD_PREFIX_COLOR.getValue().getRGB())
             .append(Component.literal(text).withColor(color));
 
         if (!textParts.containsKey(pos))
@@ -114,7 +115,7 @@ public abstract class HudElement extends Module
 
     protected void setText(String text, int x, int y)
     {
-        setText(text, textColor, x, y);
+        setText(text, HUD_TEXT_COLOR.getValue().getRGB(), x, y);
     }
 
     protected void setText(String text, int color)

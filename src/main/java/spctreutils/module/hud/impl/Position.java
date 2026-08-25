@@ -9,11 +9,11 @@ import java.util.List;
 
 public class Position extends HudElement
 {
-    private static final Setting<Boolean> scaled = new Setting<>("Also display opposite dimension pos", false, Boolean.class);
+    private static final Setting<Boolean> SCALED = new Setting<>("Also display opposite dimension pos", false, Boolean.class);
 
     public Position()
     {
-        super("Position", "Pos", "Displays your coordinates.", List.of(scaled));
+        super("Position", "Pos", "Displays your coordinates.", List.of(SCALED));
 
         setLayout(new Layout(AttachTo.BOTTOM_LEFT, false, 15, 15));
     }
@@ -25,7 +25,7 @@ public class Position extends HudElement
         String posText = String.format("§7x: §f%d §7y: §f%d §7z: §f%d", pos.getX(), pos.getY(), pos.getZ());
         String posScaledText = "";
 
-        if (scaled.getValue())
+        if (SCALED.getValue())
         {
             BlockPos posScaled = DimensionHelper.getOppositePos(pos);
             posScaledText = String.format(" [§7x: §f%d §7y: §f%d §7z: §f%d]", posScaled.getX(), pos.getY(), posScaled.getZ());

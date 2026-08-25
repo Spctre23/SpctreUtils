@@ -41,8 +41,8 @@ public interface OptionProvider
     {
         OptionGroup.Builder group = OptionGroup.createBuilder()
             .name(Component.literal(getName()))
-            .description(OptionDescription.of(Component.literal(getDescription())))
-            .option(createOption());
+            .description(OptionDescription.of(Component.literal(getDescription())));
+            //.option(createOption());
 
         for (Setting<?> setting : getSettings())
             group.option(createSettingOption(setting));

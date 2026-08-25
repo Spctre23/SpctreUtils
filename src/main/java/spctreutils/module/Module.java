@@ -12,7 +12,7 @@ public abstract class Module implements OptionProvider
 {
     protected final Minecraft mc;
     protected final String name;
-    protected final List<Setting<?>> settings;
+    protected List<Setting<?>> settings;
     protected boolean enabled;
     private final String description;
 

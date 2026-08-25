@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CopyPos extends TriggerFeature
 {
-    private static final Setting<Boolean> scaled = new Setting<>("Copy opposite dimension coords : CTRL", false, Boolean.class);
+    private static final Setting<Boolean> SCALED = new Setting<>("Copy opposite dimension coords : CTRL", false, Boolean.class);
 
     private BlockPos renderPos = null;
     private Color color = Color.YELLOW;
@@ -28,7 +28,7 @@ public class CopyPos extends TriggerFeature
 
     public CopyPos()
     {
-        super("Copy Coords of Aimed Block", "Copies the coordinates of the block you are looking at to clipboard.", List.of(scaled));
+        super("Copy Coords of Aimed Block", "Copies the coordinates of the block you are looking at to clipboard.", List.of(SCALED));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CopyPos extends TriggerFeature
         if (blockPos == null) return;
         renderPos = blockPos;
 
-        boolean shouldScale = scaled.getValue() && KeyUtils.hasControlDown();
+        boolean shouldScale = SCALED.getValue() && KeyUtils.hasControlDown();
         color = shouldScale ? getOppositeDimensionColor() : Color.YELLOW;
         blockPos = shouldScale ? DimensionHelper.getOppositePos(blockPos) : blockPos;
 

@@ -19,23 +19,23 @@ import java.util.List;
 
 public class MetadataSearch extends ToggleFeature
 {
-    private static final Setting<Boolean> searchSigns = new Setting<>("Search signs", true, Boolean.class);
-    private static final Setting<Boolean> searchItemFrames = new Setting<>("Search item frames", true, Boolean.class);
-    private static final Setting<Boolean> includeRenamedItems = new Setting<>("Include renamed items", true, Boolean.class);
-    private static final Setting<String> signText = new Setting<>("Sign text", "", String.class);
-    private static final Setting<String> itemFrameText = new Setting<>("Item frame text", "", String.class);
+    private static final Setting<Boolean> SEARCH_SIGNS = new Setting<>("Search signs", true, Boolean.class);
+    private static final Setting<Boolean> SEARCH_ITEM_FRAMES = new Setting<>("Search item frames", true, Boolean.class);
+    private static final Setting<Boolean> INCLUDE_RENAMED_ITEMS = new Setting<>("Include renamed items", true, Boolean.class);
+    private static final Setting<String> SIGN_TEXT = new Setting<>("Sign text", "", String.class);
+    private static final Setting<String> ITEM_FRAME_TEXT = new Setting<>("Item frame text", "", String.class);
 
     private final HashSet<BlockPos> matchingSignPositions = new HashSet<>();
 
     public MetadataSearch()
     {
-        super("Metadata Search", "Highlights signs or item frames that contain a specified string.", List.of(searchSigns, searchItemFrames, includeRenamedItems, signText, itemFrameText));
+        super("Metadata Search", "Highlights signs or item frames that contain a specified string.", List.of(SEARCH_SIGNS, SEARCH_ITEM_FRAMES, INCLUDE_RENAMED_ITEMS, SIGN_TEXT, ITEM_FRAME_TEXT));
     }
 
     @Override
     protected void onTick()
     {
-        if (searchSigns.getValue() && mc.level.getGameTime() % 20 == 0)
+        if (SEARCH_SIGNS.getValue() && mc.level.getGameTime() % 20 == 0)
         {
             matchingSignPositions.clear();
             findMatchingSigns();
@@ -45,7 +45,7 @@ public class MetadataSearch extends ToggleFeature
     @Override
     protected void onRender(LevelRenderContext context)
     {
-        if (searchSigns.getValue())
+        if (SEARCH_SIGNS.getValue())
         {
             for (BlockPos pos : matchingSignPositions)
             {
@@ -54,17 +54,17 @@ public class MetadataSearch extends ToggleFeature
             }
         }
 
-        if (!searchItemFrames.getValue() || itemFrameText.getValue().isBlank()) return;
+        if (!SEARCH_ITEM_FRAMES.getValue() || ITEM_FRAME_TEXT.getValue().isBlank()) return;
         EntityHelper.forEachOfType(ItemFrame.class, frame ->
         {
             ItemStack stack = frame.getItem();
             if (stack.isEmpty()) return;
 
-            String target = itemFrameText.getValue().toLowerCase();
+            String target = ITEM_FRAME_TEXT.getValue().toLowerCase();
             String item = StringUtils.substringAfterLast(String.valueOf(stack.getItem()), ":");
             Component name = stack.getCustomName();
 
-            boolean matches = item.contains(target) || (includeRenamedItems.getValue() && name != null && name.getString().toLowerCase().contains(target));
+            boolean matches = item.contains(target) || (INCLUDE_RENAMED_ITEMS.getValue() && name != null && name.getString().toLowerCase().contains(target));
             if (!matches) return;
             RenderHelper.drawOutline(context, frame.getBoundingBox(), Color.WHITE);
         });
@@ -78,7 +78,7 @@ public class MetadataSearch extends ToggleFeature
 
     private void findMatchingSigns()
     {
-        String target = signText.getValue();
+        String target = SIGN_TEXT.getValue();
         if (target.isBlank()) return;
 
         ChunkHelper.forEach((chunk ->
@@ -94,7 +94,7 @@ public class MetadataSearch extends ToggleFeature
     {
         for (int i = 0; i < 4; i++)
         {
-            if (sign.getFrontText().getMessage(i, false).getString().toLowerCase().contains(target) && !signText.getValue().isBlank())
+            if (sign.getFrontText().getMessage(i, false).getString().toLowerCase().contains(target) && !SIGN_TEXT.getValue().isBlank())
                 return true;
         }
         return false;
