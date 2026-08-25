@@ -15,7 +15,7 @@ public class ConnectionMixin
 {
     @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;genericsFtw(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;)V", shift = At.Shift.BEFORE), cancellable = true)
-    private void onReceivedPacket(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci)
+    private void onReceivedPacket(ChannelHandlerContext ctx, Packet<?> packet, CallbackInfo ci)
     {
         InteractionResult result = PacketEvent.RECEIVE.invoker().onReceive(packet);
         if (result == InteractionResult.FAIL)

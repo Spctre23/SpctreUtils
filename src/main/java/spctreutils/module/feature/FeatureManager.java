@@ -19,7 +19,8 @@ public class FeatureManager
         features.add(new NoClip());
         features.add(new PlayerTracker());
         features.add(new CopyPos());
-        features.add(new ForcePlace());
+        features.add(new SecondaryPlace());
+        features.add(new NoPlaceRestrictions());
         features.add(new Invulnerable());
         features.add(new GetEntityCount());
         features.add(new GetDistanceToAimedBlock());
@@ -29,10 +30,11 @@ public class FeatureManager
         features.add(new NoBreakDelay());
         features.add(new FastUse());
         features.add(new NoResourcePackLoadingScreen());
+        features.add(new NoExperimentalWarning());
         features.add(new SwitchCreative());
         features.add(new SwitchSurvival());
         features.add(new SwitchSpectator());
-        features.add(new NoExperimentalWarning());
+
     }
 
     @Nullable

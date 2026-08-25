@@ -12,9 +12,9 @@ import spctreutils.event.MouseEvent;
 public class MouseHandlerMixin
 {
     @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
-    private void onScroll(long window, double xOffset, double yOffset, CallbackInfo ci)
+    private void onScroll(long handle, double xoffset, double yoffset, CallbackInfo ci)
     {
-        InteractionResult result = MouseEvent.SCROLL.invoker().onMouseScrolled(yOffset);
+        InteractionResult result = MouseEvent.SCROLL.invoker().onMouseScrolled(yoffset);
         if (result != InteractionResult.PASS) ci.cancel();
     }
 }

@@ -1,8 +1,6 @@
 package spctreutils.mixin.feature;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import net.minecraft.server.WorldStem;
 import net.minecraft.server.packs.repository.PackRepository;
@@ -20,10 +18,10 @@ import spctreutils.module.feature.impl.NoExperimentalWarning;
 @Mixin(WorldOpenFlows.class)
 public abstract class WorldOpenFlowsMixin
 {
-    @Shadow protected abstract void openWorldLoadBundledResourcePack(LevelStorageSource.LevelStorageAccess levelStorageAccess, WorldStem worldStem, PackRepository packRepository, Runnable runnable);
+    @Shadow protected abstract void openWorldLoadBundledResourcePack(LevelStorageSource.LevelStorageAccess worldAccess, WorldStem worldStem, PackRepository packRepository, Runnable onCancel);
 
     @Inject(at = @At("HEAD"), method = "openWorldCheckWorldStemCompatibility", cancellable = true)
-    private void skipExperimentalWarning(LevelStorageSource.LevelStorageAccess levelStorageAccess, WorldStem worldStem, PackRepository packRepository, Runnable runnable, CallbackInfo ci)
+    private void skipExperimentalWarning(LevelStorageSource.LevelStorageAccess worldAccess, WorldStem worldStem, PackRepository packRepository, Runnable onCancel, CallbackInfo ci)
     {
         if (FeatureManager.isEnabled(NoExperimentalWarning.class))
         {
@@ -33,7 +31,7 @@ public abstract class WorldOpenFlowsMixin
             boolean isExperimental = worldData.worldGenSettingsLifecycle() != Lifecycle.stable();
             if (isOldCustomized || isExperimental)
             {
-                this.openWorldLoadBundledResourcePack(levelStorageAccess, worldStem, packRepository, runnable);
+                this.openWorldLoadBundledResourcePack(worldAccess, worldStem, packRepository, onCancel);
                 ci.cancel();
             }
         }

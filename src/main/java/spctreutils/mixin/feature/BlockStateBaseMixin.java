@@ -20,11 +20,11 @@ import spctreutils.module.feature.impl.NoClip;
 public class BlockStateBaseMixin
 {
     @Inject(method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", at = @At("RETURN"), cancellable = true)
-    private void getCollisionShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext, CallbackInfoReturnable<VoxelShape> cir)
+    private void getCollisionShape(BlockGetter level, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
     {
         if (!FeatureManager.isEnabled(NoClip.class) ||
             SpctreUtils.serverPlayer == null ||
-            !(collisionContext instanceof EntityCollisionContext entityCollisionContext) ||
+            !(context instanceof EntityCollisionContext entityCollisionContext) ||
             !(entityCollisionContext.getEntity() instanceof Player player) ||
             !player.getUUID().equals(SpctreUtils.serverPlayer.getUUID())) return;
 

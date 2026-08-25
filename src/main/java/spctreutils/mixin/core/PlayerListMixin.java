@@ -14,16 +14,16 @@ import spctreutils.SpctreUtils;
 public abstract class PlayerListMixin
 {
     @Inject(at = @At("TAIL"), method = "placeNewPlayer")
-    private void onPlayerJoin(Connection connection, ServerPlayer serverPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci)
+    private void onPlayerJoin(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci)
     {
-        SpctreUtils.serverPlayers.put(serverPlayer.getUUID(), serverPlayer);
+        SpctreUtils.serverPlayers.put(player.getUUID(), player);
     }
 
     @Inject(at = @At("HEAD"), method = "remove")
-    private void onPlayerLeave(ServerPlayer serverPlayer, CallbackInfo ci)
+    private void onPlayerLeave(ServerPlayer player, CallbackInfo ci)
     {
-        SpctreUtils.serverPlayers.remove(serverPlayer.getUUID());
-        if (SpctreUtils.serverPlayer == serverPlayer)
+        SpctreUtils.serverPlayers.remove(player.getUUID());
+        if (SpctreUtils.serverPlayer == player)
             SpctreUtils.serverPlayer = null;
     }
 }

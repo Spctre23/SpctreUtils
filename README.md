@@ -11,7 +11,9 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
    - **Noclip**
        - Gives you flight and allows you to phase through blocks. 
        - Must be in singleplayer.
-   - **Force Place**
+   - **Secondary Place Toggle**
+       - Allows you to toggle the "shift+place" action so you can easily place chests, for example.
+   - **No Place Restrictions**
        - Removes placement restrictions.
            - Makes it possible to place blocks within entity hitboxes.
        - Must be in singleplayer.

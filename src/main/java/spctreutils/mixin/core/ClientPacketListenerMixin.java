@@ -15,13 +15,13 @@ import spctreutils.SpctreUtils;
 public abstract class ClientPacketListenerMixin
 {
     @Inject(at = @At("TAIL"), method = "handleLogin")
-    private void onLogin(ClientboundLoginPacket clientboundLoginPacket, CallbackInfo ci)
+    private void onLogin(ClientboundLoginPacket packet, CallbackInfo ci)
     {
         initializeServerPlayer();
     }
 
     @Inject(at = @At("TAIL"), method = "handleRespawn")
-    private void onRespawn(ClientboundRespawnPacket clientboundRespawnPacket, CallbackInfo ci)
+    private void onRespawn(ClientboundRespawnPacket packet, CallbackInfo ci)
     {
         initializeServerPlayer();
     }

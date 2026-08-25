@@ -8,6 +8,7 @@
       	"core.GameRendererMixin",
 		"core.ConnectionMixin",
 		"core.MouseHandlerMixin",
+		"feature.MinecraftMixin",
 		"feature.BlockItemMixin",
 		"feature.BlockStateBaseMixin",
 		"feature.PlayerMixin",

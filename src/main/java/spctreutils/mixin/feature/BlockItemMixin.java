@@ -8,15 +8,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import spctreutils.module.feature.FeatureManager;
-import spctreutils.module.feature.impl.ForcePlace;
+import spctreutils.module.feature.impl.NoPlaceRestrictions;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin
 {
     @Inject(at = @At("HEAD"), method = "canPlace", cancellable = true)
-    private void canPlace(BlockPlaceContext blockPlaceContext, BlockState blockState, CallbackInfoReturnable<Boolean> cir)
+    private void canPlace(BlockPlaceContext context, BlockState stateForPlacement, CallbackInfoReturnable<Boolean> cir)
     {
-        if (FeatureManager.isEnabled(ForcePlace.class))
+        if (FeatureManager.isEnabled(NoPlaceRestrictions.class))
             cir.setReturnValue(true);
     }
 }
