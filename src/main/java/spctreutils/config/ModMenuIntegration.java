@@ -43,10 +43,9 @@ public class ModMenuIntegration implements ModMenuApi
                 .build())
             .category(ConfigCategory.createBuilder()
                 .name(Component.literal("HUD"))
-                .groups(SpctreUtils.instance.hud.getGroups())
-                .options(SpctreUtils.instance.hud.getOptions())
                 .group(SpctreUtils.instance.hud.getGlobalOptions())
                 .group(SpctreUtils.instance.hud.getDrawOrderOption())
+                .groups(SpctreUtils.instance.hud.getGroups())
                 .build())
             .build()
             .generateScreen(parent);

@@ -9,6 +9,7 @@ import spctreutils.helper.Visual.ColorHelper;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ public abstract class HudElement extends Module
 {
     private final String prefix;
 
-    private final Setting<Color> HUD_PREFIX_COLOR = new Setting<>("Prefix Color", Color.LIGHT_GRAY, Color.class);
-    private final Setting<Color> HUD_TEXT_COLOR = new Setting<>("Text Color", Color.WHITE, Color.class);
+    private final Setting<Color> hudPrefixColor = new Setting<>("Prefix Color", Color.LIGHT_GRAY, Color.class);
+    private final Setting<Color> hudTextColor = new Setting<>("Text Color", Color.WHITE, Color.class);
 
     private final Map<Vector2d, ItemPart> itemParts = new HashMap<>();
     private final Map<Vector2d, TextPart> textParts = new HashMap<>();
@@ -27,9 +28,11 @@ public abstract class HudElement extends Module
 
     protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
     {
-        super(name, description, settings);
+        super(name, description);
+
         this.prefix = prefix.isEmpty() ? "" : prefix + ": ";
-        syncFromConfig();
+        List<Setting<?>> baseSettings = new ArrayList<>(List.of(hudPrefixColor, hudTextColor));
+        registerSettings(baseSettings, settings);
     }
 
     protected HudElement(String name, String prefix, String description)
@@ -60,30 +63,14 @@ public abstract class HudElement extends Module
         ConfigManager.save();
     }
 
-/*    @Override
-    protected void syncFromConfig()
-    {
-        super.syncFromConfig();
-
-        prefixColor = ConfigManager.config.hudPrefixColor;
-        textColor = ConfigManager.config.hudTextColor;
-    }*/
-
-/*    @Override
-    protected void onStateChanged()
-    {
-        super.onStateChanged();
-        dispose();
-    }*/
-
     protected int getPrefixColor()
     {
-        return HUD_PREFIX_COLOR.getValue().getRGB();
+        return hudPrefixColor.getValue().getRGB();
     }
 
     protected int getTextColor()
     {
-        return HUD_TEXT_COLOR.getValue().getRGB();
+        return hudTextColor.getValue().getRGB();
     }
 
     public Map<Vector2d, TextPart> getTextParts()
@@ -94,7 +81,7 @@ public abstract class HudElement extends Module
     protected void setText(String text, int color, int x, int y)
     {
         Vector2d pos = new Vector2d(x, y);
-        Component contents = Component.literal(prefix).withColor(HUD_PREFIX_COLOR.getValue().getRGB())
+        Component contents = Component.literal(prefix).withColor(hudPrefixColor.getValue().getRGB())
             .append(Component.literal(text).withColor(color));
 
         if (!textParts.containsKey(pos))
@@ -115,7 +102,7 @@ public abstract class HudElement extends Module
 
     protected void setText(String text, int x, int y)
     {
-        setText(text, HUD_TEXT_COLOR.getValue().getRGB(), x, y);
+        setText(text, hudTextColor.getValue().getRGB(), x, y);
     }
 
     protected void setText(String text, int color)

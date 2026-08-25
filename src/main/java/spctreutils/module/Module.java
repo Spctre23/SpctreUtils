@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import spctreutils.config.yacl.OptionProvider;
 import spctreutils.setting.Setting;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Module implements OptionProvider
@@ -16,23 +17,14 @@ public abstract class Module implements OptionProvider
     protected boolean enabled;
     private final String description;
 
-    protected Module(String name, String description, List<Setting<?>> settings)
+    protected Module(String name, String description)
     {
         this.name = name;
         this.description = description;
-        this.settings = settings;
         this.mc = Minecraft.getInstance();
         this.enabled = getConfigValue();
 
-        for (Setting<?> setting : settings)
-            setting.setKey(name);
-
         registerEvents();
-    }
-
-    protected Module(String name, String description)
-    {
-        this(name, description, List.of());
     }
 
     protected Module(String name)
@@ -89,6 +81,19 @@ public abstract class Module implements OptionProvider
             onDisabled();
             dispose();
         }
+    }
+
+    protected void registerSettings(List<Setting<?>> moduleSettings)
+    {
+        registerSettings(new ArrayList<>(), moduleSettings);
+    }
+
+    protected void registerSettings(List<Setting<?>> baseSettings, List<Setting<?>> moduleSettings)
+    {
+        settings = baseSettings;
+        settings.addAll(moduleSettings);
+        for (Setting<?> setting : settings)
+            setting.setKey(name);
     }
 
     protected void registerEvents()

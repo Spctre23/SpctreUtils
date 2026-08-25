@@ -26,9 +26,9 @@ public class Setting<T>
         this.type = type;
     }
 
-    public void setKey(String featureName)
+    public void setKey(String moduleName)
     {
-        this.key = featureName + "." + name;
+        this.key = moduleName + "." + name;
     }
 
     public T getValue()

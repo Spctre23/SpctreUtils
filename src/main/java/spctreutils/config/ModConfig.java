@@ -6,7 +6,6 @@ import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +25,6 @@ public class ModConfig
     @SerialEntry public Map<String, Boolean> hudElementStates = new HashMap<>();
     @SerialEntry public List<String> hudElementOrder = new ArrayList<>();
     @SerialEntry public boolean hud = false;
-    //@SerialEntry public int hudPrefixColor = Color.lightGray.getRGB();
-    //@SerialEntry public int hudTextColor = Color.WHITE.getRGB();
 
     @SerialEntry public Map<String, Object> settings = new HashMap<>();
 }

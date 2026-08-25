@@ -55,7 +55,6 @@ public class FeatureManager
     public List<Option<?>> getOptions()
     {
         return features.stream()
-            //.filter(feature -> feature.getSettings().isEmpty())
             .map(FeatureBase::createOption)
             .collect(Collectors.toList());
     }

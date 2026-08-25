@@ -15,7 +15,6 @@ public record HudController(Option<String> option) implements Controller<String>
     public Component formatValue()
     {
         String className = option.pendingValue();
-        if (className == null) return Component.empty();
 
         HudElement element = SpctreUtils.instance.hud.getElement(className);
         return element != null ? Component.literal(element.getName()) : Component.literal(className);

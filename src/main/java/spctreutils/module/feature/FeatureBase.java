@@ -10,7 +10,8 @@ public abstract class FeatureBase extends Module
 {
     protected FeatureBase(String name, String description, List<Setting<?>> settings)
     {
-        super(name, description, settings);
+        super(name, description);
+        registerSettings(settings);
     }
 
     protected FeatureBase(String name, String description)

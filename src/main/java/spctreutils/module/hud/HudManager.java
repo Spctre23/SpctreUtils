@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.Window;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -74,7 +73,7 @@ public class HudManager
         Minecraft mc = Minecraft.getInstance();
         Identifier identifier = Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
 
-        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, tickDelta) ->
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, identifier, (guiGraphics, _) ->
         {
             if (!ConfigManager.config.hud) return;
 
@@ -150,18 +149,9 @@ public class HudManager
         });
     }
 
-    public List<Option<?>> getOptions()
-    {
-        return elements.stream()
-            //.filter(element -> element.getSettings().isEmpty())
-            .map(HudElement::createOption)
-            .collect(Collectors.toList());
-    }
-
     public List<OptionGroup> getGroups()
     {
         return elements.stream()
-            //.filter(element -> !element.getSettings().isEmpty())
             .map(HudElement::createGroup)
             .collect(Collectors.toList());
     }
@@ -181,28 +171,6 @@ public class HudManager
                     })
                 .controller(TickBoxControllerBuilder::create)
                 .build())
-/*            .option(Option.<Color>createBuilder()
-                .name(Component.literal("HUD Prefix Color"))
-                .binding(
-                    new Color(new ModConfig().hudPrefixColor, true),
-                    () -> new Color(ConfigManager.config.hudPrefixColor, true), v ->
-                    {
-                        ConfigManager.config.hudPrefixColor = v.getRGB();
-                        ConfigManager.save();
-                    })
-                .controller(ColorControllerBuilder::create)
-                .build())
-            .option(Option.<Color>createBuilder()
-                .name(Component.literal("HUD Text Color"))
-                .binding(
-                    new Color(new ModConfig().hudTextColor, true),
-                    () -> new Color(ConfigManager.config.hudTextColor, true), v ->
-                    {
-                        ConfigManager.config.hudTextColor = v.getRGB();
-                        ConfigManager.save();
-                    })
-                .controller(ColorControllerBuilder::create)
-                .build())*/
             .build();
     }
 
