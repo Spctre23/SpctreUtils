@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +20,7 @@ import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.FillDispatcher;
 import spctreutils.helper.World.RaycastHelper;
+import spctreutils.helper.World.WorldEditHelper;
 import spctreutils.key.Keybind;
 import spctreutils.module.feature.ToggleFeature;
 import spctreutils.setting.Setting;
@@ -32,14 +34,22 @@ public class EasyBuild extends ToggleFeature
 
     private final Color lineColor = Color.GREEN;
     private final Color boxColor = Color.CYAN;
+
     private final Keybind drawModifierBind = new Keybind("Easy Build - Draw Modifier", InputConstants.KEY_LALT);
     private final Keybind switchShapeBind = new Keybind("Easy Build - Switch Shape", InputConstants.MOUSE_BUTTON_4);
+    private final Keybind undoModifierBind = new Keybind("Easy Build - Undo Modifier", InputConstants.KEY_LCONTROL);
+    private final Keybind undoTriggerBind = new Keybind("Easy Build - Undo Trigger", InputConstants.KEY_Z);
+    private final Keybind redoModifierBind = new Keybind("Easy Build - Redo Modifier", InputConstants.KEY_LCONTROL);
+    private final Keybind redoTriggerBind = new Keybind("Easy Build - Redo Trigger", InputConstants.KEY_Y);
+    private final Keybind copyModifierBind = new Keybind("Easy Build - Copy Modifier", InputConstants.KEY_LCONTROL);
+    private final Keybind copyTriggerBind = new Keybind("Easy Build - Copy Trigger", InputConstants.KEY_Y);
 
     private BlockHitResult startHit;
     private DragSession session;
     private AABB previewBox;
     private DragShape shape = DragShape.BOX;
     private int shapeIndex;
+    private boolean isCopying = false;
 
     public EasyBuild()
     {
@@ -47,20 +57,24 @@ public class EasyBuild extends ToggleFeature
                 Allows you to effortlessly draw and fill an area with blocks.
                 - Hold the DRAW MODIFIER bind to draw.
                 - PLACE to fill the volume. BREAK to delete everything within the volume.
+                - Hold the UNDO MODIFIER and press the UNDO TRIGGER to undo the last action. Redoing follows the same logic. ONLY works if WorldEdit is present.
                 
                 There are two shape modes, LINE and PLANE.
                 - When in PLANE mode, you can extend its depth to create a BOX by scrolling the mouse wheel.
                 - Cycle between shape modes with the SWITCH SHAPE modifier.""",
             List.of(MIRROR_BLOCK_STATE));
 
-        registerModifierBind();
+        registerSwitchShapeBind();
+        registerUndoBind();
+        registerRedoBind();
         FillDispatcher.init();
     }
 
     @Override
     protected void onTick()
     {
-        if (!drawModifierBind.isDown() || mc.player.gameMode().isSurvival())
+        GameType gameType = mc.player.gameMode();
+        if (!drawModifierBind.isDown() || gameType == null || gameType.isSurvival())
         {
             session = null;
             previewBox = null;
@@ -101,21 +115,6 @@ public class EasyBuild extends ToggleFeature
         RenderHelper.drawOutline(context, previewBox, getShapeColor(shape));
     }
 
-    private void registerModifierBind()
-    {
-        switchShapeBind.onPressed(() ->
-        {
-            if (mc.player.gameMode().isSurvival()) return;
-
-            shapeIndex = (shapeIndex + 1) % DragShape.values().length;
-            shape = DragShape.values()[shapeIndex];
-
-            Component hudMessage = Component.literal("Draw Shape = ").append(shape.name()).withColor(getShapeColor(shape).getRGB());
-
-            Msg.sendHud(hudMessage);
-        });
-    }
-
     private void handleFillConfirmation()
     {
         if (session == null || previewBox == null) return;
@@ -138,14 +137,58 @@ public class EasyBuild extends ToggleFeature
                     }
                 }
 
+                if (WorldEditHelper.fillArea(previewBox, blockState)) return;
                 FillDispatcher.queueFill(previewBox, blockState);
+                return;
             }
         }
 
         while (mc.options.keyAttack.consumeClick())
         {
-            FillDispatcher.queueFill(previewBox, Blocks.AIR.defaultBlockState());
+            BlockState blockState = Blocks.AIR.defaultBlockState();
+            if (WorldEditHelper.fillArea(previewBox, blockState)) return;
+            FillDispatcher.queueFill(previewBox, blockState);
         }
+    }
+
+    private void registerSwitchShapeBind()
+    {
+        switchShapeBind.onPressed(() ->
+        {
+            GameType gameType = mc.player.gameMode();
+            if (gameType == null || gameType.isSurvival()) return;
+
+            shapeIndex = (shapeIndex + 1) % DragShape.values().length;
+            shape = DragShape.values()[shapeIndex];
+
+            Component hudMessage = Component.literal("Draw Shape = ").append(shape.name()).withColor(getShapeColor(shape).getRGB());
+
+            Msg.sendHud(hudMessage);
+        });
+    }
+
+    public void registerUndoBind()
+    {
+        undoTriggerBind.onPressed(() ->
+        {
+            if (!undoModifierBind.isDown()) return;
+            if (!WorldEditHelper.undo())
+            {
+                Msg.sendHud("Undo requires WorldEdit.", Color.RED);
+            }
+        });
+    }
+
+    public void registerRedoBind()
+    {
+        redoTriggerBind.onPressed(() ->
+        {
+            if (!redoModifierBind.isDown()) return;
+            if (!WorldEditHelper.redo())
+            {
+                Msg.sendHud("Redo requires WorldEdit.", Color.RED);
+            }
+        });
     }
 
     private Color getShapeColor(DragShape shape)

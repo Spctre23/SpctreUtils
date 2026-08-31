@@ -37,9 +37,6 @@ public class RenderHelper
     );
 
     private static final ByteBufferBuilder allocator = new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE);
-    private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
-    private static final Vector3f MODEL_OFFSET = new Vector3f();
-    private static final Matrix4f TEXTURE_MATRIX = new Matrix4f();
     private static MappableRingBuffer vertexBuffer;
     private static BufferBuilder buffer;
 
@@ -47,7 +44,7 @@ public class RenderHelper
 
     public static void drawOutline(LevelRenderContext context, BlockPos pos, Color color)
     {
-        drawOutline(context, new AABB(pos), color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f);
+        drawOutline(context, new AABB(pos), (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1f);
     }
 
     public static void drawOutline(LevelRenderContext context, BlockPos pos, float r, float g, float b, float a)
@@ -59,7 +56,7 @@ public class RenderHelper
 
     public static void drawOutline(LevelRenderContext context, AABB box, Color color)
     {
-        drawOutline(context, box, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1f);
+        drawOutline(context, box, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1f);
     }
 
     public static void drawOutline(LevelRenderContext context, AABB box, float r, float g, float b, float a)
@@ -171,23 +168,6 @@ public class RenderHelper
         buffer.addVertex(mat, (float) x1, (float) y1, (float) z1)
             .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
         buffer.addVertex(mat, (float) x2, (float) y2, (float) z2)
-            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
-    }
-
-    private static void line(VertexConsumer consumer, Matrix4f mat,
-                             double x1, double y1, double z1,
-                             double x2, double y2, double z2,
-                             float r, float g, float b, float a)
-    {
-        float nx = (float) (x2 - x1), ny = (float) (y2 - y1), nz = (float) (z2 - z1);
-        float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-        nx /= len;
-        ny /= len;
-        nz /= len;
-
-        consumer.addVertex(mat, (float) x1, (float) y1, (float) z1)
-            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
-        consumer.addVertex(mat, (float) x2, (float) y2, (float) z2)
             .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
     }
 
