@@ -2,6 +2,7 @@ package spctreutils.module.feature.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
@@ -41,15 +42,12 @@ public class EasyBuild extends ToggleFeature
     private final Keybind undoTriggerBind = new Keybind("Easy Build - Undo Trigger", InputConstants.KEY_Z);
     private final Keybind redoModifierBind = new Keybind("Easy Build - Redo Modifier", InputConstants.KEY_LCONTROL);
     private final Keybind redoTriggerBind = new Keybind("Easy Build - Redo Trigger", InputConstants.KEY_Y);
-    private final Keybind copyModifierBind = new Keybind("Easy Build - Copy Modifier", InputConstants.KEY_LCONTROL);
-    private final Keybind copyTriggerBind = new Keybind("Easy Build - Copy Trigger", InputConstants.KEY_Y);
 
     private BlockHitResult startHit;
     private DragSession session;
     private AABB previewBox;
     private DragShape shape = DragShape.BOX;
     private int shapeIndex;
-    private boolean isCopying = false;
 
     public EasyBuild()
     {
@@ -76,8 +74,8 @@ public class EasyBuild extends ToggleFeature
         GameType gameType = mc.player.gameMode();
         if (!drawModifierBind.isDown() || gameType == null || gameType.isSurvival())
         {
-            session = null;
             previewBox = null;
+            session = null;
             startHit = null;
             return;
         }
