@@ -9,7 +9,7 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
        - Allows you to effortlessly draw and fill areas with blocks.
        - Works on any server where you have OP permissions.
        - Supports WorldEdit
-          - Prioritizes WorldEdit commands over vanilla fill commmands if present.
+          - If present, prioritizes WorldEdit commands over vanilla fill commmands.
           - Adds customizable binds for /undo and /redo.
    - **Noclip**
        - Gives you flight and allows you to phase through blocks. 
