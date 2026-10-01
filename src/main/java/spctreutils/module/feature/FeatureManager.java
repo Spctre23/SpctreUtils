@@ -31,10 +31,12 @@ public class FeatureManager
         features.add(new FastUse());
         features.add(new NoResourcePackLoadingScreen());
         features.add(new NoExperimentalWarning());
+        features.add(new BypassChatRestrictions());
+        features.add(new BypassMultiplayerRestrictions());
+        features.add(new BypassServerBlacklist());
         features.add(new SwitchCreative());
         features.add(new SwitchSurvival());
         features.add(new SwitchSpectator());
-
     }
 
     @Nullable

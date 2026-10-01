@@ -17,7 +17,7 @@ import java.util.List;
 public class FlySpeed extends ToggleFeature
 {
     public static final Setting<Float> SPEED = new Setting<>("Speed", 0.1f, Float.class);
-    public static final Setting<Boolean> NO_GLIDE = new Setting<>("No Glide", false, Boolean.class);
+    private static final Setting<Boolean> NO_GLIDE = new Setting<>("No Glide", false, Boolean.class);
 
     public FlySpeed()
     {

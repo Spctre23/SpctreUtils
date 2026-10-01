@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResult;
 import spctreutils.component.TextComp;
 import spctreutils.event.MouseEvent;
 import spctreutils.helper.Visual.Msg;
+import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.key.Keybind;
 import spctreutils.setting.Setting;
 
@@ -15,6 +16,8 @@ import java.util.List;
 
 public abstract class ToggleFeature extends FeatureBase
 {
+    static { RenderHelper.init(); }
+
     protected Keybind keybind;
 
     protected ToggleFeature(String name, String description, int keyCode, List<Setting<?>> settings)
@@ -45,7 +48,7 @@ public abstract class ToggleFeature extends FeatureBase
         return InteractionResult.PASS;
     }
 
-    protected void onRender(LevelRenderContext context) {}
+    protected void onRender() {}
 
     protected void toggle()
     {
@@ -64,7 +67,7 @@ public abstract class ToggleFeature extends FeatureBase
         super.registerEvents();
         LevelRenderEvents.END_MAIN.register(context ->
         {
-            if (enabled && mc.level != null && mc.player != null) onRender(context);
+            if (enabled && mc.level != null && mc.player != null) onRender();
         });
         MouseEvent.SCROLL.register(this::onMouseScrolled);
     }

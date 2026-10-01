@@ -19,7 +19,7 @@ public class HighlightRareEntities extends ToggleFeature
     }
 
     @Override
-    protected void onRender(LevelRenderContext context)
+    protected void onRender()
     {
         EntityHelper.forEach(entity ->
         {
@@ -46,7 +46,7 @@ public class HighlightRareEntities extends ToggleFeature
             }
 
             if (aabb == null) return;
-            RenderHelper.drawOutline(context, aabb, color);
+            RenderHelper.drawOutline(aabb, color);
         });
     }
 }

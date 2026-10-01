@@ -43,10 +43,10 @@ public class GetDistanceToAimedBlock extends TriggerFeature
     }
 
     @Override
-    protected void onRender(LevelRenderContext context)
+    protected void onRender()
     {
         if (renderPos == null || unrenderDelay.isOver()) return;
-        RenderHelper.drawOutline(context, renderPos, Color.YELLOW);
+        RenderHelper.drawOutline(renderPos, Color.YELLOW);
     }
 
     @Override

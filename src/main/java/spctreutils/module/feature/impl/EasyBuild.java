@@ -53,11 +53,13 @@ public class EasyBuild extends ToggleFeature
     {
         super("Easy Build", """
                 Allows you to effortlessly draw and fill an area with blocks.
+                
                 - Hold the DRAW MODIFIER bind to draw.
                 - PLACE to fill the volume. BREAK to delete everything within the volume.
                 - Hold the UNDO MODIFIER and press the UNDO TRIGGER to undo the last action. Redoing follows the same logic. ONLY works if WorldEdit is present.
                 
                 There are two shape modes, LINE and PLANE.
+                
                 - When in PLANE mode, you can extend its depth to create a BOX by scrolling the mouse wheel.
                 - Cycle between shape modes with the SWITCH SHAPE modifier.""",
             List.of(MIRROR_BLOCK_STATE));
@@ -106,11 +108,11 @@ public class EasyBuild extends ToggleFeature
     }
 
     @Override
-    protected void onRender(LevelRenderContext context)
+    protected void onRender()
     {
         if (session == null || previewBox == null || !drawModifierBind.isDown()) return;
 
-        RenderHelper.drawOutline(context, previewBox, getShapeColor(shape));
+        RenderHelper.drawOutline(previewBox, getShapeColor(shape));
     }
 
     private void handleFillConfirmation()

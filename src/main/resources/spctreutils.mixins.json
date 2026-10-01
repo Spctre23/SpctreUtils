@@ -1,27 +1,31 @@
 {
-	"required": true,
-	"package": "spctreutils.mixin",
-	"compatibilityLevel": "JAVA_25",
-	"mixins": [
-		"accessor.AzimuthWaypointInvoker",
-		"accessor.ChunkWaypointInvoker",
-		"accessor.Vec3iWaypointInvoker",
-		"core.ClientPacketListenerMixin",
-		"core.ConnectionMixin",
-		"core.GameRendererMixin",
-		"core.MouseHandlerMixin",
-		"core.PlayerListMixin",
-		"feature.BlockItemMixin",
-		"feature.BlockStateBaseMixin",
-		"feature.MinecraftMixin",
-		"feature.MultiPlayerGamemodeMixin",
-		"feature.PlayerMixin",
-		"feature.WorldOpenFlowsMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"overwrites": {
-		"requireAnnotations": true
-	}
+  "required": true,
+  "package": "spctreutils.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "accessor.AzimuthWaypointInvoker",
+    "accessor.ChunkWaypointInvoker",
+    "accessor.Vec3iWaypointInvoker",
+    "core.ClientPacketListenerMixin",
+    "core.ConnectionMixin",
+    "core.GameRendererMixin",
+    "core.MouseHandlerMixin",
+    "core.PlayerListMixin",
+    "feature.BlockedServersMixin",
+    "feature.BlockItemMixin",
+    "feature.BlockStateBaseMixin",
+    "feature.MinecraftMixin",
+    "feature.MultiPlayerGamemodeMixin",
+    "feature.PlayerMixin",
+    "feature.WorldOpenFlowsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "client": [
+    "feature.ChatAbilitiesMixin"
+  ]
 }

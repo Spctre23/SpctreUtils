@@ -1,184 +1,137 @@
 package spctreutils.helper.Visual;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MappableRingBuffer;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.StagedVertexBuffer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.system.MemoryUtil;
 import spctreutils.SpctreUtils;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
-public class RenderHelper
+public final class RenderHelper
 {
-    private static final RenderPipeline LINES_NO_DEPTH = RenderPipelines.register(
+    private RenderHelper() {}
+
+    private static final RenderPipeline PIPELINE = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
-            .withLocation(Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "pipeline/lines_no_depth"))
-            .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
-            .build()
-    );
+            .withLocation(Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "pipeline/lines_through_walls"))
+            .withDepthStencilState(Optional.empty())
+            .build());
 
-    private static final ByteBufferBuilder allocator = new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE);
-    private static MappableRingBuffer vertexBuffer;
-    private static BufferBuilder buffer;
+    private static final StagedVertexBuffer BUFFER =
+        new StagedVertexBuffer(() -> SpctreUtils.MOD_ID + " lines", RenderType.SMALL_BUFFER_SIZE);
 
-    // --- Block outline overloads ---
+    private record Outline(AABB box, float r, float g, float b, float a) {}
 
-    public static void drawOutline(LevelRenderContext context, BlockPos pos, Color color)
+    private static final List<Outline> QUEUE = new ArrayList<>();
+
+    private static boolean initialized;
+
+    public static void init()
     {
-        drawOutline(context, new AABB(pos), (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1f);
+        if (initialized) return;
+        initialized = true;
+
+        LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN.register(RenderHelper::flush);
     }
 
-    public static void drawOutline(LevelRenderContext context, BlockPos pos, float r, float g, float b, float a)
+    public static void close() {BUFFER.close();}
+
+    public static void drawOutline(BlockPos pos, Color color) {drawOutline(new AABB(pos), color);}
+
+    public static void drawOutline(AABB box, Color c)
     {
-        drawOutline(context, new AABB(pos), r, g, b, a);
+        QUEUE.add(new Outline(box, c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f));
     }
 
-    // --- AABB outline overloads ---
-
-    public static void drawOutline(LevelRenderContext context, AABB box, Color color)
+    private static void flush(LevelRenderContext context)
     {
-        drawOutline(context, box, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1f);
+        if (QUEUE.isEmpty()) return;
+
+        StagedVertexBuffer.Draw draw = BUFFER.appendDraw(PIPELINE.getVertexFormatBinding(0), PIPELINE.getPrimitiveTopology(), null);
+        VertexConsumer builder = BUFFER.getVertexBuilder(draw);
+
+        PoseStack pose = context.poseStack();
+        Vec3 cam = context.levelState().cameraRenderState.pos;
+        pose.pushPose();
+        pose.translate(-cam.x, -cam.y, -cam.z);
+        QUEUE.forEach(o -> addBox(builder, pose.last().pose(), o));
+        pose.popPose();
+        QUEUE.clear();
+
+        BUFFER.upload();
+        StagedVertexBuffer.ExecuteInfo info = BUFFER.getExecuteInfo(draw);
+        if (info != null) execute(info);
+        BUFFER.endFrame();
     }
 
-    public static void drawOutline(LevelRenderContext context, AABB box, float r, float g, float b, float a)
+    private static void addBox(VertexConsumer b, Matrix4fc pose, Outline o)
     {
-        PoseStack poseStack = context.poseStack();
-        Vec3 cam = context.gameRenderer().mainCamera().position();
+        float[] lo = {(float) o.box().minX, (float) o.box().minY, (float) o.box().minZ};
+        float[] hi = {(float) o.box().maxX, (float) o.box().maxY, (float) o.box().maxZ};
 
-        poseStack.pushPose();
-        poseStack.translate(-cam.x, -cam.y, -cam.z);
-
-        double x1 = box.minX, y1 = box.minY, z1 = box.minZ;
-        double x2 = box.maxX, y2 = box.maxY, z2 = box.maxZ;
-
-        if (buffer == null)
-            buffer = new BufferBuilder(allocator, LINES_NO_DEPTH.getPrimitiveTopology(), LINES_NO_DEPTH.getVertexFormatBinding(0));
-
-        Matrix4f mat = poseStack.last().pose();
-        addLineToBuffer(buffer, mat, x1, y1, z1, x2, y1, z1, r, g, b, a);
-        addLineToBuffer(buffer, mat, x2, y1, z1, x2, y1, z2, r, g, b, a);
-        addLineToBuffer(buffer, mat, x2, y1, z2, x1, y1, z2, r, g, b, a);
-        addLineToBuffer(buffer, mat, x1, y1, z2, x1, y1, z1, r, g, b, a);
-        addLineToBuffer(buffer, mat, x1, y2, z1, x2, y2, z1, r, g, b, a);
-        addLineToBuffer(buffer, mat, x2, y2, z1, x2, y2, z2, r, g, b, a);
-        addLineToBuffer(buffer, mat, x2, y2, z2, x1, y2, z2, r, g, b, a);
-        addLineToBuffer(buffer, mat, x1, y2, z2, x1, y2, z1, r, g, b, a);
-        addLineToBuffer(buffer, mat, x1, y1, z1, x1, y2, z1, r, g, b, a);
-        addLineToBuffer(buffer, mat, x2, y1, z1, x2, y2, z1, r, g, b, a);
-        addLineToBuffer(buffer, mat, x2, y1, z2, x2, y2, z2, r, g, b, a);
-        addLineToBuffer(buffer, mat, x1, y1, z2, x1, y2, z2, r, g, b, a);
-        drawBuffer(Minecraft.getInstance(), LINES_NO_DEPTH);
-
-        poseStack.popPose();
-    }
-
-    // --- Internal drawing ---
-
-    private static void drawBuffer(Minecraft client, RenderPipeline pipeline)
-    {
-        MeshData builtBuffer = buffer.buildOrThrow();
-        MeshData.DrawState drawParams = builtBuffer.drawState();
-        VertexFormat format = drawParams.format();
-
-        int vertexBufferSize = drawParams.vertexCount() * format.getVertexSize();
-        if (vertexBuffer == null || vertexBuffer.size() < vertexBufferSize)
+        for (int axis = 0; axis < 3; axis++)
         {
-            if (vertexBuffer != null) vertexBuffer.close();
-            vertexBuffer = new MappableRingBuffer(
-                () -> SpctreUtils.MOD_ID + " lines_no_depth",
-                GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_MAP_WRITE,
-                vertexBufferSize
-            );
+            int u = (axis + 1) % 3, v = (axis + 2) % 3;
+            for (int i = 0; i < 4; i++)
+            {
+                float[] start = lo.clone();
+                start[u] = (i & 1) == 0 ? lo[u] : hi[u];
+                start[v] = (i & 2) == 0 ? lo[v] : hi[v];
+                float[] end = start.clone();
+                end[axis] = hi[axis];
+
+                vertex(b, pose, o, start, axis);
+                vertex(b, pose, o, end, axis);
+            }
         }
-
-        try (GpuBufferSlice.MappedView view = vertexBuffer.currentBuffer()
-            .slice(0, builtBuffer.vertexBuffer().remaining())
-            .map(false, true))
-        {
-            MemoryUtil.memCopy(builtBuffer.vertexBuffer(), view.data());
-        }
-
-        GpuBuffer vertices = vertexBuffer.currentBuffer();
-        RenderSystem.AutoStorageIndexBuffer indexBuffer =
-            RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
-        GpuBuffer indices = indexBuffer.getBuffer(drawParams.indexCount());
-
-        GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms()
-            .writeTransform(
-                RenderSystem.getModelViewMatrixCopy(),
-                new Vector4f(1f, 1f, 1f, 1f),
-                new Vector3f(0f, 0f, 0f),
-                new Matrix4f()
-            );
-
-        try (RenderPass renderPass = RenderSystem.getDevice()
-            .createCommandEncoder()
-            .createRenderPass(
-                () -> SpctreUtils.MOD_ID + " lines_no_depth rendering",
-                client.gameRenderer.mainRenderTarget().getColorTextureView(),
-                Optional.empty(),
-                client.gameRenderer.mainRenderTarget().getDepthTextureView(),
-                OptionalDouble.empty()))
-        {
-            renderPass.setPipeline(pipeline);
-            RenderSystem.bindDefaultUniforms(renderPass);
-            renderPass.setUniform("DynamicTransforms", dynamicTransforms);
-            renderPass.setVertexBuffer(0, vertices.slice());
-            renderPass.setIndexBuffer(indices, indexBuffer.type());
-            renderPass.drawIndexed(drawParams.indexCount(), 1, 0, 0, 0);
-        }
-
-        builtBuffer.close();
-        vertexBuffer.rotate();
-        buffer = null;
     }
 
-    private static void addLineToBuffer(BufferBuilder buffer, Matrix4f mat,
-                                        double x1, double y1, double z1,
-                                        double x2, double y2, double z2,
-                                        float r, float g, float b, float a)
+    private static void vertex(VertexConsumer b, Matrix4fc pose, Outline o, float[] p, int axis)
     {
-        float nx = (float) (x2 - x1);
-        float ny = (float) (y2 - y1);
-        float nz = (float) (z2 - z1);
-        float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-        nx /= len;
-        ny /= len;
-        nz /= len;
-
-        buffer.addVertex(mat, (float) x1, (float) y1, (float) z1)
-            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
-        buffer.addVertex(mat, (float) x2, (float) y2, (float) z2)
-            .setColor(r, g, b, a).setNormal(nx, ny, nz).setLineWidth(1.0f);
+        b.addVertex(pose, p[0], p[1], p[2])
+            .setColor(o.r(), o.g(), o.b(), o.a())
+            .setNormal(axis == 0 ? 1 : 0, axis == 1 ? 1 : 0, axis == 2 ? 1 : 0)
+            .setLineWidth(1f);
     }
 
-    public static void close()
+    private static void execute(StagedVertexBuffer.ExecuteInfo info)
     {
-        allocator.close();
+        GpuBufferSlice transforms = RenderSystem.getDynamicUniforms().writeTransform(
+            RenderSystem.getModelViewMatrixCopy(), new Vector4f(1f, 1f, 1f, 1f), new Vector3f(), new Matrix4f());
 
-        if (vertexBuffer != null)
+        RenderTarget target = Minecraft.getInstance().gameRenderer.mainRenderTarget();
+        try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
+            () -> SpctreUtils.MOD_ID + " lines rendering",
+            target.getColorTextureView(), Optional.empty(), target.getDepthTextureView(), OptionalDouble.empty()))
         {
-            vertexBuffer.close();
-            vertexBuffer = null;
+            pass.setPipeline(PIPELINE);
+            RenderSystem.bindDefaultUniforms(pass);
+            pass.setUniform("DynamicTransforms", transforms);
+            pass.setVertexBuffer(0, info.vertexBuffer().slice());
+            pass.setIndexBuffer(info.indexBuffer(), info.indexType());
+            pass.drawIndexed(info.indexCount(), 1, info.firstIndex(), info.baseVertex(), 0);
         }
     }
 }
