@@ -16,6 +16,7 @@ public class FeatureManager
     public FeatureManager()
     {
         features.add(new EasyBuild());
+        features.add(new FlexiblePlace());
         features.add(new NoClip());
         features.add(new PlayerTracker());
         features.add(new CopyPos());

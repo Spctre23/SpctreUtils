@@ -19,7 +19,7 @@ public class HighlightRareEntities extends ToggleFeature
     }
 
     @Override
-    protected void onRender()
+    protected void onRender(LevelRenderContext context)
     {
         EntityHelper.forEach(entity ->
         {

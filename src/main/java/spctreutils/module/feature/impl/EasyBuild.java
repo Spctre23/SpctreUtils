@@ -2,7 +2,6 @@ package spctreutils.module.feature.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
@@ -32,6 +31,7 @@ import java.util.List;
 public class EasyBuild extends ToggleFeature
 {
     private static final Setting<Boolean> MIRROR_BLOCK_STATE = new Setting<>("Mirror start pos block state", true, Boolean.class);
+    private static final Setting<Float> BLOCK_PREVIEW_OPACITY = new Setting<>("Block placement preview opacity", 0.5f, Float.class);
 
     private final Color lineColor = Color.GREEN;
     private final Color boxColor = Color.CYAN;
@@ -44,6 +44,7 @@ public class EasyBuild extends ToggleFeature
     private final Keybind redoTriggerBind = new Keybind("Easy Build - Redo Trigger", InputConstants.KEY_Y);
 
     private BlockHitResult startHit;
+    private BlockState blockState;
     private DragSession session;
     private AABB previewBox;
     private DragShape shape = DragShape.BOX;
@@ -62,8 +63,9 @@ public class EasyBuild extends ToggleFeature
                 
                 - When in PLANE mode, you can extend its depth to create a BOX by scrolling the mouse wheel.
                 - Cycle between shape modes with the SWITCH SHAPE modifier.""",
-            List.of(MIRROR_BLOCK_STATE));
+            List.of(MIRROR_BLOCK_STATE, BLOCK_PREVIEW_OPACITY));
 
+        registerDrawModifierBind();
         registerSwitchShapeBind();
         registerUndoBind();
         registerRedoBind();
@@ -79,6 +81,7 @@ public class EasyBuild extends ToggleFeature
             previewBox = null;
             session = null;
             startHit = null;
+            blockState = null;
             return;
         }
 
@@ -108,26 +111,45 @@ public class EasyBuild extends ToggleFeature
     }
 
     @Override
-    protected void onRender()
+    protected void onRender(LevelRenderContext context)
     {
-        if (session == null || previewBox == null || !drawModifierBind.isDown()) return;
+        if (session == null || previewBox == null || blockState == null || !drawModifierBind.isDown()) return;
 
+        RenderHelper.drawBlock(context, previewBox, blockState, BLOCK_PREVIEW_OPACITY.getValue());
         RenderHelper.drawOutline(previewBox, getShapeColor(shape));
     }
 
     private void handleFillConfirmation()
     {
-        if (session == null || previewBox == null) return;
+        if (session == null || previewBox == null || blockState == null) return;
 
         while (mc.options.keyUse.consumeClick())
         {
+            if (WorldEditHelper.fillArea(previewBox, blockState)) return;
+            FillDispatcher.queueFill(previewBox, blockState);
+        }
+
+        while (mc.options.keyAttack.consumeClick())
+        {
+            blockState = Blocks.AIR.defaultBlockState();
+            if (WorldEditHelper.fillArea(previewBox, blockState)) return;
+            FillDispatcher.queueFill(previewBox, blockState);
+        }
+    }
+
+    private void registerDrawModifierBind()
+    {
+        drawModifierBind.onPressed(() ->
+        {
+            if (!enabled) return;
+
             ItemStack mainHandItem = mc.player.getMainHandItem();
             if (mainHandItem.getItem() instanceof BlockItem blockItem)
             {
                 if (startHit == null) return;
 
                 Block heldBlock = blockItem.getBlock();
-                BlockState blockState = heldBlock.defaultBlockState();
+                blockState = heldBlock.defaultBlockState();
                 if (MIRROR_BLOCK_STATE.getValue())
                 {
                     BlockState startBlockState = mc.level.getBlockState(startHit.getBlockPos());
@@ -136,25 +158,16 @@ public class EasyBuild extends ToggleFeature
                         blockState = heldBlock.withPropertiesOf(startBlockState);
                     }
                 }
-
-                if (WorldEditHelper.fillArea(previewBox, blockState)) return;
-                FillDispatcher.queueFill(previewBox, blockState);
-                return;
             }
-        }
-
-        while (mc.options.keyAttack.consumeClick())
-        {
-            BlockState blockState = Blocks.AIR.defaultBlockState();
-            if (WorldEditHelper.fillArea(previewBox, blockState)) return;
-            FillDispatcher.queueFill(previewBox, blockState);
-        }
+        });
     }
 
     private void registerSwitchShapeBind()
     {
         switchShapeBind.onPressed(() ->
         {
+            if (!enabled) return;
+
             GameType gameType = mc.player.gameMode();
             if (gameType == null || gameType.isSurvival()) return;
 
@@ -171,7 +184,7 @@ public class EasyBuild extends ToggleFeature
     {
         undoTriggerBind.onPressed(() ->
         {
-            if (!undoModifierBind.isDown()) return;
+            if (!enabled || !undoModifierBind.isDown()) return;
             if (!WorldEditHelper.undo())
             {
                 Msg.sendHud("Undo requires WorldEdit.", Color.RED);
@@ -183,7 +196,7 @@ public class EasyBuild extends ToggleFeature
     {
         redoTriggerBind.onPressed(() ->
         {
-            if (!redoModifierBind.isDown()) return;
+            if (!enabled || !redoModifierBind.isDown()) return;
             if (!WorldEditHelper.redo())
             {
                 Msg.sendHud("Redo requires WorldEdit.", Color.RED);

@@ -19,7 +19,7 @@ public abstract class PlayerMixin
     public abstract Abilities getAbilities();
 
     @Inject(at = @At("HEAD"), method = "tick")
-    private void tick(CallbackInfo ci)
+    private void injectCustomFlySpeed(CallbackInfo ci)
     {
         if (FeatureManager.isEnabled(FlySpeed.class))
             getAbilities().setFlyingSpeed(FlySpeed.SPEED.getValue());

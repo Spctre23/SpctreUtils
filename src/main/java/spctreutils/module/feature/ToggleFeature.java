@@ -16,7 +16,10 @@ import java.util.List;
 
 public abstract class ToggleFeature extends FeatureBase
 {
-    static { RenderHelper.init(); }
+    static
+    {
+        RenderHelper.init();
+    }
 
     protected Keybind keybind;
 
@@ -48,7 +51,7 @@ public abstract class ToggleFeature extends FeatureBase
         return InteractionResult.PASS;
     }
 
-    protected void onRender() {}
+    protected void onRender(LevelRenderContext context) {}
 
     protected void toggle()
     {
@@ -65,11 +68,18 @@ public abstract class ToggleFeature extends FeatureBase
     protected void registerEvents()
     {
         super.registerEvents();
-        LevelRenderEvents.END_MAIN.register(context ->
+        LevelRenderEvents.COLLECT_SUBMITS.register(context ->
         {
-            if (enabled && mc.level != null && mc.player != null) onRender();
+            if (enabled && mc.level != null && mc.player != null) onRender(context);
         });
-        MouseEvent.SCROLL.register(this::onMouseScrolled);
+        MouseEvent.SCROLL.register(delta ->
+        {
+            if (enabled && mc.level != null && mc.player != null)
+            {
+                return onMouseScrolled(delta);
+            }
+            return InteractionResult.PASS;
+        });
     }
 
     protected void registerKeybind()

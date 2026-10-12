@@ -5,6 +5,7 @@ import net.minecraft.client.player.ClientInput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.lwjgl.system.ffm.mapping.Mapping;
 import spctreutils.component.TextComp;
 import spctreutils.helper.MathHelper;
 import spctreutils.helper.Visual.Msg;

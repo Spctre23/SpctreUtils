@@ -51,6 +51,7 @@ public class HudManager
         elements.add(new EntityHealth());
         elements.add(new EntityOwner());
         elements.add(new LightLevel());
+        elements.add(new PlayerCount());
         elements.add(new TPS());
         elements.add(new FPS());
         elements.add(new Ping());

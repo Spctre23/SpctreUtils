@@ -1,6 +1,7 @@
 package spctreutils.module.feature.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -52,7 +53,7 @@ public class MetadataSearch extends ToggleFeature
     }
 
     @Override
-    protected void onRender()
+    protected void onRender(LevelRenderContext context)
     {
         if (SEARCH_SIGNS.getValue())
         {

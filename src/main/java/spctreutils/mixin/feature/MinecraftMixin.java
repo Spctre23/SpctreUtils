@@ -13,14 +13,14 @@ import spctreutils.module.feature.impl.BypassMultiplayerRestrictions;
 public class MinecraftMixin
 {
     @Inject(method = "allowsMultiplayer", at = @At("HEAD"), cancellable = true)
-    private void allowsMultiplayer(CallbackInfoReturnable<Boolean> cir)
+    private void bypassMultiplayerRestrictions(CallbackInfoReturnable<Boolean> cir)
     {
         if (FeatureManager.isEnabled(BypassMultiplayerRestrictions.class))
             cir.setReturnValue(true);
     }
 
     @Inject(method = "allowsRealms", at = @At("HEAD"), cancellable = true)
-    private void allowsRealms(CallbackInfoReturnable<Boolean> cir)
+    private void bypassMultiplayerRestrictions2(CallbackInfoReturnable<Boolean> cir)
     {
         if (FeatureManager.isEnabled(BypassMultiplayerRestrictions.class))
             cir.setReturnValue(true);

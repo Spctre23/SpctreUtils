@@ -8,7 +8,7 @@ public class Biome extends HudElement
 {
     public Biome()
     {
-        super("Biome", "Displays the durability of the item you are currently holding.");
+        super("Biome", "Displays the id of the biome you are in.");
     }
 
     @Override
