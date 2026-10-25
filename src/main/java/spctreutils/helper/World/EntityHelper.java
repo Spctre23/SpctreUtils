@@ -8,8 +8,10 @@ import net.minecraft.world.phys.Vec3;
 import java.util.HashSet;
 import java.util.function.Consumer;
 
-public class EntityHelper
+public final class EntityHelper
 {
+    private static final Minecraft mc = Minecraft.getInstance();
+
     public static <T extends Entity> HashSet<T> getEntitiesOfType(Class<T> entityType)
     {
         HashSet<T> entities = new HashSet<>();
@@ -37,7 +39,6 @@ public class EntityHelper
 
     public static <T extends Entity> void forEachOfType(Class<T> entityClass, Consumer<T> action)
     {
-        Minecraft mc = Minecraft.getInstance();
         for (Entity entity : mc.level.entitiesForRendering())
         {
             if (entityClass.isInstance(entity))
@@ -47,7 +48,6 @@ public class EntityHelper
 
     public static void forEach(Consumer<Entity> action)
     {
-        Minecraft mc = Minecraft.getInstance();
         for (Entity entity : mc.level.entitiesForRendering())
         {
             action.accept(entity);

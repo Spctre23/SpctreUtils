@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +18,7 @@ import spctreutils.helper.Drawing.DragShape;
 import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.FillDispatcher;
+import spctreutils.helper.World.GameModeHelper;
 import spctreutils.helper.World.RaycastHelper;
 import spctreutils.helper.World.WorldEditHelper;
 import spctreutils.key.Keybind;
@@ -75,8 +75,7 @@ public class EasyBuild extends ToggleFeature
     @Override
     protected void onTick()
     {
-        GameType gameType = mc.player.gameMode();
-        if (!drawModifierBind.isDown() || gameType == null || gameType.isSurvival())
+        if (!drawModifierBind.isDown() || GameModeHelper.isAdventureOrSurvival())
         {
             previewBox = null;
             session = null;
@@ -141,7 +140,7 @@ public class EasyBuild extends ToggleFeature
     {
         drawModifierBind.onPressed(() ->
         {
-            if (!enabled) return;
+            if (!isEnabled()) return;
 
             ItemStack mainHandItem = mc.player.getMainHandItem();
             if (mainHandItem.getItem() instanceof BlockItem blockItem)
@@ -166,16 +165,12 @@ public class EasyBuild extends ToggleFeature
     {
         switchShapeBind.onPressed(() ->
         {
-            if (!enabled) return;
-
-            GameType gameType = mc.player.gameMode();
-            if (gameType == null || gameType.isSurvival()) return;
+            if (!isEnabled() || GameModeHelper.isAdventureOrSurvival()) return;
 
             shapeIndex = (shapeIndex + 1) % DragShape.values().length;
             shape = DragShape.values()[shapeIndex];
 
             Component hudMessage = Component.literal("Draw Shape = ").append(shape.name()).withColor(getShapeColor(shape).getRGB());
-
             Msg.sendHud(hudMessage);
         });
     }
@@ -184,7 +179,8 @@ public class EasyBuild extends ToggleFeature
     {
         undoTriggerBind.onPressed(() ->
         {
-            if (!enabled || !undoModifierBind.isDown()) return;
+            if (!isEnabled() || !undoModifierBind.isDown() || GameModeHelper.isAdventureOrSurvival()) return;
+
             if (!WorldEditHelper.undo())
             {
                 Msg.sendHud("Undo requires WorldEdit.", Color.RED);
@@ -196,7 +192,8 @@ public class EasyBuild extends ToggleFeature
     {
         redoTriggerBind.onPressed(() ->
         {
-            if (!enabled || !redoModifierBind.isDown()) return;
+            if (!isEnabled() || !redoModifierBind.isDown() || GameModeHelper.isAdventureOrSurvival()) return;
+
             if (!WorldEditHelper.redo())
             {
                 Msg.sendHud("Redo requires WorldEdit.", Color.RED);

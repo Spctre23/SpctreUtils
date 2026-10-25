@@ -15,8 +15,9 @@
     "feature.BlockItemMixin",
     "feature.BlockStateBaseMixin",
     "feature.MinecraftMixin",
-    "feature.MultiPlayerGamemodeMixin",
+    "feature.MultiPlayerGameModeMixin",
     "feature.PlayerMixin",
+    "feature.ServerboundUseItemOnPacketMixin",
     "feature.WorldOpenFlowsMixin"
   ],
   "injectors": {

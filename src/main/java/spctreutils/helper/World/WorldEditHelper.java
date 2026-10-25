@@ -9,7 +9,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import spctreutils.helper.ModState;
 
-public class WorldEditHelper
+public final class WorldEditHelper
 {
     public static boolean fillArea(AABB area, BlockState state)
     {

@@ -9,13 +9,15 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 
-public class RaycastHelper
+public final class RaycastHelper
 {
+    private static final Minecraft mc = Minecraft.getInstance();
+
     private record Ray(Vec3 start, Vec3 look, Vec3 end) {}
 
     private static Ray getRay()
     {
-        Camera camera = Minecraft.getInstance().gameRenderer.mainCamera();
+        Camera camera = mc.gameRenderer.mainCamera();
         Vec3 start = camera.position();
         Vec3 look = camera.entity().getLookAngle();
         Vec3 end = start.add(look.scale(100));
@@ -24,9 +26,7 @@ public class RaycastHelper
 
     public static BlockHitResult getBlockHitResult()
     {
-        Minecraft mc = Minecraft.getInstance();
         Ray ray = getRay();
-
         return mc.level.clip(new ClipContext(
             ray.start, ray.end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.gameRenderer.mainCamera().entity()
         ));
@@ -50,7 +50,6 @@ public class RaycastHelper
     @Nullable
     public static Entity getAimedEntity()
     {
-        Minecraft mc = Minecraft.getInstance();
         Ray ray = getRay();
         AABB searchBox = mc.player.getBoundingBox().expandTowards(ray.look.scale(100)).inflate(1.0);
 

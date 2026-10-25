@@ -6,7 +6,6 @@ import net.minecraft.world.phys.Vec3;
 import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.RaycastHelper;
-import spctreutils.module.feature.ToggleFeature;
 import spctreutils.helper.*;
 import spctreutils.module.feature.TriggerFeature;
 

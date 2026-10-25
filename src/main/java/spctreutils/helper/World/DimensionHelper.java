@@ -6,11 +6,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class DimensionHelper
+public final class DimensionHelper
 {
+    private static final Minecraft mc = Minecraft.getInstance();
+
     public static Vec3 getOppositePos(Vec3 pos)
     {
-        Minecraft mc = Minecraft.getInstance();
         ResourceKey<Level> dimension = mc.level.dimension();
         if (dimension != Level.END)
             pos = dimension == Level.NETHER ? pos.scale(8) : pos.scale(0.125);
@@ -25,7 +26,6 @@ public class DimensionHelper
 
     public static String getDimensionPath()
     {
-        Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return "None";
         return mc.level.dimension().identifier().getPath();
     }

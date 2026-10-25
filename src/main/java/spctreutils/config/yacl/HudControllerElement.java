@@ -69,7 +69,7 @@ public class HudControllerElement extends ControllerWidget<HudController>
             ConfigManager.save();
 
             HudElement element = SpctreUtils.instance.hud.getElement(className);
-            if (element != null) element.setEnabled(!current);
+            if (element != null) element.setState(!current);
 
             return true;
         }

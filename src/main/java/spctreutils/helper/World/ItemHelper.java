@@ -2,7 +2,7 @@ package spctreutils.helper.World;
 
 import net.minecraft.world.item.ItemStack;
 
-public class ItemHelper
+public final class ItemHelper
 {
     public static int getDurability(ItemStack item)
     {

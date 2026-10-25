@@ -7,11 +7,12 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import java.util.HashSet;
 import java.util.function.Consumer;
 
-public class ChunkHelper
+public final class ChunkHelper
 {
+    private static final Minecraft mc = Minecraft.getInstance();
+
     public static void forEach(Consumer<LevelChunk> action)
     {
-        Minecraft mc = Minecraft.getInstance();
         int renderDist = mc.options.renderDistance().get();
         int chunkX = mc.player.chunkPosition().x();
         int chunkZ = mc.player.chunkPosition().z();

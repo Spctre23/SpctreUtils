@@ -25,6 +25,7 @@ public class ModConfig
     @SerialEntry public Map<String, Boolean> hudElementStates = new HashMap<>();
     @SerialEntry public List<String> hudElementOrder = new ArrayList<>();
     @SerialEntry public boolean hud = false;
+    @SerialEntry public float hudScale = 1.0f;
 
     @SerialEntry public Map<String, Object> settings = new HashMap<>();
 }

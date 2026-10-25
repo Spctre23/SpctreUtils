@@ -54,7 +54,7 @@ public class FeatureManager
     public static <T extends FeatureBase> boolean isEnabled(Class<T> type)
     {
         FeatureBase feature = getFeature(type);
-        return feature != null && feature.getEnabled();
+        return feature != null && feature.isEnabled();
     }
 
     public List<Option<?>> getOptions()

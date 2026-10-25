@@ -5,7 +5,6 @@ import net.minecraft.client.player.ClientInput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.lwjgl.system.ffm.mapping.Mapping;
 import spctreutils.component.TextComp;
 import spctreutils.helper.MathHelper;
 import spctreutils.helper.Visual.Msg;
@@ -28,7 +27,7 @@ public class FlySpeed extends ToggleFeature
     @Override
     protected InteractionResult onMouseScrolled(double delta)
     {
-        if (!KeyUtils.hasControlDown())
+        if (!KeyUtils.hasControlDown() || !mc.player.getAbilities().flying)
             return InteractionResult.PASS;
 
         float flySpeed = (float) MathHelper.round(Math.clamp(SPEED.getValue() + (delta * 0.01), 0.0, Float.MAX_VALUE), 3);

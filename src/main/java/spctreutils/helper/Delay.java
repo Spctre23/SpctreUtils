@@ -1,6 +1,6 @@
 package spctreutils.helper;
 
-public class Delay
+public final class Delay
 {
     private long endTime = 0;
 

@@ -2,7 +2,7 @@ package spctreutils.helper.Visual;
 
 import java.awt.*;
 
-public class ColorHelper
+public final class ColorHelper
 {
     public static int rgbToHex(Color color)
     {

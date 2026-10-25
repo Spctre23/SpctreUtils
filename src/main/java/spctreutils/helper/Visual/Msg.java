@@ -11,7 +11,7 @@ import spctreutils.component.TextComp;
 import java.awt.*;
 import java.util.Arrays;
 
-public class Msg
+public final class Msg
 {
     public static void sendChat(Component component)
     {

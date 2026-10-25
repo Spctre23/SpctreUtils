@@ -17,9 +17,9 @@ public interface OptionProvider
 
     String getDescription();
 
-    boolean getEnabled();
+    boolean isEnabled();
 
-    void setEnabled(boolean value);
+    void setState(boolean value);
 
     List<Setting<?>> getSettings();
 
@@ -28,9 +28,9 @@ public interface OptionProvider
         return Option.<Boolean>createBuilder()
             .name(Component.literal(getName()))
             .description(OptionDescription.of(Component.literal(getDescription())))
-            .binding(false, this::getEnabled, v ->
+            .binding(false, this::isEnabled, v ->
             {
-                setEnabled(v);
+                setState(v);
                 ConfigManager.save();
             })
             .controller(TickBoxControllerBuilder::create)

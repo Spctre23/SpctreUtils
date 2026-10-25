@@ -12,10 +12,10 @@ import java.util.List;
 public abstract class Module implements OptionProvider
 {
     protected final Minecraft mc;
-    protected final String name;
-    protected List<Setting<?>> settings;
-    protected boolean enabled;
+    private final String name;
     private final String description;
+    private List<Setting<?>> settings;
+    private boolean enabled;
 
     protected Module(String name, String description)
     {
@@ -36,11 +36,17 @@ public abstract class Module implements OptionProvider
 
     @Override public String getDescription() { return description; }
 
-    @Override public boolean getEnabled() { return enabled; }
-
-    @Override public void setEnabled(boolean value) { setState(value); }
-
     @Override public List<Setting<?>> getSettings() { return settings; }
+
+    @Override public boolean isEnabled() { return enabled; }
+
+    @Override
+    public void setState(boolean state)
+    {
+        enabled = state;
+        setConfigValue(enabled);
+        onStateChanged();
+    }
 
     protected void onEnabled() {}
 
@@ -53,13 +59,6 @@ public abstract class Module implements OptionProvider
     protected void onDisconnect() {}
 
     protected void dispose() {}
-
-    protected void setState(boolean state)
-    {
-        enabled = state;
-        setConfigValue(enabled);
-        onStateChanged();
-    }
 
     protected abstract boolean getConfigValue();
 

@@ -13,38 +13,33 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
-import spctreutils.helper.World.PlacementHelper;
+import spctreutils.helper.Placement.PlacementHelper;
 import spctreutils.key.Keybind;
 import spctreutils.module.feature.ToggleFeature;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
-import java.util.Optional;
+import java.util.List;
 
 public class FlexiblePlace extends ToggleFeature
 {
     private static final Setting<Float> BLOCK_PREVIEW_OPACITY = new Setting<>("Block placement preview opacity", 0.5f, Float.class);
-
-    //private static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
-    //private static final EnumProperty<SlabType> SLAB_TYPE = BlockStateProperties.SLAB_TYPE;
 
     public final Keybind flexiblePlaceModifier = new Keybind("Flexible Place - Modifier", InputConstants.KEY_LCONTROL);
     private final Keybind switchPropertyBind = new Keybind("Flexible Place - Switch Property", InputConstants.MOUSE_BUTTON_4);
 
     public BlockState blockState;
     private BlockPos blockPos;
-    private Property<?> property = null;
     private int propertyIndex;
-
-/*    enum BlockStateProperty
-    {
-        ROTATION,
-        HALF
-    }*/
+    private List<Property<?>> properties = List.of();
+    private boolean active;
 
     public FlexiblePlace()
     {
-        super("Flexible Place", "");
+        super("Flexible Place", """
+            Allows you to effortlessly control properties of blocks on placement (EG: slab shape or stair rotation).
+            - Hold your MODIFIER + scroll to cycle the state of the currently selected property.
+            - Press your PROPERTY SWITCH bind to switch the property you want to modify.""");
 
         registerSwitchPropertyBind();
     }
@@ -52,72 +47,72 @@ public class FlexiblePlace extends ToggleFeature
     @Override
     protected void onTick()
     {
+        active = false;
         if (!flexiblePlaceModifier.isDown()) return;
 
         ItemStack stack = mc.player.getMainHandItem();
         if (!(stack.getItem() instanceof BlockItem blockItem) ||
             !(mc.hitResult instanceof BlockHitResult hit) ||
             !PlacementHelper.canPlaceHeldBlock(stack, blockItem, hit))
-        {
-            blockPos = null;
-            blockState = null;
             return;
-        }
 
         blockPos = hit.getBlockPos().relative(hit.getDirection());
         Block heldBlock = blockItem.getBlock();
 
-        if (blockState != null && blockState.getBlock() == heldBlock) return;
-        blockState = heldBlock.defaultBlockState();
-        Optional<Property<?>> first = blockState.getProperties().stream().findFirst();
-        first.ifPresent(value -> property = value);
+        if (blockState == null || blockState.getBlock() != heldBlock)
+            selectBlock(heldBlock);
+        active = true;
     }
 
     @Override
     protected InteractionResult onMouseScrolled(double delta)
     {
-        if (!flexiblePlaceModifier.isDown() || blockState == null || property == null)
+        Property<?> property = currentProperty();
+        if (!flexiblePlaceModifier.isDown() || !active || blockState == null || property == null)
             return InteractionResult.PASS;
 
         blockState = blockState.cycle(property);
-/*        switch(blockState.getProperties())
-        {
-            case 1 ->
-            {
-                EnumProperty<Direction> facing = BlockStateProperties.FACING;
-                blockState = blockState.cycle(facing);
-            }
-            case HALF ->
-            {
-                EnumProperty<Half> half = BlockStateProperties.HALF;
-                EnumProperty<SlabType> slabType = BlockStateProperties.SLAB_TYPE;
-                if (blockState.hasProperty(half))
-                    blockState = blockState.cycle(half);
-                else if (blockState.hasProperty(slabType))
-                    blockState = blockState.cycle(slabType);
-            }
-        }*/
         return InteractionResult.SUCCESS;
     }
 
     @Override
     protected void onRender(LevelRenderContext context)
     {
-        if (blockState == null || !flexiblePlaceModifier.isDown()) return;
+        if (!flexiblePlaceModifier.isDown() || !active || blockState == null) return;
         RenderHelper.drawBlock(context, blockPos, blockState, BLOCK_PREVIEW_OPACITY.getValue());
+    }
+
+    public BlockState getOverrideState(Block heldBlock)
+    {
+        if (!isEnabled() || !flexiblePlaceModifier.isDown() || blockState == null || blockState.getBlock() != heldBlock) return null;
+        return blockState;
+    }
+
+    private void selectBlock(Block block)
+    {
+        blockState = block.defaultBlockState();
+        properties = mc.getSingleplayerServer() == null
+            ? blockState.getProperties().stream().filter(PlacementHelper::isSupported).toList()
+            : List.copyOf(blockState.getProperties());
+        propertyIndex = 0;
     }
 
     private void registerSwitchPropertyBind()
     {
         switchPropertyBind.onPressed(() ->
         {
-            if (!enabled || blockState == null) return;
+            if (!isEnabled() || !active || properties.isEmpty()) return;
 
-            propertyIndex = (propertyIndex + 1) % blockState.getProperties().size();
-            property = (Property<?>) blockState.getProperties().toArray()[propertyIndex];
+            propertyIndex = (propertyIndex + 1) % properties.size();
+            Property<?> property = currentProperty();
+            if (property == null) return;
 
-            Component hudMessage = Component.literal(String.format("Modifying property: %s", property.getName())).withColor(Color.GREEN.getRGB());
-            Msg.sendHud(hudMessage);
+            Msg.sendHud(Component.literal("Modifying property: " + property.getName()).withColor(Color.GREEN.getRGB()));
         });
+    }
+
+    private Property<?> currentProperty()
+    {
+        return properties.isEmpty() ? null : properties.get(propertyIndex);
     }
 }

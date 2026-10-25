@@ -2,6 +2,8 @@ package spctreutils.setting;
 
 import spctreutils.config.ConfigManager;
 
+import java.awt.Color;
+
 public class Setting<T>
 {
     public final String name;
@@ -20,10 +22,7 @@ public class Setting<T>
 
     public Setting(String name, T defaultValue, Class<T> type)
     {
-        this.name = name;
-        this.description = "";
-        this.defaultValue = defaultValue;
-        this.type = type;
+        this(name, "", defaultValue, type);
     }
 
     public void setKey(String moduleName)
@@ -35,14 +34,33 @@ public class Setting<T>
     {
         Object raw = ConfigManager.config.settings.get(key);
         if (raw == null) return defaultValue;
-        if (type == Float.class && raw instanceof Double d) return type.cast(d.floatValue());
-        return type.isInstance(raw) ? type.cast(raw) : defaultValue;
+
+        Object value = deserialize(raw);
+        return type.isInstance(value) ? type.cast(value) : defaultValue;
     }
 
     public void setValue(T value)
     {
-        ConfigManager.config.settings.put(key, value);
+        ConfigManager.config.settings.put(key, serialize(value));
         ConfigManager.save();
+    }
+
+    private Object serialize(T value)
+    {
+        return value instanceof Color color ? color.getRGB() : value;
+    }
+
+    private Object deserialize(Object raw)
+    {
+        if (raw instanceof Number number)
+        {
+            if (type == Integer.class) return number.intValue();
+            if (type == Long.class) return number.longValue();
+            if (type == Float.class) return number.floatValue();
+            if (type == Double.class) return number.doubleValue();
+            if (type == Color.class) return new Color(number.intValue(), true);
+        }
+        return raw;
     }
 
     public T getDefault() { return defaultValue; }

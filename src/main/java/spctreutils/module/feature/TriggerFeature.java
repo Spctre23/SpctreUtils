@@ -31,12 +31,12 @@ public abstract class TriggerFeature extends ToggleFeature
     {
         keybind.onPressed(() ->
         {
-            if (enabled) onKeyPressed();
+            if (isEnabled()) onKeyPressed();
         });
 
         keybind.onReleased(() ->
         {
-            if (enabled) onKeyReleased();
+            if (isEnabled()) onKeyReleased();
         });
     }
 }

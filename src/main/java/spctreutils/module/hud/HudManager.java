@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.FloatFieldControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -18,7 +19,6 @@ import spctreutils.config.yacl.HudControllerBuilder;
 import spctreutils.module.hud.impl.*;
 import spctreutils.module.hud.impl.Dimension;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class HudManager
     {
         registerElements();
         reorderElements();
-        initializeHud();
+        registerHud();
     }
 
     private void registerElements()
@@ -69,7 +69,7 @@ public class HudManager
             .orElse(null);
     }
 
-    private void initializeHud()
+    private void registerHud()
     {
         Minecraft mc = Minecraft.getInstance();
         Identifier identifier = Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "hud");
@@ -82,8 +82,11 @@ public class HudManager
             final int width = window.getGuiScaledWidth();
             final int height = window.getGuiScaledHeight();
             final int chatBarHeight = mc.gui.hud.getChat().isChatFocused() ? 14 : 0;
-            int topStackOffset = 0;
-            int bottomStackOffset = 0;
+            final double guiScale = window.getGuiScale();
+            final float scale = snapScale(ConfigManager.config.hudScale, guiScale);
+
+            float topStackOffset = 0;
+            float bottomStackOffset = 0;
 
             for (HudElement element : elements)
             {
@@ -91,63 +94,115 @@ public class HudManager
                 final boolean isTop = (layout.attachTo() == HudElement.AttachTo.TOP_LEFT || layout.attachTo() == HudElement.AttachTo.TOP_RIGHT);
                 final boolean isRight = (layout.attachTo() == HudElement.AttachTo.TOP_RIGHT || layout.attachTo() == HudElement.AttachTo.BOTTOM_RIGHT);
 
+                final int spacing = Math.max(1, layout.partSpacingX());
+                final float columnWidth = spacing * scale;
+                final int maxCol = maxColumn(element, spacing);
+
+                final int itemCount = element.getItemParts().size();
+                final int textCount = element.getTextParts().size();
+
+                final boolean centered = isRight && itemCount > 0 && textCount > 0;
+
+                final float itemSize = 16 * scale;
+                final float itemSpacingX = layout.partSpacingX() * scale;
+
                 for (HudElement.ItemPart itemPart : element.getItemParts().values())
                 {
                     if (itemPart.item == null) continue;
 
-                    int itemX = itemPart.xOffset;
-                    int itemY = itemPart.yOffset;
-                    final int itemSize = 16;
+                    float itemX = itemPart.xOffset * scale;
+                    float itemY = itemPart.yOffset * scale;
 
                     if (!isTop)
                         itemY += height - chatBarHeight - itemSize;
 
-                    if (isRight)
-                        itemX += width - ((itemSize * element.getItemParts().size()) + ((layout.partSpacingX() - itemSize) * (element.getItemParts().size() - 1)));
+                    if (centered)
+                    {
+                        int col = Math.round(itemPart.xOffset / (float) spacing);
+                        itemX = columnCenterX(col, maxCol, columnWidth, width) - itemSize / 2f;
+                    }
+                    else if (isRight)
+                    {
+                        itemX += width - ((itemSize * itemCount) + ((itemSpacingX - itemSize) * (itemCount - 1)));
+                    }
 
-                    guiGraphics.item(
-                        itemPart.item.getDefaultInstance(),
-                        itemX,
-                        itemY
-                    );
+                    guiGraphics.pose().pushMatrix();
+                    guiGraphics.pose().translate(snap(itemX, guiScale), snap(itemY, guiScale));
+                    guiGraphics.pose().scale(scale, scale);
+                    guiGraphics.item(itemPart.item.getDefaultInstance(), 0, 0);
+                    guiGraphics.pose().popMatrix();
                 }
+
+                final float lineHeight = mc.font.lineHeight * scale;
+                final float textSpacingX = layout.partSpacingX() * scale;
+                final float topBuffer = 3 * scale;
 
                 for (HudElement.TextPart textPart : element.getTextParts().values())
                 {
                     if (textPart.text == null) continue;
 
-                    int textX = textPart.xOffset;
-                    int textY = textPart.yOffset;
-                    final int textWidth = mc.font.width(textPart.text);
-                    final int topBuffer = 3;
+                    float textX = textPart.xOffset * scale;
+                    float textY = textPart.yOffset * scale;
+                    final float textWidth = mc.font.width(textPart.text) * scale;
 
                     if (isTop)
                     {
                         textY += topBuffer + topStackOffset;
                         if (layout.verticalStack())
-                            topStackOffset += mc.font.lineHeight;
+                            topStackOffset += lineHeight;
                     }
                     else
                     {
-                        textY += bottomStackOffset + height - chatBarHeight - mc.font.lineHeight;
+                        textY += bottomStackOffset + height - chatBarHeight - lineHeight;
                         if (layout.verticalStack())
-                            bottomStackOffset -= mc.font.lineHeight;
+                            bottomStackOffset -= lineHeight;
                     }
 
-                    if (isRight)
-                        textX += width - ((textWidth * element.getTextParts().size()) + ((layout.partSpacingX() - textWidth) * (element.getTextParts().size() - 1)));
+                    if (centered)
+                    {
+                        int col = Math.round(textPart.xOffset / (float) spacing);
+                        textX = columnCenterX(col, maxCol, columnWidth, width) - textWidth / 2f;
+                    }
+                    else if (isRight)
+                    {
+                        textX += width - ((textWidth * textCount) + ((textSpacingX - textWidth) * (textCount - 1)));
+                    }
 
-                    guiGraphics.text(
-                        mc.font,
-                        textPart.text,
-                        textX,
-                        textY,
-                        element.getPrefixColor(),
-                        true
-                    );
+                    guiGraphics.pose().pushMatrix();
+                    guiGraphics.pose().translate(snap(textX, guiScale), snap(textY, guiScale));
+                    guiGraphics.pose().scale(scale, scale);
+                    guiGraphics.text(mc.font, textPart.text, 0, 0, element.getPrefixColor(), true);
+                    guiGraphics.pose().popMatrix();
                 }
             }
         });
+    }
+
+    private static int maxColumn(HudElement element, int spacing)
+    {
+        int max = 0;
+        for (HudElement.ItemPart p : element.getItemParts().values())
+            max = Math.max(max, Math.round(p.xOffset / (float) spacing));
+        for (HudElement.TextPart p : element.getTextParts().values())
+            max = Math.max(max, Math.round(p.xOffset / (float) spacing));
+        return max;
+    }
+
+    private static float columnCenterX(int column, int maxColumn, float columnWidth, int screenWidth)
+    {
+        float right = screenWidth - (maxColumn - column) * columnWidth;
+        return right - columnWidth / 2f;
+    }
+
+    private static float snap(float value, double guiScale)
+    {
+        return (float) (Math.round(value * guiScale) / guiScale);
+    }
+
+    private static float snapScale(float desired, double guiScale)
+    {
+        long physicalPixels = Math.max(1, Math.round(desired * guiScale));
+        return (float) (physicalPixels / guiScale);
     }
 
     public List<OptionGroup> getGroups()
@@ -171,6 +226,17 @@ public class HudManager
                         ConfigManager.save();
                     })
                 .controller(TickBoxControllerBuilder::create)
+                .build())
+            .option(Option.<Float>createBuilder()
+                .name(Component.literal("HUD Scale"))
+                .binding(
+                    new ModConfig().hudScale,
+                    () -> ConfigManager.config.hudScale, v ->
+                    {
+                        ConfigManager.config.hudScale = v;
+                        ConfigManager.save();
+                    })
+                .controller(FloatFieldControllerBuilder::create)
                 .build())
             .build();
     }

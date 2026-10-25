@@ -3,10 +3,7 @@ package spctreutils.helper.World;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class BoundingBoxHelper
+public final class BoundingBoxHelper
 {
     public static BoundingBox toRegion(AABB box)
     {

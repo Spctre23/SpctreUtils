@@ -55,7 +55,7 @@ public abstract class ToggleFeature extends FeatureBase
 
     protected void toggle()
     {
-        setState(!enabled);
+        setState(!isEnabled());
     }
 
     @Override
@@ -70,11 +70,11 @@ public abstract class ToggleFeature extends FeatureBase
         super.registerEvents();
         LevelRenderEvents.COLLECT_SUBMITS.register(context ->
         {
-            if (enabled && mc.level != null && mc.player != null) onRender(context);
+            if (isEnabled() && mc.level != null && mc.player != null) onRender(context);
         });
         MouseEvent.SCROLL.register(delta ->
         {
-            if (enabled && mc.level != null && mc.player != null)
+            if (isEnabled() && mc.level != null && mc.player != null)
             {
                 return onMouseScrolled(delta);
             }
@@ -89,8 +89,8 @@ public abstract class ToggleFeature extends FeatureBase
 
     private void sendToggleNotification()
     {
-        Color color = enabled ? Color.GREEN : Color.RED;
-        String text = enabled ? name + " = ON" : name + " = OFF";
+        Color color = isEnabled() ? Color.GREEN : Color.RED;
+        String text = isEnabled() ? getName() + " = ON" : getName() + " = OFF";
         Msg.sendHud(new TextComp(text, color));
     }
 }

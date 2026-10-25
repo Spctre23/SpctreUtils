@@ -26,11 +26,9 @@ public abstract class BlockItemMixin
     protected BlockState placeBlock(BlockState placementState)
     {
         FlexiblePlace flexiblePlace = FeatureManager.getFeature(FlexiblePlace.class);
-        if (flexiblePlace != null &&
-            flexiblePlace.getEnabled() &&
-            flexiblePlace.blockState != null &&
-            flexiblePlace.flexiblePlaceModifier.isDown())
-            placementState = flexiblePlace.blockState;
-        return placementState;
+        if (flexiblePlace == null) return placementState;
+
+        BlockState override = flexiblePlace.getOverrideState(placementState.getBlock());
+        return override != null ? override : placementState;
     }
 }
