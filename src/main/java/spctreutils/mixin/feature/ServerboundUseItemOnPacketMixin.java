@@ -13,14 +13,14 @@ import spctreutils.helper.Placement.PlacementHelper;
 @Mixin(ServerboundUseItemOnPacket.class)
 public class ServerboundUseItemOnPacketMixin
 {
-    @ModifyVariable(method = "<init>(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;I)V", at = @At("HEAD"), argsOnly = true, name = "blockHit")
-    private static BlockHitResult embedFlexiblePlacementState(BlockHitResult blockHit)
+    @ModifyVariable(method = "<init>(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;I)V", at = @At("HEAD"), argsOnly = true, name = "hitResult")
+    private static BlockHitResult embedFlexiblePlacementState(BlockHitResult hitResult)
     {
         BlockState state = PendingPlacement.state;
         BlockPos placementPos = PendingPlacement.placementPos;
-        if (state == null || placementPos == null) return blockHit;
+        if (state == null || placementPos == null) return hitResult;
 
         PendingPlacement.clear();
-        return PlacementHelper.withProtocol(blockHit, state, placementPos);
+        return PlacementHelper.withProtocol(hitResult, state, placementPos);
     }
 }

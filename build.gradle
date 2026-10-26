@@ -12,12 +12,6 @@ repositories {
 		name 'Xander Maven'
 		url 'https://maven.isxander.dev/releases'
 	}
-	maven {
-		url 'https://api.modrinth.com/maven'
-		content {
-			includeGroup "maven.modrinth"
-		}
-	}
 	mavenCentral()
 }
 
@@ -35,11 +29,9 @@ dependencies {
 
 	implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 
-	api "com.terraformersmc:modmenu:20.0.1"
+	api "com.terraformersmc:modmenu:21.0.0"
 
 	implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-
-	include(implementation("maven.modrinth:admiral:${admiral_version}+${minecraft_version}+fabric"))
 }
 
 processResources {

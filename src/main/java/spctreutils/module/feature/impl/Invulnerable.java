@@ -16,7 +16,7 @@ public class Invulnerable extends ToggleFeature
     {
         Player player = SpctreUtils.serverPlayer;
         if (player == null) return;
-        player.setInvulnerable(true);
+        player.setPermanentlyInvulnerable(true);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class Invulnerable extends ToggleFeature
         if (player == null ||
             player.isSpectator() ||
             player.isCreative()) return;
-        player.setInvulnerable(false);
+        player.setPermanentlyInvulnerable(false);
     }
 }

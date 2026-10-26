@@ -1,13 +1,14 @@
 package spctreutils.helper.Visual;
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.pipeline.CompiledRenderPipeline;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.vertex.VertexFormat;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
@@ -234,7 +235,7 @@ public final class RenderHelper
             () -> SpctreUtils.MOD_ID + " lines rendering",
             target.getColorTextureView(), Optional.empty(), target.getDepthTextureView(), OptionalDouble.empty()))
         {
-            pass.setPipeline(OUTLINE_PIPELINE);
+            pass.setPipeline((CompiledRenderPipeline) OUTLINE_PIPELINE);
             RenderSystem.bindDefaultUniforms(pass);
             pass.setUniform("DynamicTransforms", transforms);
             pass.setVertexBuffer(0, info.vertexBuffer().slice());

@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import org.apache.commons.lang3.StringUtils;
 import spctreutils.key.Keybind;
 import spctreutils.module.feature.ToggleFeature;
@@ -17,6 +18,7 @@ import spctreutils.screen.TextFieldScreen;
 import spctreutils.setting.Setting;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -102,9 +104,12 @@ public class MetadataSearch extends ToggleFeature
 
     private boolean hasMatchingLine(SignBlockEntity sign, String target)
     {
-        for (int i = 0; i < 4; i++)
+        List<Component> messages = new ArrayList<>(sign.getText(SignTextSlot.FRONT).getMessages(false));
+        messages.addAll(sign.getText(SignTextSlot.BACK).getMessages(false));
+
+        for (Component text : messages)
         {
-            if (sign.getFrontText().getMessage(i, false).getString().toLowerCase().contains(target) && !searchQuery.isBlank())
+            if (text.getString().toLowerCase().contains(target) && !searchQuery.isBlank())
                 return true;
         }
         return false;

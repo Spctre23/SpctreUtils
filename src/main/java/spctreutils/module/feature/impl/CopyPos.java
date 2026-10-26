@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import org.lwjgl.glfw.GLFW;
 import spctreutils.helper.Visual.Msg;
 import spctreutils.helper.Visual.RenderHelper;
 import spctreutils.helper.World.DimensionHelper;
@@ -43,7 +42,7 @@ public class CopyPos extends TriggerFeature
         blockPos = shouldScale ? DimensionHelper.getOppositePos(blockPos) : blockPos;
 
         String posString = blockPos.getX() + " " + renderPos.getY() + " " + blockPos.getZ();
-        GLFW.glfwSetClipboardString(mc.getWindow().handle(), posString);
+        mc.keyboardHandler.setClipboard(posString);
         Msg.sendHud("Copied position: " + posString, color);
 
         unrenderDelay.set(0.5);
