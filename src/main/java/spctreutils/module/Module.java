@@ -3,7 +3,10 @@ package spctreutils.module;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.InteractionResult;
 import spctreutils.config.yacl.OptionProvider;
+import spctreutils.event.PacketEvents;
 import spctreutils.setting.Setting;
 
 import java.util.ArrayList;
@@ -53,6 +56,16 @@ public abstract class Module implements OptionProvider
     protected void onDisabled() {}
 
     protected void onTick() {}
+
+    protected InteractionResult onPacketReceived(Packet<?> packet)
+    {
+        return InteractionResult.PASS;
+    }
+
+    protected InteractionResult onPacketSent(Packet<?> packet)
+    {
+        return InteractionResult.PASS;
+    }
 
     protected void onJoin() {}
 
@@ -107,6 +120,22 @@ public abstract class Module implements OptionProvider
         {
             onDisconnect();
             dispose();
+        });
+        PacketEvents.RECEIVE.register(packet ->
+        {
+            if (isEnabled() && mc.level != null && mc.player != null)
+            {
+                return onPacketReceived(packet);
+            }
+            return InteractionResult.PASS;
+        });
+        PacketEvents.SEND.register(packet ->
+        {
+            if (isEnabled() && mc.level != null && mc.player != null)
+            {
+                return onPacketSent(packet);
+            }
+            return InteractionResult.PASS;
         });
     }
 }

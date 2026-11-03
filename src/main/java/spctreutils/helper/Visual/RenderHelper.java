@@ -6,6 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import com.mojang.renderpearl.api.pipeline.CompiledRenderPipeline;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.mojang.renderpearl.api.vertex.VertexFormat;
@@ -144,6 +146,7 @@ public final class RenderHelper
     private static final RenderPipeline OUTLINE_PIPELINE = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath(SpctreUtils.MOD_ID, "pipeline/lines_through_walls"))
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .withDepthStencilState(Optional.empty())
             .build());
 
@@ -227,6 +230,9 @@ public final class RenderHelper
 
     private static void executeOutlines(StagedVertexBuffer.ExecuteInfo info)
     {
+        CompiledRenderPipeline compiled = RenderSystem.getCompiledPipelineNullable(OUTLINE_PIPELINE);
+        if (compiled == null) return;
+
         GpuBufferSlice transforms = RenderSystem.getDynamicUniforms().writeTransform(
             RenderSystem.getModelViewMatrixCopy(), new Vector4f(1f, 1f, 1f, 1f), new Vector3f(), new Matrix4f());
 
@@ -235,7 +241,7 @@ public final class RenderHelper
             () -> SpctreUtils.MOD_ID + " lines rendering",
             target.getColorTextureView(), Optional.empty(), target.getDepthTextureView(), OptionalDouble.empty()))
         {
-            pass.setPipeline((CompiledRenderPipeline) OUTLINE_PIPELINE);
+            pass.setPipeline(compiled);
             RenderSystem.bindDefaultUniforms(pass);
             pass.setUniform("DynamicTransforms", transforms);
             pass.setVertexBuffer(0, info.vertexBuffer().slice());

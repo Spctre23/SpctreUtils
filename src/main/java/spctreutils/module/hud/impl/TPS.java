@@ -1,8 +1,8 @@
 package spctreutils.module.hud.impl;
 
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.world.InteractionResult;
-import spctreutils.event.PacketEvent;
 import spctreutils.module.hud.HudElement;
 
 import java.awt.*;
@@ -16,33 +16,28 @@ public class TPS extends HudElement
     public TPS()
     {
         super("TPS", "Displays the server tps.");
-
-        registerPacketListener();
     }
 
-    private void registerPacketListener()
+    @Override
+    protected InteractionResult onPacketReceived(Packet<?> packet)
     {
-        PacketEvent.RECEIVE.register(packet ->
+        if (packet instanceof ClientboundSetTimePacket gameTimePacket)
         {
-            if (packet instanceof ClientboundSetTimePacket gameTimePacket)
+            long currentGameTime = gameTimePacket.gameTime();
+            long currentRealTime = System.currentTimeMillis();
+
+            if (prevGameTime != -1)
             {
-                long currentGameTime = gameTimePacket.gameTime();
-                long currentRealTime = System.currentTimeMillis();
-
-                if (prevGameTime != -1)
-                {
-                    long gameDelta = currentGameTime - prevGameTime;
-                    long realDelta = currentRealTime - prevRealTime;
-                    if (realDelta > 0)
-                        tps = Math.min((gameDelta * 1000.0) / realDelta, 20.0);
-                }
-
-                prevGameTime = currentGameTime;
-                prevRealTime = currentRealTime;
+                long gameDelta = currentGameTime - prevGameTime;
+                long realDelta = currentRealTime - prevRealTime;
+                if (realDelta > 0)
+                    tps = Math.min((gameDelta * 1000.0) / realDelta, 20.0);
             }
 
-            return InteractionResult.PASS;
-        });
+            prevGameTime = currentGameTime;
+            prevRealTime = currentRealTime;
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
