@@ -1,6 +1,6 @@
 # SpctreUtils
 
-A client-side fabric mod for Minecraft 26.2 which adds various QOL features I find useful.
+A client-side fabric mod for Minecraft 26.3 which adds various QOL features I find useful.
 
 
 ## Features
@@ -11,6 +11,8 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
        - Supports WorldEdit
           - If present, prioritizes WorldEdit commands over vanilla fill commands.
           - Adds customizable binds for /undo and /redo.
+   - **Flexible Place**
+       - Allows you to effortlessly control / scroll through properties of blocks on placement (EG: slab shape or stair rotation).
    - **Noclip**
        - Gives you flight and allows you to phase through blocks. 
        - Must be in singleplayer.
@@ -48,7 +50,9 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
        - Removes right click delay.
    - **No Break Delay**
        - Removes block breaking delay.
-   
+   - **Bypass Chat Restrictions**
+   - **Bypass Multiplayer Restrictions**
+   - **Bypass Server Blacklist**  
         
 ## Informational HUD
    - Configurable overlay which displays various types of useful information. Info lines can be selectively enabled / disabled to avoid screen clutter.
@@ -76,6 +80,7 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
    - **Biome**
    - **Dimension**
    - **Light Level**
+   - **Day Count**
    - **Armor**
    - **Ping**
    - **FPS**
@@ -83,5 +88,5 @@ A client-side fabric mod for Minecraft 26.2 which adds various QOL features I fi
 
 ## Dependencies
 
-- **Yet Another Config Lib:** [Download](https://cdn.modrinth.com/data/1eAoo2KR/versions/cnfPzuFU/yet_another_config_lib_v3-3.9.6%2B26.2-fabric.jar?mr_download_reason=standalone)
-- **Mod Menu:** [Download](https://cdn.modrinth.com/data/mOgUt4GM/versions/njXb639R/modmenu-20.0.1.jar?mr_download_reason=standalone)
+- **Yet Another Config Lib:** [Download]([https://cdn.modrinth.com/data/1eAoo2KR/versions/cnfPzuFU/yet_another_config_lib_v3-3.9.6%2B26.2-fabric.jar?mr_download_reason=standalone](https://modrinth.com/mod/yacl/version/3.9.7+26.3-fabric))
+- **Mod Menu:** [Download]([https://cdn.modrinth.com/data/mOgUt4GM/versions/njXb639R/modmenu-20.0.1.jar?mr_download_reason=standalone](https://modrinth.com/mod/modmenu/version/21.0.1))
