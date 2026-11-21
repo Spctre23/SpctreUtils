@@ -48,7 +48,7 @@ public class FlySpeed extends ToggleFeature
         boolean horizontalInput = moveInput.x != 0 || moveInput.y != 0;
 
         ClientInput input = mc.player.input;
-        boolean verticalInput = input.keyPresses.jump() || input.keyPresses.shift();
+        boolean verticalInput = !(input.keyPresses.jump() && input.keyPresses.shift()) && (input.keyPresses.jump() || input.keyPresses.shift());
 
         Vec3 vel = mc.player.getDeltaMovement();
 

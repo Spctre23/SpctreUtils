@@ -38,8 +38,10 @@ public class HudManager
 
     private void registerElements()
     {
-        elements.add(new Biome());
+        elements.add(new Watermark());
+        elements.add(new Facing());
         elements.add(new Dimension());
+        elements.add(new Biome());
         elements.add(new Position());
         elements.add(new HorseSpeed());
         elements.add(new HorseJump());
@@ -47,11 +49,11 @@ public class HudManager
         elements.add(new Acceleration());
         elements.add(new Durability());
         elements.add(new Speed());
-        elements.add(new Rotation());
         elements.add(new EntityHealth());
         elements.add(new EntityOwner());
         elements.add(new LightLevel());
         elements.add(new PlayerCount());
+        elements.add(new DayCount());
         elements.add(new TPS());
         elements.add(new FPS());
         elements.add(new Ping());

@@ -22,6 +22,6 @@ public class Durability extends HudElement
         }
 
         String text = ItemHelper.getDurability(held) + " / " + ItemHelper.getMaxDurability(held);
-        setText(text);
+        setText(text, held.getBarColor());
     }
 }

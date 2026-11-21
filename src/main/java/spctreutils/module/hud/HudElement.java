@@ -16,23 +16,35 @@ import java.util.Map;
 
 public abstract class HudElement extends Module
 {
-    private final String prefix;
+    private String prefix = "";
 
-    private final Setting<Color> hudPrefixColor = new Setting<>("Prefix Color", Color.LIGHT_GRAY, Color.class);
-    private final Setting<Color> hudTextColor = new Setting<>("Text Color", Color.WHITE, Color.class);
+    private final Setting<Color> hudPrefixColor = new Setting<>("Prefix color", Color.LIGHT_GRAY, Color.class);
+    private final Setting<Color> hudTextColor;
 
     private final Map<Vector2d, ItemPart> itemParts = new HashMap<>();
     private final Map<Vector2d, TextPart> textParts = new HashMap<>();
 
     private Layout layout = new Layout(AttachTo.TOP_RIGHT, true, 15, 15);
 
-    protected HudElement(String name, String prefix, String description, List<Setting<?>> settings)
+    protected HudElement(String name, String prefix, String description, Color textColor, List<Setting<?>> settings)
     {
         super(name, description);
 
-        this.prefix = prefix.isEmpty() ? "" : prefix + ": ";
-        List<Setting<?>> baseSettings = new ArrayList<>(List.of(hudPrefixColor, hudTextColor));
+        List<Setting<?>> baseSettings = new ArrayList<>();
+        if (!prefix.isEmpty())
+        {
+            this.prefix = prefix + ": ";
+            baseSettings.add(hudPrefixColor);
+        }
+
+        hudTextColor = new Setting<>("Text color", textColor, Color.class);
+        baseSettings.add(hudTextColor);
         registerSettings(baseSettings, settings);
+    }
+
+    protected HudElement(String name, String prefix, String description, List<Setting<?>> setting)
+    {
+        this(name, prefix, description, Color.WHITE, setting);
     }
 
     protected HudElement(String name, String prefix, String description)
@@ -47,7 +59,7 @@ public abstract class HudElement extends Module
 
     protected HudElement(String name, String description)
     {
-        this(name, name, description, List.of());
+        this(name, description, List.of());
     }
 
     @Override
@@ -78,11 +90,10 @@ public abstract class HudElement extends Module
         return textParts;
     }
 
-    protected void setText(String text, int color, int x, int y)
+    protected void setText(Component text, int x, int y)
     {
         Vector2d pos = new Vector2d(x, y);
-        Component contents = Component.literal(prefix).withColor(hudPrefixColor.getValue().getRGB())
-            .append(Component.literal(text).withColor(color));
+        Component contents = Component.literal(prefix).withColor(hudPrefixColor.getValue().getRGB()).append(text);
 
         if (!textParts.containsKey(pos))
         {
@@ -93,6 +104,16 @@ public abstract class HudElement extends Module
             TextPart textPart = textParts.get(pos);
             textPart.text = contents;
         }
+    }
+
+    protected void setText(Component text)
+    {
+        setText(text, 0, 0);
+    }
+
+    protected void setText(String text, int color, int x, int y)
+    {
+        setText(Component.literal(text).withColor(color), x, y);
     }
 
     protected void setText(String text, Color color, int x, int y)

@@ -2,6 +2,7 @@ package spctreutils.module.hud.impl;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import spctreutils.module.hud.HudElement;
 
 public class EntityOwner extends HudElement
@@ -17,7 +18,7 @@ public class EntityOwner extends HudElement
         if (mc.crosshairPickEntity instanceof OwnableEntity entity)
         {
             Entity owner = entity.getOwner();
-            if (entity.getOwner() != null)
+            if (owner != null)
                 setText(owner.getName().getString());
             return;
         }

@@ -57,6 +57,10 @@ public abstract class Module implements OptionProvider
 
     protected void onTick() {}
 
+    protected void onJoin() {}
+
+    protected void onDisconnect() {}
+
     protected InteractionResult onPacketReceived(Packet<?> packet)
     {
         return InteractionResult.PASS;
@@ -66,10 +70,6 @@ public abstract class Module implements OptionProvider
     {
         return InteractionResult.PASS;
     }
-
-    protected void onJoin() {}
-
-    protected void onDisconnect() {}
 
     protected void dispose() {}
 
