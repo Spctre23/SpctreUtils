@@ -88,5 +88,5 @@ A client-side fabric mod for Minecraft 26.3 which adds various QOL features I fi
 
 ## Dependencies
 
-- **Yet Another Config Lib:** [Download]([https://cdn.modrinth.com/data/1eAoo2KR/versions/cnfPzuFU/yet_another_config_lib_v3-3.9.6%2B26.2-fabric.jar?mr_download_reason=standalone](https://modrinth.com/mod/yacl/version/3.9.7+26.3-fabric))
-- **Mod Menu:** [Download]([https://cdn.modrinth.com/data/mOgUt4GM/versions/njXb639R/modmenu-20.0.1.jar?mr_download_reason=standalone](https://modrinth.com/mod/modmenu/version/21.0.1))
+- **Yet Another Config Lib:** [Download](https://modrinth.com/mod/yacl/version/3.9.7+26.3-fabric)
+- **Mod Menu:** [Download](https://modrinth.com/mod/modmenu/version/21.0.1)
